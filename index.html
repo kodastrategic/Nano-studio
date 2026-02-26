@@ -21,10 +21,14 @@
             <div class="input-group">
                 <select id="saved-prompts-select"><option value="">✍️ Digitar Novo</option></select>
             </div>
+            <div class="section-title">Criação</div>
+            <div class="input-group">
+                <label>Prompt</label>
+                <textarea id="prompt-input" rows="5" placeholder="Descreva sua visão..."></textarea>
             </div>
-            <div style="display:flex; gap:10px; margin-bottom: 20px;">
-                <button class="btn-save" id="open-save-modal" style="flex:1; margin-top:0;">💾 SALVAR</button>
-                <button class="btn-save" id="open-manage-modal" style="flex:1; margin-top:0; background:var(--bg-card); border:1px solid var(--border-color);">⚙️ LISTA</button>
+            <div class="input-group" style="display:flex; flex-direction:column; gap:8px; margin-bottom: 20px;">
+                <button class="btn-save" id="open-save-modal" style="width:100%; margin-top:0;">💾 SALVAR NOVO</button>
+                <button class="btn-save" id="open-manage-modal" style="width:100%; margin-top:0; background:var(--bg-card); border:1px solid var(--border-color); font-size: 11px;">⚙️ GERENCIAR LISTA</button>
             </div>
             <div class="section-title">2. Referências Visuais</div>
             <div class="ref-actions">
