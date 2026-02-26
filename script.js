@@ -30,9 +30,15 @@ document.getElementById('close-settings').onclick = () => document.getElementByI
 document.getElementById('close-preview').onclick = () => previewModal.style.display = 'none';
 document.getElementById('close-ref-modal').onclick = () => refModal.style.display = 'none';
 
-// --- WEB READY: API Key via localStorage ---
-const savedKey = localStorage.getItem('banana_api_key');
-if (savedKey) apiKeyInput.value = savedKey;
+// --- WEB READY: Carregamento Automático da Chave ---
+function loadApiKey() {
+    const savedKey = localStorage.getItem('banana_api_key');
+    if (savedKey) {
+        apiKeyInput.value = savedKey;
+        console.log("🔑 Chave API carregada do navegador.");
+    }
+}
+loadApiKey();
 
 document.getElementById('save-key-btn').onclick = () => {
     const key = apiKeyInput.value.trim();
@@ -180,7 +186,12 @@ async function callGeminiAPI(key, prompt, refs, aspect, quality) {
 function createFeedItem(grid) {
     const item = document.createElement('div');
     item.className = 'feed-item';
-    item.innerHTML = `<div class="spinner-container"><div class="spinner"></div><span>PROCESSANDO...</span></div>`;
+    item.innerHTML = `
+        <div class="spinner-container" style="display:flex; flex-direction:column; align-items:center; gap:15px;">
+            <div class="spinner"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <span style="font-size:10px; color:var(--accent-blue); font-weight:bold; letter-spacing:1px;">PROCESSANDO...</span>
+        </div>
+    `;
     grid.prepend(item);
     return item;
 }
