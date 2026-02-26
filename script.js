@@ -171,6 +171,31 @@ refFileInput.onchange = (e) => {
     refFileInput.value = "";
 };
 
+const handlePaste = async (mode) => {
+    currentRefMode = mode;
+    try {
+        const items = await navigator.clipboard.read();
+        for (const item of items) {
+            for (const type of item.types) {
+                if (type.startsWith("image/")) {
+                    const blob = await item.getType(type);
+                    const reader = new FileReader();
+                    reader.onload = (e) => { 
+                        if (mode === 'studio') attachedRefs.push(e.target.result);
+                        else if (mode === 'hero') heroRefs.push(e.target.result);
+                        else if (mode === 'obj') objRefs.push(e.target.result);
+                        renderRefs(mode); 
+                    };
+                    reader.readAsDataURL(blob);
+                }
+            }
+        }
+    } catch (e) { alert("Use Upload ou verifique se há uma imagem copiada."); }
+};
+
+document.getElementById('ref-paste-btn').onclick = () => handlePaste('studio');
+if(document.getElementById('hero-paste-btn')) document.getElementById('hero-paste-btn').onclick = () => handlePaste('hero');
+
 function renderRefs(mode) {
     let container, list;
     if (mode === 'studio') { container = refCarousel; list = attachedRefs; }
