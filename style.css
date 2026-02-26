@@ -145,7 +145,7 @@ textarea:focus, select:focus, input:focus { border-color: var(--accent-blue); ou
     margin-bottom: 20px;
     overflow-x: auto;
     overflow-y: hidden;
-    white-space: nowrap;
+    min-height: 105px;
 }
 .ref-carousel-container::-webkit-scrollbar { height: 6px; }
 .ref-carousel-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
