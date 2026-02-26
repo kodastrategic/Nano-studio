@@ -21,14 +21,10 @@
             <div class="input-group">
                 <select id="saved-prompts-select"><option value="">✍️ Digitar Novo</option></select>
             </div>
-            <div class="section-title">Criação</div>
-            <div class="input-group">
-                <label>Prompt</label>
-                <textarea id="prompt-input" rows="5" placeholder="Descreva sua visão..."></textarea>
             </div>
             <div style="display:flex; gap:10px; margin-bottom: 20px;">
                 <button class="btn-save" id="open-save-modal" style="flex:1; margin-top:0;">💾 SALVAR</button>
-                <button class="btn-save" id="open-manage-modal" style="flex:1; margin-top:0; background:var(--bg-card); border:1px solid var(--border-color);">⚙️ EDITAR LISTA</button>
+                <button class="btn-save" id="open-manage-modal" style="flex:1; margin-top:0; background:var(--bg-card); border:1px solid var(--border-color);">⚙️ LISTA</button>
             </div>
             <div class="section-title">2. Referências Visuais</div>
             <div class="ref-actions">
@@ -55,7 +51,6 @@
                     <option value="4K" selected>🌟 4K</option>
                 </select>
             </div>
-            <button class="btn-save" id="open-save-modal">💾 SALVAR PROMPT</button>
             <button class="btn-generate" id="gen-btn">GERAR IMAGEM</button>
             <div id="status-msg" style="margin-top:20px; color:var(--text-muted); font-size:12px; text-align:center;"></div>
         </div>
@@ -417,6 +412,18 @@
             </div>
             <div id="manage-prompts-list" style="display:flex; flex-direction:column; gap:10px;">
                 <!-- Lista será gerada via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR PROMPT ESPECÍFICO -->
+    <div id="edit-prompt-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3 id="edit-prompt-title">Editar Prompt</h3>
+            <textarea id="edit-prompt-textarea" rows="10" style="width:100%; background:var(--bg-input); color:white; border:1px solid var(--border-color); border-radius:8px; padding:10px; font-family:inherit;"></textarea>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="document.getElementById('edit-prompt-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
+                <button id="confirm-edit-save" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar Alteração</button>
             </div>
         </div>
     </div>

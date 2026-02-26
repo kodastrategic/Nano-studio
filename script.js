@@ -88,6 +88,8 @@ document.getElementById('confirm-save').onclick = () => {
 };
 
 // --- WEB READY: Gerenciar Prompts ---
+let editingPromptName = "";
+
 document.getElementById('open-manage-modal').onclick = () => {
     const prompts = getLocalPrompts();
     const listContainer = document.getElementById('manage-prompts-list');
@@ -101,12 +103,23 @@ document.getElementById('open-manage-modal').onclick = () => {
         const item = document.createElement('div');
         item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
         item.innerHTML = `
-            <span style="font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">${name}</span>
+            <span style="font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${name}</span>
             <div style="display:flex; gap:8px;">
-                <button class="btn-edit-item" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--accent-blue); color:white; border:none; border-radius:4px;">EXCLUIR</button>
+                <button class="btn-edit-item" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--accent-blue); color:white; border:none; border-radius:4px;">EDITAR</button>
+                <button class="btn-delete-item" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
             </div>
         `;
-        item.querySelector('button').onclick = () => {
+
+        // Botão Editar
+        item.querySelector('.btn-edit-item').onclick = () => {
+            editingPromptName = name;
+            document.getElementById('edit-prompt-title').innerText = `Editar: ${name}`;
+            document.getElementById('edit-prompt-textarea').value = prompts[name];
+            document.getElementById('edit-prompt-modal').style.display = 'flex';
+        };
+
+        // Botão Excluir
+        item.querySelector('.btn-delete-item').onclick = () => {
             if(confirm(`Excluir o prompt "${name}"?`)) {
                 const p = getLocalPrompts();
                 delete p[name];
@@ -118,6 +131,20 @@ document.getElementById('open-manage-modal').onclick = () => {
         listContainer.appendChild(item);
     });
     document.getElementById('manage-modal').style.display = 'flex';
+};
+
+// Salvar Edição
+document.getElementById('confirm-edit-save').onclick = () => {
+    const newContent = document.getElementById('edit-prompt-textarea').value.trim();
+    if (!newContent) return;
+    
+    const prompts = getLocalPrompts();
+    prompts[editingPromptName] = newContent;
+    localStorage.setItem('banana_prompts', JSON.stringify(prompts));
+    
+    alert("✅ Alteração salva!");
+    document.getElementById('edit-prompt-modal').style.display = 'none';
+    refreshPromptList();
 };
 
 // --- REFERENCE LOGIC ---
