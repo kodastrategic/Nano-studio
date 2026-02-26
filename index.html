@@ -26,6 +26,10 @@
                 <label>Prompt</label>
                 <textarea id="prompt-input" rows="5" placeholder="Descreva sua visão..."></textarea>
             </div>
+            <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                <button class="btn-save" id="open-save-modal" style="flex:1; margin-top:0;">💾 SALVAR</button>
+                <button class="btn-save" id="open-manage-modal" style="flex:1; margin-top:0; background:var(--bg-card); border:1px solid var(--border-color);">⚙️ EDITAR LISTA</button>
+            </div>
             <div class="section-title">2. Referências Visuais</div>
             <div class="ref-actions">
                 <button class="btn-ref" id="ref-upload-btn">📤 UPLOAD</button>
@@ -400,6 +404,19 @@
             <div style="display:flex; gap:10px; margin-top:20px;">
                 <button onclick="document.getElementById('save-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
                 <button id="confirm-save" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GERENCIAR PROMPTS -->
+    <div id="manage-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Gerenciar Prompts</h3>
+                <div class="close-btn" onclick="document.getElementById('manage-modal').style.display='none'" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            <div id="manage-prompts-list" style="display:flex; flex-direction:column; gap:10px;">
+                <!-- Lista será gerada via JS -->
             </div>
         </div>
     </div>

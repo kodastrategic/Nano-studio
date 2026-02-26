@@ -87,6 +87,39 @@ document.getElementById('confirm-save').onclick = () => {
     refreshPromptList();
 };
 
+// --- WEB READY: Gerenciar Prompts ---
+document.getElementById('open-manage-modal').onclick = () => {
+    const prompts = getLocalPrompts();
+    const listContainer = document.getElementById('manage-prompts-list');
+    listContainer.innerHTML = "";
+    
+    if (Object.keys(prompts).length === 0) {
+        listContainer.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Nenhum prompt salvo.</p>";
+    }
+
+    Object.keys(prompts).forEach(name => {
+        const item = document.createElement('div');
+        item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
+        item.innerHTML = `
+            <span style="font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">${name}</span>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-edit-item" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--accent-blue); color:white; border:none; border-radius:4px;">EXCLUIR</button>
+            </div>
+        `;
+        item.querySelector('button').onclick = () => {
+            if(confirm(`Excluir o prompt "${name}"?`)) {
+                const p = getLocalPrompts();
+                delete p[name];
+                localStorage.setItem('banana_prompts', JSON.stringify(p));
+                document.getElementById('open-manage-modal').click(); // Refresh modal
+                refreshPromptList();
+            }
+        };
+        listContainer.appendChild(item);
+    });
+    document.getElementById('manage-modal').style.display = 'flex';
+};
+
 // --- REFERENCE LOGIC ---
 document.getElementById('ref-upload-btn').onclick = () => { currentRefMode = 'studio'; refFileInput.click(); };
 if(document.getElementById('hero-upload-btn')) document.getElementById('hero-upload-btn').onclick = () => { currentRefMode = 'hero'; refFileInput.click(); };
