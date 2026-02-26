@@ -1,0 +1,109 @@
+{
+  "editable_fields": {
+    "cenario": " interna palacio grego sombrio ",
+    "acao": "estátua romana de bronze com motion blur na cabeça como se mudasse de direção, segurando balança da justiça"
+  },
+
+  "image_type": [
+    "cinematic conceptual scene",
+    "dark philosophical visual",
+    "high-end dramatic composition"
+  ],
+
+  "core_concept": [
+    "contrast between stillness and motion",
+    "individual awareness versus collective chaos",
+    "time distortion and existential tension"
+  ],
+
+  "main_subject": [
+    "single central figure",
+    "calm, stoic and motionless",
+    "sharp focus and high clarity",
+    "symbolic presence representing truth, law, conscience or judgment"
+  ],
+
+  "surrounding_elements": [
+    "multiple human figures surrounding the main subject",
+    "figures in continuous motion",
+    "strong motion blur applied to surrounding people",
+    "faces and bodies unreadable and anonymous",
+    "visual representation of noise and distraction"
+  ],
+
+  "composition_rules": [
+    "central framing of the main subject",
+    "surrounding motion creates a circular or flowing pattern",
+    "clear visual separation between static and dynamic elements",
+    "strong depth perception"
+  ],
+
+  "lighting": [
+    "low-key cinematic lighting",
+    "focused directional light on the main subject",
+    "subtle highlights on contours and folds",
+    "background absorbed into darkness",
+    "high contrast between subject and environment"
+  ],
+
+  "color_palette": [
+    "dark monochromatic tones",
+    "black, charcoal, deep gray",
+    "subtle bronze or gold accents",
+    "muted and desaturated overall look"
+  ],
+
+  "material_and_texture": [
+    "realistic material rendering",
+    "matte and stone-like surfaces",
+    "soft specular highlights",
+    "no glossy or plastic textures"
+  ],
+
+  "atmosphere": [
+    "somber",
+    "introspective",
+    "timeless",
+    "oppressive yet calm",
+    "philosophical and symbolic"
+  ],
+
+  "camera": [
+    "medium to close framing",
+    "shallow to moderate depth of field",
+    "subject perfectly sharp",
+    "motion blur driven by subject movement, not camera shake"
+  ],
+
+  "post_processing": [
+    "cinematic contrast",
+    "controlled shadows",
+    "subtle vignette",
+    "no visible grain",
+    "high clarity on main subject only"
+  ],
+
+  "quality_settings": [
+    "ultra high resolution",
+    "photorealistic rendering",
+    "museum-grade cinematic quality"
+  ],
+
+  "strict_restrictions": [
+    "no text",
+    "no logos",
+    "no modern objects unless defined in the scenario",
+    "no bright colors",
+    "no cheerful mood"
+  ],
+
+  "negative_prompts": [
+    "cartoon style",
+    "illustration",
+    "flat lighting",
+    "overexposed highlights",
+    "AI artifacts",
+    "plastic skin",
+    "low contrast"
+  ]
+}

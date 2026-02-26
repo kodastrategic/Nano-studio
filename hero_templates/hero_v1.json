@@ -1,0 +1,148 @@
+{
+  "PARAMETROS_EDITAVEIS": {
+    "PROFISSAO": "substituir aqui",
+    "CONTEXTO_DO_AMBIENTE": "substituir aqui",
+    "GENERO": "substituir aqui",
+    "ESTILO_VISUAL_DA_PESSOA": "executivo moderno / criativo / técnico / minimalista",
+    "ANGULO_DE_CAMERA": "eye level frontal",
+    "PLANO": "meio corpo",
+    "POSE": "postura confiante",
+    "EXPRESSAO": "segurança tranquila",
+    "ROUPA_PRINCIPAL": "traje alinhado à profissão",
+    "LADO_DO_PERSONAGEM": "direita",
+    "LADO_DO_ESPACO_NEGATIVO": "esquerda",
+    "COR_ATMOSFERA": "#000000",
+    "COLOR_GRADING": "cinematográfico moderno",
+    "BACKLIGHT": {
+      "ativo": true,
+      "cor_hex": "#FFFFFF",
+      "intensidade": "média"
+    },
+    "LENS_FLARE": {
+      "ativo": false,
+      "cor_hex": "#FFFFFF",
+      "intensidade": "sutil"
+    },
+    "LUZ_VOLUMETRICA": {
+      "ativo": false,
+      "cor_hex": "#FFFFFF",
+      "intensidade": "baixa"
+    },
+    "PARTICULAS_ATMOSFERICAS": {
+      "ativo": false,
+      "cor_hex": "#FFFFFF",
+      "intensidade": "baixa"
+    }
+  },
+  "// CORPO_DO_PROMPT": "Abaixo estão as instruções estruturais fixas do sistema. Apenas os PARAMETROS_EDITAVEIS podem ser alterados.",
+  "conceito_visual": {
+    "arquetipo": "autoridade profissional contemporânea",
+    "presenca": "figura central com domínio técnico",
+    "leitura_emocional": "@EXPRESSAO"
+  },
+  "composicao": {
+    "regra": "regra dos terços",
+    "personagem_no_terco": "@LADO_DO_PERSONAGEM",
+    "espaco_negativo_no_terco_oposto": "@LADO_DO_ESPACO_NEGATIVO",
+    "espaco_negativo_estilo": "limpo com gradiente sutil"
+  },
+  "personagem": {
+    "profissao": "@PROFISSAO",
+    "genero": "@GENERO",
+    "pose": "@POSE",
+    "expressao": "@EXPRESSAO",
+    "plano": "@PLANO",
+    "vestimenta": [
+      "@ROUPA_PRINCIPAL"
+    ],
+    "caracteristicas_especificas": "@DETALHES_EXTRA",
+    "estilo_visual": "@ESTILO_VISUAL_DA_PESSOA",
+    "preservacao_identidade": {
+      "fonte": "imagem anexada obrigatória",
+      "regras_obrigatorias": [
+        "preservar 100% dos traços faciais originais",
+        "preservar proporções exatas do rosto",
+        "preservar formato dos olhos, nariz e boca",
+        "preservar tom de pele original",
+        "preservar textura natural da pele",
+        "preservar cabelo conforme referência",
+        "PRESERVAR RIGOROSAMENTE AS PROPORÇÕES CORPORAIS DA REFERÊNCIA",
+        "MANTER SILHUETA, VOLUMES E MASSA MUSCULAR CONFORME IMAGEM ANEXADA",
+        "NÃO NORMALIZAR OU ALTERAR ATRIBUTOS FÍSICOS MARCANTES",
+        "fidelidade absoluta à anatomia apresentada nas fotos de referência",
+        "não alterar estrutura óssea",
+        "não alterar idade aparente",
+        "não alterar etnia",
+        "não estilizar",
+        "não cartoonizar",
+        "não suavizar excessivamente",
+        "não modificar identidade"
+      ]
+    }
+  },
+  "camera": {
+    "corpo": "cinema full-frame",
+    "lente": "50mm ou equivalente",
+    "angulo": "@ANGULO_DE_CAMERA",
+    "abertura": "f/1.8 - f/2.8",
+    "profundidade_de_campo": "rasa controlada",
+    "foco_prioritario": [
+      "olhos",
+      "expressão"
+    ]
+  },
+  "iluminacao": {
+    "esquema_base": "iluminação cinematográfica profissional",
+    "luz_principal": {
+      "tipo": "soft directional light",
+      "angulo": "45 graus",
+      "intensidade": "média",
+      "temperatura": "neutra"
+    },
+    "backlight": "@BACKLIGHT",
+    "lens_flare": "@LENS_FLARE",
+    "luz_de_preenchimento": {
+      "ativo": true,
+      "tipo": "fill suave",
+      "intensidade": "baixa"
+    }
+  },
+  "atmosfera": {
+    "luz_volumetrica": "@LUZ_VOLUMETRICA",
+    "particulas": "@PARTICULAS_ATMOSFERICAS"
+  },
+  "fundo": {
+    "ambiente": "@CONTEXTO_DO_AMBIENTE",
+    "desfoque": "bokeh profissional",
+    "cor_dominante": "@COR_ATMOSFERA",
+    "nivel_de_detalhe": "sutil, não competir com o personagem"
+  },
+  "colorizacao": {
+    "estilo": "@COLOR_GRADING",
+    "contraste": "moderado a alto",
+    "pele": "tons naturais preservados"
+  },
+  "realismo": {
+    "resolucao": "alta",
+    "textura_pele": "natural realista",
+    "detalhe_tecido": "visível",
+    "nitidez": "óptica realista",
+    "fisica_de_luz": "consistente com câmera real"
+  },
+  "negative_prompt": [
+    "ilustração",
+    "cartoon",
+    "3D artificial",
+    "texto",
+    "logo",
+    "marca d'água",
+    "pele plastificada",
+    "cores exageradas",
+    "iluminação flat",
+    "mãos deformadas",
+    "olhos artificiais",
+    "rosto modificado",
+    "proporções alteradas"
+  ],
+  "instrucao_final": "Gerar retrato profissional cinematográfico obedecendo estritamente os PARAMETROS_EDITAVEIS. Elementos com ativo:false não devem existir. A identidade facial da imagem anexada deve ser preservada com fidelidade absoluta."
+}

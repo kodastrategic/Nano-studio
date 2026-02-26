@@ -1,0 +1,68 @@
+{
+  "EDITAVEIS": {
+    "ESTILO_VISUAL": "3D metálico premium",
+    "TIPO_METAL": "aço polido / alumínio escovado",
+    "NIVEL_GLOSSY": "alto brilho controlado",
+    "INTENSIDADE_EXTRUSAO_3D": "sutil",
+    "QUALIDADE_RENDER": "ultra alta",
+    "FUNDO": "neutro escuro ou transparente"
+  },
+
+  "OBJETIVO_GERAL": [
+    "Recriar o logotipo fornecido com fidelidade absoluta ao design original",
+    "Aplicar acabamento 3D metálico realista com aparência premium",
+    "Elevar a percepção de valor da marca sem alterar sua identidade"
+  ],
+
+  "REGRAS_DE_FIDELIDADE": [
+    "não redesenhar o logotipo",
+    "não alterar tipografia",
+    "não modificar proporções ou geometria",
+    "não reinterpretar o design original",
+    "manter identidade visual exatamente como fornecida"
+  ],
+
+  "MATERIAIS_E_SUPERFICIE": [
+    "material metálico fisicamente realista (PBR)",
+    "superfície glossy com reflexos suaves e bem definidos",
+    "microvariações de reflexão para evitar aparência artificial",
+    "acabamento limpo, sem ruído visual ou textura exagerada"
+  ],
+
+  "MODELAGEM_3D": [
+    "extrusão 3D controlada e proporcional",
+    "bordas levemente suavizadas (bevel discreto)",
+    "profundidade suficiente para leitura tridimensional sem exagero",
+    "geometria limpa e precisa"
+  ],
+
+  "ILUMINACAO": [
+    "iluminação de estúdio profissional",
+    "key light suave para leitura principal",
+    "rim light para destacar contornos metálicos",
+    "reflexos especulares naturais e bem posicionados",
+    "evitar luz dura ou reflexos estourados"
+  ],
+
+  "SOMBRAS_E_AMBIENTE": [
+    "sombras realistas e fisicamente coerentes",
+    "oclusão ambiente sutil",
+    "ambiente controlado, sem distrações",
+    "foco total no logotipo"
+  ],
+
+  "RENDER_E_QUALIDADE": [
+    "render limpo e nítido",
+    "alta resolução",
+    "microdetalhes preservados",
+    "aparência de mockup profissional de branding",
+    "evitar estética genérica de IA"
+  ],
+
+  "ESTILO_FINAL_DESEJADO": [
+    "visual corporativo premium",
+    "branding de alto valor",
+    "realismo fotográfico aplicado a logotipo 3D",
+    "acabamento digno de apresentação institucional"
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "image_type": ["studio portrait", "character reference photo"],
+  "composition": [
+    "horizontal format",
+    "image divided vertically into two equal sections",
+    "left side showing front view of the character",
+    "right side showing profile view of the character",
+    "both views aligned and proportionally consistent",
+    "character centered in each half"
+  ],
+  "subject_reference": [
+    "use the uploaded reference photos as the primary source",
+    "preserve character identity exactly",
+    "maintain consistent facial features across both views",
+    "same face, same proportions, same likeness",
+    "no facial distortion",
+    "no reinterpretation of features",
+    "high fidelity photorealistic reconstruction"
+  ],
+  "subject_description": [
+    "single character",
+    "same person shown twice in the same image",
+    "neutral facial expression",
+    "relaxed and natural posture",
+    "realistic anatomy and proportions"
+  ],
+  "appearance": [
+    "simple black t-shirt",
+    "no logos",
+    "no patterns",
+    "no accessories",
+    "clean and neutral styling",
+    "natural hair and beard as per reference"
+  ],
+  "pose": [
+    "front view: character facing directly forward",
+    "profile view: character facing sideways",
+    "head and body orientation consistent with reference",
+    "no exaggerated angles",
+    "no dramatic poses"
+  ],
+  "studio_environment": [
+    "professional photography studio",
+    "solid pure white background",
+    "seamless backdrop",
+    "no visible texture on background",
+    "clean studio setup"
+  ],
+  "lighting": [
+    "soft studio lighting",
+    "even light distribution",
+    "no harsh shadows",
+    "no dramatic contrast",
+    "neutral color temperature",
+    "light wraps smoothly around the face"
+  ],
+  "camera_settings": [
+    "professional camera quality",
+    "sharp focus",
+    "natural depth of field",
+    "no lens distortion",
+    "portrait focal length look",
+    "realistic skin tones"
+  ],
+  "quality": [
+    "ultra high resolution",
+    "extreme realism",
+    "fine skin texture visible",
+    "natural pores and details",
+    "professional photography finish",
+    "noise-free image"
+  ],
+  "style": [
+    "neutral reference photography",
+    "technical character sheet style",
+    "realistic and unbiased look",
+    "no artistic filters"
+  ],
+  "restrictions": [
+    "do not add text or labels",
+    "do not add watermarks",
+    "no logos",
+    "no accessories",
+    "no hats or glasses",
+    "no stylization",
+    "no cartoon or illustration look",
+    "no dramatic lighting",
+    "no background elements"
+  ]
+}

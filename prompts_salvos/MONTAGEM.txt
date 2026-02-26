@@ -1,0 +1,76 @@
+{
+  "EDITAVEIS": {
+    "OBJETIVO": "transformar uma foto-montagem (recortes colados) em uma única foto realista e coerente",
+    "ESTILO_FOTOGRAFICO": "fotografia realista natural (sem aparência de IA, sem filtros artificiais)",
+    "NIVEL_RECRIAÇÃO": "recriar do zero baseado na ideia da montagem (não 'consertar por cima')",
+    "LENTE_EQUIVALENTE": "35mm-50mm (perspectiva natural, sem grande-angular)",
+    "ILUMINACAO_ALVO": "seguir a iluminação do cenário de fundo (direção, intensidade, temperatura de cor)",
+    "RESOLUCAO": "alta definição, detalhes naturais, textura preservada"
+  },
+  "ENTRADA_REFERENCIA": [
+    "usar a imagem anexada como referência do conceito (montagem com erros de escala/perspectiva/sombra)",
+    "identificar automaticamente: sujeito recortado, cenário de fundo, objetos inseridos e pontos de contato com o chão",
+    "recriar a cena inteira do zero mantendo a mesma ideia geral e composição aproximada",
+    "não manter bordas de recorte, halos, diferenças de nitidez ou ruído entre elementos"
+  ],
+  "DIAGNOSTICO_DA_MONTAGEM": [
+    "assumir que a imagem possui inconsistências típicas: escala incorreta, sombras ausentes, perspectiva quebrada, temperatura de cor incompatível, falta de ambientação",
+    "detectar o plano do chão e a direção das linhas de fuga para reconstruir a perspectiva correta",
+    "usar o cenário de fundo como fonte principal para geometria, horizonte e iluminação"
+  ],
+  "RECONSTRUCAO_DE_CENA": [
+    "recriar o cenário do fundo com a mesma estrutura visual, mantendo céu, ambiente, objetos fixos e profundidade",
+    "recriar o(s) personagem(ns) e objeto(s) inserido(s) com proporções reais e alinhados ao ambiente",
+    "preservar o enquadramento e o ângulo de câmera sugeridos pela montagem, mas corrigindo a física da cena"
+  ],
+  "COMPOSICAO_E_CAMERA": [
+    "manter composição geral: posição relativa dos elementos (sujeito e objetos) no quadro",
+    "alinhar perspectiva ao cenário: horizonte, ponto de fuga, altura de câmera e inclinação",
+    "garantir proporções naturais (sem distorção, sem membros deformados, sem objetos impossíveis)",
+    "profundidade de campo coerente: foco, desfoque e nitidez unificados em toda a cena"
+  ],
+  "ESCALA_E_PERSPECTIVA": [
+    "ajustar escala do sujeito para corresponder ao ambiente (comparar com portas, postes, carros, árvores, linhas do piso, mobiliário, etc.)",
+    "ajustar tamanho e perspectiva dos objetos inseridos conforme a distância até a câmera",
+    "garantir que pés/rodas/base dos objetos estejam no mesmo plano do solo (sem flutuar, sem afundar)",
+    "reconstruir o contato físico com o chão: compressão, marcas leves, deslocamento de poeira/grama quando aplicável"
+  ],
+  "ILUMINACAO_GLOBAL": [
+    "igualar a direção da luz principal ao cenário (posição do sol/lâmpadas, sombras existentes)",
+    "igualar temperatura de cor e exposição (evitar sujeito muito quente/frio comparado ao fundo)",
+    "reproduzir contraste realista (sem HDR agressivo, sem saturação artificial)",
+    "respeitar luz ambiente e bounce light (reflexos sutis do chão/parede no sujeito)"
+  ],
+  "SOMBRAS_E_CONTATO": [
+    "gerar sombras projetadas completas do sujeito e objetos: direção, comprimento e suavidade coerentes",
+    "gerar sombra de contato (occlusion) nos pontos de apoio: pés, rodas, base de objetos, mãos tocando superfícies",
+    "fazer sombras seguirem irregularidades do terreno (não parecer um decalque plano)",
+    "garantir consistência com sombras já existentes no cenário"
+  ],
+  "AMBIENTACAO_E_INTEGRACAO": [
+    "adicionar leve integração atmosférica conforme o ambiente: haze distante, poeira, umidade, neblina sutil (se existir no cenário)",
+    "unificar microcontraste e textura entre todos os elementos (pele, tecido, metal, madeira, concreto, etc.)",
+    "unificar ruído/grão fotográfico sutil e natural para remover aparência de colagem",
+    "evitar halos, recortes duros e bordas super nítidas no sujeito"
+  ],
+  "REALISMO_DE_MATERIAIS": [
+    "recriar materiais com resposta física correta à luz (tecido, pele, plástico, metal, vidro, etc.)",
+    "preservar imperfeições naturais: dobras, sujeira leve, arranhões, desgaste, manchas realistas",
+    "evitar superfícies plastificadas ou pele com 'efeito cera'"
+  ],
+  "RESTRICOES": [
+    "não adicionar elementos extras que mudem a narrativa da montagem",
+    "não mudar clima/horário do dia sem necessidade (seguir o cenário original)",
+    "não aplicar estilos artísticos (sem cartoon, 3D, pintura, anime)",
+    "evitar artefatos de IA: olhos estranhos, mãos deformadas, repetição de padrões, texto ilegível"
+  ],
+  "VALIDACAO_DE_COERENCIA": [
+    "checar coerência final: escala x ambiente, luz x sombras, foco x profundidade, cor x atmosfera",
+    "o resultado deve parecer uma única fotografia capturada no local, sem sinais de edição"
+  ],
+  "SAIDA_ESPERADA": [
+    "imagem final fotorrealista e natural, com todos os elementos integrados fisicamente",
+    "perspectiva correta, escala correta, sombras corretas, ambientação coerente",
+    "sem aparência de montagem e sem aparência de IA"
+  ]
+}

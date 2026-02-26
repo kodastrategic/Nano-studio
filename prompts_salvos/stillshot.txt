@@ -1,0 +1,102 @@
+{
+  "scene": {
+    "type": "professional multi-product still shot",
+    "objective": "recreate all attached products together in a single studio-quality image",
+    "priority": "absolute fidelity to original packaging and labels"
+  },
+
+  "critical_preservation_rules": {
+    "label_integrity": "100% preserve all labels exactly as provided",
+    "logo_integrity": "logos must remain identical in shape, color and position",
+    "text_integrity": "all text must remain readable and unchanged",
+    "packaging_integrity": "do not redesign, stylize, simplify or enhance packaging",
+    "geometry_integrity": "maintain exact proportions, thickness and shape of each product",
+    "color_integrity": "do not alter original packaging colors",
+    "rule_priority": "preservation overrides aesthetics"
+  },
+
+  "input_handling": {
+    "instruction": "use all attached product images as strict visual sources",
+    "method": "reconstruct products exactly as photographed, correcting only perspective and lighting",
+    "forbidden_actions": [
+      "inventing new textures",
+      "reinterpreting labels",
+      "changing typography",
+      "adding decorative elements",
+      "removing brand information"
+    ]
+  },
+
+  "composition": {
+    "layout": "products grouped side by side in a cohesive arrangement",
+    "scale": "maintain real-world relative scale between all products",
+    "alignment": "clean commercial alignment",
+    "depth": "subtle depth layering without overlap distortion",
+    "perspective": "consistent studio perspective for all items"
+  },
+
+  "environment": {
+    "type": "professional studio environment",
+    "background": {
+      "style": "dark or neutral promotional background",
+      "texture": "very subtle gradient or noise-free surface",
+      "distractions": "none"
+    },
+    "surface": "minimal or invisible studio base"
+  },
+
+  "lighting": {
+    "style": "high-end commercial studio lighting",
+    "key_light": "soft directional light revealing volume",
+    "fill_light": "balanced to avoid harsh shadows",
+    "rim_light": "subtle edge separation",
+    "reflection_control": "material-accurate reflections only",
+    "shadow_behavior": "consistent soft contact shadows"
+  },
+
+  "materials_and_physics": {
+    "plastic": "realistic plastic behavior with accurate highlights",
+    "metal": "true metallic response if present",
+    "paper_or_pouch": "correct matte or semi-gloss response",
+    "glass_or_liquid": "physically correct translucency and refraction",
+    "rule": "material realism must not alter branding appearance"
+  },
+
+  "camera": {
+    "camera_type": "professional full-frame product camera",
+    "lens": "50–85mm equivalent",
+    "angle": "eye-level or slightly elevated product angle",
+    "distortion": "none",
+    "framing": "wide enough to clearly display all products"
+  },
+
+  "image_quality": {
+    "resolution": "commercial-grade high resolution",
+    "sharpness": "extreme clarity on labels and edges",
+    "noise": "none",
+    "compression": "none"
+  },
+
+  "style_constraints": {
+    "photorealistic": true,
+    "no_ai_artifacts": true,
+    "no_cartoon": true,
+    "no_illustration": true,
+    "no_fantasy": true,
+    "no_brand_modification": true
+  },
+
+  "negative_prompt": [
+    "redesigned packaging",
+    "blurred or altered labels",
+    "changed colors",
+    "fake branding",
+    "generic packaging",
+    "collage appearance",
+    "floating products",
+    "mismatched lighting",
+    "distorted proportions",
+    "added text or symbols",
+    "low-quality render"
+  ]
+}

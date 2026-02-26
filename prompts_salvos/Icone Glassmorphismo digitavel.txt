@@ -1,0 +1,93 @@
+{
+  "editable_parameters": {
+    "ICON_SUBJECT": "mirtilo com ícone de check central",
+    "PRIMARY_COLOR_HEX": "#38217C",
+    "BACKGROUND_COLOR": "absolute black",
+    "DEPTH_LEVEL": "semi-3D (baixa profundidade)"
+  },
+
+  "icon_concept": {
+    "type": "3D minimal icon",
+    "style": "glassmorphism",
+    "volume": "low depth, semi-3D",
+    "visual_weight": "solid, clean, premium",
+    "intent": "technological, modern, refined"
+  },
+
+  "geometry_and_shape": [
+    "uniform and well-defined thickness",
+    "smooth, rounded and precise shapes",
+    "clean silhouette with controlled curvature",
+    "no exaggerated extrusion or deep relief",
+    "balanced proportions with visual stability"
+  ],
+
+  "material_and_surface": [
+    "translucent glass-like material",
+    "polished surface finish",
+    "soft internal refraction",
+    "clean optical clarity",
+    "non-metallic appearance",
+    "no plastic shine exaggeration"
+  ],
+
+  "color_definition": {
+    "primary_color": "#38217C",
+    "color_behavior": [
+      "color integrated into the glass material",
+      "subtle light diffusion through the volume",
+      "no color banding or gradients visible"
+    ]
+  },
+
+  "lighting_setup": [
+    "primary illumination emitted from the icon edges",
+    "soft and continuous edge glow",
+    "diffuse lighting without harsh hotspots",
+    "icon appears to emit its own light",
+    "controlled luminance with premium softness"
+  ],
+
+  "background_and_environment": [
+    "absolute black background",
+    "no textures",
+    "no visible gradients",
+    "no patterns",
+    "only a subtle halo of light around the icon caused by self-emission"
+  ],
+
+  "composition_rules": [
+    "icon perfectly centered",
+    "well-defined negative space",
+    "clean and noise-free composition",
+    "no additional elements",
+    "no text",
+    "no UI components",
+    "no secondary symbols"
+  ],
+
+  "icon_details": [
+    "mirtilo rendered as the main form",
+    "check icon embedded centrally",
+    "check icon integrated seamlessly into the glass structure",
+    "no outline separation between elements"
+  ],
+
+  "style_restrictions": [
+    "do not use cartoon style",
+    "do not use hand-drawn strokes",
+    "do not use metallic materials",
+    "do not use exaggerated glow",
+    "do not use extreme depth",
+    "do not add hard shadows",
+    "do not flatten the icon"
+  ],
+
+  "render_quality": [
+    "high clarity",
+    "clean edges",
+    "precise lighting control",
+    "premium product icon quality",
+    "modern tech aesthetic"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "task_type": ["style transfer", "icon enhancement", "3D UI icon render"],
+
+  "reference_handling": [
+    "use the attached icon as the exact shape reference",
+    "preserve the original silhouette and proportions",
+    "do not redesign the icon",
+    "do not add or remove elements",
+    "apply style only"
+  ],
+
+  "icon_style": [
+    "premium glassmorphism / acrylic UI icon",
+    "enterprise-grade SaaS / fintech aesthetic",
+    "high realism",
+    "professional product-level finish",
+    "not flat",
+    "not cartoon",
+    "not emoji style"
+  ],
+
+  "material_properties": [
+    "acrylic-like semi-translucent material",
+    "plastic-glass hybrid appearance",
+    "40% to 50% translucency",
+    "realistic physical thickness",
+    "subtle internal refraction",
+    "soft internal light diffusion",
+    "solid volume perception",
+    "not fully transparent",
+    "not opaque"
+  ],
+
+  "color_control": {
+    "primary_color_hex": "#FF0000",
+    "color_locked": true,
+    "no_color_shift": true,
+    "no_white_tint": true,
+    "no_neon_effect": true,
+    "no_gradient_color_changes": true
+  },
+
+  "lighting": [
+    "controlled studio lighting applied only to the icon",
+    "soft key light enhancing volume and depth",
+    "subtle rim light to define edges",
+    "no background illumination",
+    "no light spill into background"
+  ],
+
+  "background_rules": {
+    "background_color_hex": "#000000",
+    "background_type": "solid",
+    "no_gradients": true,
+    "no_gray_tones": true,
+    "no_transparency": true,
+    "icon fully isolated against background"
+  },
+
+  "camera_and_framing": [
+    "centered composition",
+    "frontal view or very subtle isometric angle",
+    "icon occupies approximately 60% of the frame",
+    "clean negative space around the icon"
+  ],
+
+  "style_constraints": [
+    "no text",
+    "no letters",
+    "no extra symbols",
+    "no added logos",
+    "no watermark",
+    "no UI mockups",
+    "icon only"
+  ],
+
+  "negative_prompt": [
+    "white background",
+    "light background",
+    "gray background",
+    "transparent background",
+    "alpha channel",
+    "studio backdrop",
+    "environment scene",
+    "background reflections",
+    "halo glow",
+    "bloom",
+    "overexposure",
+    "plastic toy look",
+    "low detail"
+  ],
+
+  "render_quality": [
+    "ultra-detailed PBR render",
+    "high sharpness",
+    "noise-free image",
+    "clean edges",
+    "premium professional finish"
+  ]
+}

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banana Studio | AI Image Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- NAVEGAÇÃO SUPERIOR -->
+    <nav class="top-nav">
+        <div style="font-size: 20px; font-weight: 700; margin-right: 20px;">🍌</div>
+        <button class="nav-tab active" id="tab-studio-btn" onclick="switchTab('studio')">🎨 STUDIO</button>
+        <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO</button>
+    </nav>
+
+    <!-- ABA STUDIO -->
+    <div id="studio-tab" class="tab-page active">
+        <div class="sidebar">
+            <div class="section-title">Presets</div>
+            <div class="input-group">
+                <select id="saved-prompts-select"><option value="">✍️ Digitar Novo</option></select>
+            </div>
+            <div class="section-title">Criação</div>
+            <div class="input-group">
+                <label>Prompt</label>
+                <textarea id="prompt-input" rows="5" placeholder="Descreva sua visão..."></textarea>
+            </div>
+            <div class="section-title">2. Referências Visuais</div>
+            <div class="ref-actions">
+                <button class="btn-ref" id="ref-upload-btn">📤 UPLOAD</button>
+                <button class="btn-ref" id="ref-paste-btn">📋 COLAR</button>
+                <button class="btn-ref" id="ref-clear-btn">🗑️ LIMPAR</button>
+                <input type="file" id="ref-file-input" style="display:none;" accept="image/*" multiple>
+            </div>
+            <div class="ref-carousel-container"><div class="ref-carousel" id="ref-carousel"></div></div>
+            <div class="input-group">
+                <label>Formato</label>
+                <select id="aspect-select">
+                    <option value="1:1">⬜ 1:1</option>
+                    <option value="16:9">▭ 16:9</option>
+                    <option value="9:16">▯ 9:16</option>
+                    <option value="4:3">📺 4:3</option>
+                    <option value="3:4">📸 3:4</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Qualidade</label>
+                <select id="quality-select">
+                    <option value="1K">⚡ 1K</option>
+                    <option value="4K" selected>🌟 4K</option>
+                </select>
+            </div>
+            <button class="btn-save" id="open-save-modal">💾 SALVAR PROMPT</button>
+            <button class="btn-generate" id="gen-btn">GERAR IMAGEM</button>
+            <div id="status-msg" style="margin-top:20px; color:var(--text-muted); font-size:12px; text-align:center;"></div>
+        </div>
+        <div class="viewport">
+            <div class="settings-icon" id="toggle-settings">⚙️</div>
+            <div class="section-title" style="text-align:center; margin-top:0;">Feed de Criações</div>
+            <div class="feed-grid" id="feed-grid"></div>
+        </div>
+    </div>
+
+    <!-- ABA HERO (PROMPT BUILDER) -->
+    <div id="hero-tab" class="tab-page">
+        <div class="sidebar">
+            <div class="section-title">1. Referências Persona</div>
+            <div class="ref-actions">
+                <button class="btn-ref" id="hero-upload-btn">📤 UPLOAD</button>
+                <button class="btn-ref" id="hero-clear-btn">🗑️ LIMPAR</button>
+                <input type="file" id="hero-file-input" style="display:none;" accept="image/*" multiple>
+            </div>
+            <div class="ref-carousel-container"><div class="ref-carousel" id="hero-ref-carousel"></div></div>
+
+            <div class="section-title">2. Identidade e Profissão</div>
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Profissão</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-profissao-toggle" checked onchange="toggleProfissaoField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-profissao" class="input-group" style="margin-top: 10px;">
+                    <input type="text" id="hero-profissao" placeholder="Ex: Desenvolvedor de Software">
+                </div>
+            </div>
+            <div class="input-group" style="margin-top: 16px;">
+                <label>Ambiente</label>
+                <input type="text" id="hero-ambiente" placeholder="Ex: Escritório minimalista high-tech">
+            </div>
+            <div class="input-group">
+                <label>Roupa</label>
+                <input type="text" id="hero-roupa" placeholder="Ex: Terno slim azul marinho">
+            </div>
+
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Descrição Extra (Reforço)</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-detalhes-toggle" onchange="toggleDetailsField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-detalhes" style="display:none; margin-top: 10px;">
+                    <textarea id="hero-detalhes-desc" rows="3" placeholder="Ex: Fisiculturista com seios fartos e ombros largos, pele bronzeada..."></textarea>
+                </div>
+            </div>
+
+            <div class="hero-controls" style="margin-top: 16px;">
+                <div class="input-group">
+                    <label>Gênero</label>
+                    <select id="hero-genero">
+                        <option value="homem">Masculino</option>
+                        <option value="mulher">Feminino</option>
+                        <option value="andrógeno">Andrógeno</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-title">3. Estilo e Composição</div>
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Estilo Visual</label>
+                    <select id="hero-estilo">
+                        <option value="executivo moderno">Executivo Moderno</option>
+                        <option value="criativo e vibrante">Criativo</option>
+                        <option value="técnico e industrial">Técnico</option>
+                        <option value="minimalista luxuoso">Minimalista</option>
+                        <option value="foto editorial moda praia feminina">Moda Praia</option>
+                        <option value="épico heroico com iluminação dramática">Heroico / Épico</option>
+                        <option value="capa de revista de alta moda (Vogue style)">Capa de Revista</option>
+                        <option value="estilo vida fitness e atlético">Vida Fitness</option>
+                        <option value="cinematográfico noir em preto e branco">Film Noir</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Preset / Filtro</label>
+                    <select id="hero-preset">
+                        <option value="cores naturais e realistas" selected>Nenhum (Natural)</option>
+                        <option value="ultra-vibrant Huji Cam style, vintage 35mm film, heavy light leaks, chromatic aberration, dated timestamp look, 90s aesthetic">Huji Cam (Vintage)</option>
+                        <option value="Kodak Portra 400 aesthetic, warm skin tones, fine film grain, soft highlights">Kodak Portra 400</option>
+                        <option value="cinematográfico Teal and Orange, high contrast, blue shadows and orange highlights">Teal & Orange</option>
+                        <option value="Polaroid instant film style, faded colors, soft edges, vintage matte finish">Polaroid Retrô</option>
+                        <option value="moody dark aesthetic, deep shadows, desaturated tones, dramatic low-key lighting">Moody & Dark</option>
+                        <option value="Technicolor movie style, hyper-saturated primary colors, retro cinema look">Technicolor Classic</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Pose</label>
+                    <select id="hero-pose">
+                        <optgroup label="Corporativo & Social">
+                            <option value="braços cruzados">Braços Cruzados</option>
+                            <option value="mãos nos bolsos da calça">Mãos nos Bolsos</option>
+                            <option value="mão no queixo">Mão no Queixo</option>
+                            <option value="ajustando o punho da camisa ou relógio">Ajustando Relógio/Punho</option>
+                            <option value="mão na nuca">Mão na Nuca</option>
+                        </optgroup>
+                        <optgroup label="Editorial & Moda">
+                            <option value="mão na cintura">Mão na Cintura</option>
+                            <option value="mão na cabeça entre os cabelos">Mão na Cabeça</option>
+                            <option value="braços erguidos acima da cabeça">Editorial (Braços Altos)</option>
+                            <option value="corpo levemente inclinado para frente">Inclinado (Atitude)</option>
+                            <option value="sentado de forma despojada">Sentado Despojado</option>
+                        </optgroup>
+                        <optgroup label="Ação & Dinamismo">
+                            <option value="caminhando em direção à câmera">Caminhando</option>
+                            <option value="correndo">Correndo</option>
+                            <option value="agachado estilo streetwear">Agachado</option>
+                            <option value="pulando no ar">Pulando</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Lado Personagem</label>
+                    <select id="hero-lado">
+                        <option value="direita">Direita</option><option value="esquerda">Esquerda</option><option value="centro">Centro</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Expressão</label>
+                    <select id="hero-expressao">
+                        <option value="neutro" selected>Neutro (Padrão)</option>
+                        <optgroup label="Positivas">
+                            <option value="sorriso aberto e radiante">Sorriso Aberto</option>
+                            <option value="sorriso sutil e confiante">Sorriso Sutil</option>
+                            <option value="euforia insana e vibrante">Euforia Insana</option>
+                            <option value="olhar apaixonado e doce">Apaixonado</option>
+                        </optgroup>
+                        <optgroup label="Sérias & Focadas">
+                            <option value="olhar sério e autoritário">Sério / Autoritário</option>
+                            <option value="olhar focado e determinado">Focado / Determinado</option>
+                            <option value="expressão de profundo pensamento">Pensativo</option>
+                            <option value="olhar de desprezo e superioridade">Desprezo / Superioridade</option>
+                        </optgroup>
+                        <optgroup label="Dramáticas">
+                            <option value="expressão de surpresa e choque">Surpreso</option>
+                            <option value="rosto tenso e mandíbula cerrada">Tenso</option>
+                            <option value="olhar preocupado e melancólico">Preocupado</option>
+                            <option value="rosto bravo e intimidador">Bravo / Agressivo</option>
+                        </optgroup>
+                        <optgroup label="Editorial">
+                            <option value="olhar magnético para a lente">Olhar Magnético</option>
+                            <option value="rosto relaxado com boca levemente entreaberta">Editorial (Vogue Style)</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Ângulo de Câmera</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-angulo-toggle" onchange="toggleAnguloField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-angulo" style="display:none; margin-top: 10px;">
+                    <select id="hero-angulo">
+                        <option value="ao nível dos olhos">Nível dos Olhos (Eye-level)</option>
+                        <option value="de baixo para cima (low angle)">Contra-Plongée (Low Angle)</option>
+                        <option value="de cima para baixo (high angle)">Plongée (High Angle)</option>
+                        <option value="extremo low angle (worm's eye view)">Worm's Eye (Vista de Verme)</option>
+                        <option value="visto de cima (bird's eye view)">Bird's Eye (Vista de Pássaro)</option>
+                        <option value="ângulo holandês (dutch angle) inclinado">Holandês (Inclinado)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Plano</label>
+                <select id="hero-plano">
+                    <option value="meio corpo">Meio Corpo</option><option value="rosto">Close-up Rosto</option><option value="corpo inteiro">Corpo Inteiro</option>
+                </select>
+            </div>
+
+            <div class="section-title">4. Objetos e Acessórios</div>
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Incluir Objeto na Cena</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-objeto-toggle" onchange="toggleObjetoField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-objeto" style="display:none; margin-top: 15px;">
+                    <div class="input-group">
+                        <label>Descrição do Objeto / Ação</label>
+                        <input type="text" id="hero-objeto-desc" placeholder="Ex: Segurando uma capa de disco de vinil">
+                    </div>
+                    <div class="ref-actions">
+                        <button class="btn-ref" id="obj-upload-btn">📤 UPLOAD OBJETO</button>
+                        <button class="btn-ref" id="obj-clear-btn">🗑️ LIMPAR</button>
+                        <input type="file" id="obj-file-input" style="display:none;" accept="image/*" multiple>
+                    </div>
+                    <div class="ref-carousel-container" style="margin-top:10px;">
+                        <div class="ref-carousel" id="obj-ref-carousel"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">5. Atmosfera e Efeitos</div>
+            <div class="hero-effects-list">
+                <!-- Backlight -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Backlight</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-backlight" onchange="toggleEffectControls('backlight')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-backlight" class="effect-extra-controls" style="display:none;">
+                        <input type="color" id="hero-backlight-cor" value="#ffffff" title="Cor do Backlight">
+                        <select id="hero-backlight-intensidade">
+                            <option value="suave">Suave</option>
+                            <option value="média" selected>Média</option>
+                            <option value="forte">Forte</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lens Flare -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Lens Flare</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-flare" onchange="toggleEffectControls('flare')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-flare" class="effect-extra-controls" style="display:none;">
+                        <input type="color" id="hero-flare-cor" value="#ffffff" title="Cor do Flare">
+                        <select id="hero-flare-estilo">
+                            <option value="anamórfico">Anamórfico</option>
+                            <option value="circular">Circular</option>
+                            <option value="suave">Glow</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Luz Volumétrica -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Luz Volumétrica</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-luzv" onchange="toggleEffectControls('luzv')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-luzv" class="effect-extra-controls" style="display:none;">
+                        <input type="color" id="hero-luzv-cor" value="#ffffff" title="Cor da Luz">
+                        <select id="hero-luzv-intensidade">
+                            <option value="sutil">Sutil</option>
+                            <option value="visível" selected>Visível</option>
+                            <option value="dramática">Dramática</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Partículas -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Partículas</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-part" onchange="toggleEffectControls('part')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-part" class="effect-extra-controls" style="display:none;">
+                        <select id="hero-part-tipo">
+                            <option value="poeira suspensa">Poeira</option>
+                            <option value="partículas de luz">Fótons</option>
+                            <option value="nevoa leve">Névoa</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Formato</label>
+                    <select id="hero-aspect-select">
+                        <option value="1:1">⬜ 1:1 (Quadrado)</option>
+                        <option value="16:9" selected>▭ 16:9 (Widescreen Horizontal)</option>
+                        <option value="9:16">▯ 9:16 (Vertical/Smartphone)</option>
+                        <option value="4:3">📺 4:3 (Clássico Horizontal)</option>
+                        <option value="3:4">📸 3:4 (Clássico Vertical/Retrato)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Qualidade</label>
+                    <select id="hero-quality-select">
+                        <option value="1K">⚡ 1K</option>
+                        <option value="4K" selected>🌟 4K</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-generate" id="hero-gen-btn">🚀 GERAR HERO PRO</button>
+        </div>
+        <div class="viewport">
+            <div class="section-title" style="text-align:center; margin-top:0;">Preview Hero Build</div>
+            <div class="feed-grid" id="hero-feed-grid"></div>
+            <div id="hero-status-msg" style="margin-top:20px; color:var(--text-muted); font-size:14px; text-align:center;">Configure os parâmetros e clique em Gerar.</div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="settings-panel" class="settings-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2>Ajustes</h2><div class="close-btn" id="close-settings">✕</div>
+        </div>
+        <div class="input-group">
+            <label>Chave API (Gemini)</label>
+            <input type="password" id="api-key-input" placeholder="Sua chave...">
+            <button class="btn-save" id="save-key-btn" style="width:100%;">ATUALIZAR CHAVE</button>
+        </div>
+        <button class="btn-shutdown" id="shutdown-btn">🛑 ENCERRAR ESTÚDIO</button>
+    </div>
+
+    <div id="preview-modal" class="preview-modal">
+        <div class="close-btn" id="close-preview" style="position:absolute; right:30px; top:30px; font-size:30px;">✕</div>
+        <div class="preview-content">
+            <img src="" id="expanded-img">
+            <button class="btn-generate" id="modal-download-btn">📥 BAIXAR JPG</button>
+        </div>
+    </div>
+
+    <div id="save-modal" class="modal">
+        <div class="modal-content">
+            <h3>Nome do Prompt</h3>
+            <input type="text" id="prompt-name-input" placeholder="Ex: Preset Pro">
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="document.getElementById('save-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
+                <button id="confirm-save" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="ref-modal" class="preview-modal">
+        <div class="close-btn" id="close-ref-modal" style="position:absolute; right:30px; top:30px; font-size:30px;">✕</div>
+        <div class="preview-content">
+            <h3 style="margin-bottom:15px;">Gerenciar Referência</h3>
+            <img src="" id="ref-expanded-img" style="max-height: 60vh;">
+            <div style="display:flex; gap:15px; margin-top:20px; width:100%;">
+                <button class="btn-ref" id="ref-replace-btn" style="background:var(--accent-blue); color:white; font-size:14px;">🔄 SUBSTITUIR</button>
+                <button class="btn-ref" id="ref-delete-btn" style="background:var(--danger-red); color:white; border:none; font-size:14px;">🗑️ EXCLUIR</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+            if(tab === 'studio') {
+                document.getElementById('studio-tab').classList.add('active');
+                document.getElementById('tab-studio-btn').classList.add('active');
+            } else {
+                document.getElementById('hero-tab').classList.add('active');
+                document.getElementById('tab-hero-btn').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

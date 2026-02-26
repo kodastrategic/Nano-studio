@@ -1,0 +1,99 @@
+{
+  "GLOBAL_SETTINGS": {
+    "BACKGROUND_TONE_HEX": "#E6DCCF",
+    "GLOBAL_LIGHTING_PERCENT": 35
+  },
+
+  "SCENE": {
+    "objective": "recreate the attached scene with enhanced professional quality while preserving original composition and background texture",
+    "fidelity": "strict recreation",
+    "camera": {
+      "angle": "identical to reference",
+      "perspective": "unchanged",
+      "framing": "preserved"
+    }
+  },
+
+  "ATMOSPHERE": {
+    "mood": "dark",
+    "style": "cinematic",
+    "tone": "somber and dramatic",
+    "contrast_behavior": "controlled low-key contrast",
+    "ambient_density": "subtle and realistic"
+  },
+
+  "BACKGROUND": {
+    "type": "original background preserved",
+    "texture_preservation": "mandatory",
+    "original_surface_details": "fully maintained",
+    "color_tone_adjustment": {
+      "target_tone_hex": "{{BACKGROUND_TONE_HEX}}",
+      "method": "color grading only",
+      "blend_behavior": "natural color shift",
+      "opacity": "low",
+      "restriction": "do not flatten or remove texture"
+    },
+    "gradient": {
+      "allowed": "natural only",
+      "artificial_gradient": "forbidden"
+    }
+  },
+
+  "PARTICLES": {
+    "type": "floating follicle-like micro particles",
+    "distribution": "organic and non-uniform",
+    "scale": "microscopic to small",
+    "edges": "soft",
+    "density": "low to medium",
+    "depth_of_field": {
+      "enabled": true,
+      "foreground_particles": "slightly sharper",
+      "background_particles": "softly diffused"
+    }
+  },
+
+  "LIGHTING": {
+    "global_illumination_percent": "{{GLOBAL_LIGHTING_PERCENT}}",
+    "lighting_style": "low-key studio lighting",
+    "key_light": {
+      "intensity_relative": "moderate",
+      "direction": "directional"
+    },
+    "fill_light": {
+      "intensity_relative": "very low"
+    },
+    "shadow_behavior": "soft and realistic transitions",
+    "overexposure": "strictly forbidden"
+  },
+
+  "OPTICAL_EFFECTS": {
+    "lens_flare": {
+      "enabled": true,
+      "intensity": "subtle",
+      "behavior": "physically plausible",
+      "source": "directional light only",
+      "restriction": "no glow, no bloom, no neon artifacts"
+    }
+  },
+
+  "IMAGE_QUALITY": {
+    "resolution": "high",
+    "render_quality": "professional cinematic",
+    "focus": {
+      "main_subject": "tack sharp",
+      "secondary_elements": "smooth depth falloff"
+    },
+    "noise": "none",
+    "artifacts": "none",
+    "sharpening": "natural only"
+  },
+
+  "RESTRICTIONS": {
+    "no_background_flattening": true,
+    "no_texture_removal": true,
+    "no_new_elements": true,
+    "no_composition_changes": true,
+    "no_ai_visual_artifacts": true,
+    "no_exaggerated_effects": true
+  }
+}

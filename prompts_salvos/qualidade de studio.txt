@@ -1,0 +1,74 @@
+{
+  "image_type": ["photo restoration", "professional studio recreation"],
+  "composition": [
+    "maintain the same framing as the reference photo",
+    "maintain the same camera angle",
+    "maintain the same pose and body orientation",
+    "subject positioned exactly as in the reference image",
+    "no changes to perspective or composition"
+  ],
+  "subject_reference": [
+    "use the uploaded photo as the main reference",
+    "preserve facial identity exactly",
+    "preserve body proportions and posture",
+    "do not reinterpret or stylize the subject",
+    "no facial distortion",
+    "high fidelity photorealistic reconstruction"
+  ],
+  "restoration_goal": [
+    "recover fine details lost due to low light",
+    "restore natural skin texture",
+    "restore fabric texture",
+    "restore hair strand definition",
+    "restore sharp edges and micro-details",
+    "remove digital noise typical of low-light mobile photos"
+  ],
+  "lighting": [
+    "replace uncontrolled night lighting with professional studio lighting",
+    "soft and even studio light",
+    "controlled highlights and shadows",
+    "no harsh shadows",
+    "neutral color temperature",
+    "light wrapping naturally around the subject"
+  ],
+  "environment": [
+    "clean studio environment",
+    "solid neutral background",
+    "background without texture or visual noise",
+    "focus entirely on the subject"
+  ],
+  "camera_settings": [
+    "professional camera look",
+    "high-end lens clarity",
+    "sharp focus across the subject",
+    "natural depth of field",
+    "no motion blur",
+    "accurate color reproduction"
+  ],
+  "quality": [
+    "ultra high resolution",
+    "extreme sharpness",
+    "fine skin pores visible",
+    "natural imperfections preserved",
+    "professional photography finish",
+    "noise-free image"
+  ],
+  "style": [
+    "photorealistic",
+    "studio portrait realism",
+    "natural and neutral look",
+    "no beauty filters",
+    "no artificial smoothing"
+  ],
+  "restrictions": [
+    "do not change pose",
+    "do not change camera angle",
+    "do not alter facial identity",
+    "do not beautify or idealize the subject",
+    "no stylization",
+    "no cartoon or illustration look",
+    "no dramatic or cinematic lighting",
+    "no added accessories or wardrobe changes",
+    "no text or watermarks"
+  ]
+}

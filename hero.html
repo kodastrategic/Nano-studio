@@ -1,0 +1,87 @@
+<!-- HERO Tab Content -->
+<div class="hero-container">
+    <div class="hero-header">
+        <h1 class="hero-title">HERO MOD</h1>
+        <p class="hero-subtitle">Transforme suas gerações em personagens lendários</p>
+    </div>
+
+    <div class="hero-grid">
+        <div class="hero-card">
+            <div class="hero-icon">⚔️</div>
+            <h3>Guerreiro</h3>
+            <p>Aplica armaduras e texturas metálicas pesadas.</p>
+            <button class="btn-ref" onclick="applyHeroStyle('Guerreiro')">APLICAR</button>
+        </div>
+        <div class="hero-card">
+            <div class="hero-icon">🔮</div>
+            <h3>Místico</h3>
+            <p>Adiciona efeitos de partículas e aura mágica neon.</p>
+            <button class="btn-ref" onclick="applyHeroStyle('Mistico')">APLICAR</button>
+        </div>
+        <div class="hero-card">
+            <div class="hero-icon">🤖</div>
+            <h3>Cibernético</h3>
+            <p>Estilo industrial com implantes e luzes LED.</p>
+            <button class="btn-ref" onclick="applyHeroStyle('Cibernetico')">APLICAR</button>
+        </div>
+    </div>
+
+    <div class="hero-info-box">
+        <p>💡 <b>Dica:</b> Selecione uma imagem no Feed da aba anterior para trazê-la para o Hero Mod.</p>
+    </div>
+</div>
+
+<style>
+    .hero-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        color: white;
+    }
+    .hero-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .hero-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 3rem;
+        color: var(--accent-blue);
+        text-shadow: 0 0 20px rgba(0, 113, 227, 0.4);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    .hero-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    .hero-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-blue);
+    }
+    .hero-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+    .hero-info-box {
+        margin-top: 50px;
+        background: rgba(0, 113, 227, 0.1);
+        border: 1px solid var(--accent-blue);
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 14px;
+    }
+</style>
+
+<script>
+    function applyHeroStyle(style) {
+        alert("Estilo " + style + " selecionado! Integração com o prompt em breve.");
+    }
+</script>

@@ -1,0 +1,162 @@
+{
+  "prompt_id": "mockup_cartao_visita_uv_metalico_v1",
+  "version": "1.1",
+
+  "EDITAR_AQUI_PRIMEIRO": {
+    "_nota_geral": "✅ EDITE SOMENTE ESTA SEÇÃO PRIMEIRO. Tudo abaixo usa esses valores automaticamente.",
+
+    "CONTROLES_DE_CENA": {
+      "_nota": "Escolha APENAS um modo. Se dia=true, noite deve ser false (e vice-versa).",
+      "modo_dia": true,
+      "modo_noite": false
+    },
+
+    "CORES_HEX": {
+      "_nota": "Cole cores em HEX (ex: #0B0F19). Essas cores guiam o visual do mockup.",
+      "cor_cartao_frente_hex": "#0B0F19",
+      "cor_cartao_verso_hex": "#0B0F19",
+      "cor_fundo_hex": "#0A0A0A",
+      "cor_mesa_hex": "#2B1B12",
+      "cor_detalhe_acento_hex": "#C2FC05"
+    },
+
+    "DADOS_DO_CARTAO": {
+      "_nota": "Preencha com os dados reais. Nada aqui deve ser inventado pelo gerador.",
+      "nome_da_empresa": "NOME DA EMPRESA AQUI",
+      "nome_da_pessoa": "NOME / RESPONSÁVEL (OPCIONAL)",
+      "telefone": "+55 (91) 99999-9999",
+      "instagram": "@seuinstagram",
+      "email": "contato@seudominio.com",
+      "site": "www.seudominio.com",
+      "endereco_linha_1": "Rua Exemplo, 123",
+      "endereco_linha_2": "Bairro • Cidade/UF"
+    },
+
+    "REFERENCIAS_DE_INPUT": {
+      "_nota": "Anexe o logo e use como referência principal. O logo não pode ser redesenhado nem alterado.",
+      "logo_referencia": "ANEXAR_IMAGEM_DO_LOGO_AQUI"
+    }
+  },
+
+  "tokens_de_estilo": {
+    "_nota": "⚙️ Motor do template. Não precisa mexer aqui (a menos que queira mudar o estilo padrão).",
+
+    "iluminacao": {
+      "dia_look": "soft daylight from a window, clean highlights, natural shadows",
+      "noite_look": "warm studio lamp + subtle cool fill, deeper shadows, cinematic contrast"
+    },
+
+    "materiais": {
+      "papel": "premium thick cardstock",
+      "acabamento": "metallic finish with subtle shimmer",
+      "spot_uv": "raised spot UV varnish on the logo only",
+      "intensidade_uv": "noticeable but elegant, not plastic-looking"
+    },
+
+    "camera": {
+      "tipo_foto": "premium product mockup",
+      "lente": "50mm",
+      "angulo": "slight top-front angle",
+      "profundidade_de_campo": "shallow DOF, crisp focus on cards, soft blur on background objects",
+      "qualidade": "high-detail, studio quality"
+    },
+
+    "composicao": {
+      "mostrar_frente_e_verso": true,
+      "arranjo": "two cards slightly overlapped on the table; one shows front info, the other shows back logo",
+      "orientacao_frente": "landscape",
+      "orientacao_verso": "landscape"
+    },
+
+    "props": {
+      "incluir_caneta": true,
+      "estilo_caneta": "minimal premium metal pen",
+      "incluir_celular": true,
+      "modelo_celular": "iPhone 15 Pro Max",
+      "tela_celular": "off (black glass), no reflections of UI"
+    }
+  },
+
+  "regras_de_geracao": {
+    "preservacao_do_logo": [
+      "use the attached logo as the exact brand mark",
+      "do not redraw, do not re-style, do not simplify, do not change colors",
+      "keep logo proportions intact",
+      "place logo on the back side only and apply spot UV only on the logo area"
+    ],
+
+    "regras_de_texto": [
+      "front side must contain the business information exactly as provided in EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO",
+      "use clean modern typography, high readability, no decorative fonts",
+      "do not invent contact info; only use what is provided",
+      "ensure text is sharp and readable at realistic print scale"
+    ],
+
+    "realismo_de_impressao": [
+      "realistic print margins and safe area",
+      "subtle paper texture visible under light",
+      "spot UV should catch light differently than the metallic surface",
+      "edges of the card must show thickness (premium stock)"
+    ],
+
+    "realismo_de_cena": [
+      "cards placed on a table whose color matches EDITAR_AQUI_PRIMEIRO.CORES_HEX.cor_mesa_hex",
+      "include a premium pen near the cards if enabled",
+      "include an iPhone 15 Pro Max near the cards with screen off if enabled",
+      "no extra props beyond the defined props",
+      "background color should match EDITAR_AQUI_PRIMEIRO.CORES_HEX.cor_fundo_hex"
+    ],
+
+    "logica_dia_noite": [
+      "if EDITAR_AQUI_PRIMEIRO.CONTROLES_DE_CENA.modo_dia is true, follow tokens_de_estilo.iluminacao.dia_look and avoid night mood",
+      "if EDITAR_AQUI_PRIMEIRO.CONTROLES_DE_CENA.modo_noite is true, follow tokens_de_estilo.iluminacao.noite_look and avoid daylight",
+      "never mix day and night; only one must dominate"
+    ]
+  },
+
+  "prompt_final": {
+    "_nota": "🧠 Este é o texto que o gerador deve seguir, puxando os dados editáveis do topo.",
+    "tarefa": "Create a realistic premium mockup of a business card front and back using the attached logo, following the style and brand data.",
+    "descricao_da_cena": [
+      "A premium tabletop product mockup scene.",
+      "Two business cards on a table: one card shows the FRONT with contact info; the other shows the BACK with the logo.",
+      "Cards have metallic finish; logo has raised spot UV (UV localized only on the logo).",
+      "A minimal premium metal pen placed near the cards.",
+      "An iPhone 15 Pro Max near the cards with screen OFF (black glass), no UI.",
+      "Shallow depth of field, high realism, studio-quality."
+    ],
+
+    "conteudo_frente_do_cartao": [
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.nome_da_empresa}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.nome_da_pessoa}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.telefone}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.instagram}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.email}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.site}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.endereco_linha_1}",
+      "{EDITAR_AQUI_PRIMEIRO.DADOS_DO_CARTAO.endereco_linha_2}"
+    ],
+
+    "restricoes_visuais": [
+      "Table color must visually match {EDITAR_AQUI_PRIMEIRO.CORES_HEX.cor_mesa_hex}.",
+      "Card front color must visually match {EDITAR_AQUI_PRIMEIRO.CORES_HEX.cor_cartao_frente_hex}.",
+      "Card back color must visually match {EDITAR_AQUI_PRIMEIRO.CORES_HEX.cor_cartao_verso_hex}.",
+      "Background must visually match {EDITAR_AQUI_PRIMEIRO.CORES_HEX.cor_fundo_hex}.",
+      "Typography must be modern, clean, and readable.",
+      "No extra logos, no watermarks, no random text."
+    ],
+
+    "escolha_de_iluminacao": [
+      "If modo_dia=true: {tokens_de_estilo.iluminacao.dia_look}.",
+      "If modo_noite=true: {tokens_de_estilo.iluminacao.noite_look}."
+    ],
+
+    "camera_e_qualidade": [
+      "{tokens_de_estilo.camera.tipo_foto}",
+      "Lens: {tokens_de_estilo.camera.lente}",
+      "Angle: {tokens_de_estilo.camera.angulo}",
+      "Depth of field: {tokens_de_estilo.camera.profundidade_de_campo}",
+      "Quality: {tokens_de_estilo.camera.qualidade}"
+    ]
+  }
+}

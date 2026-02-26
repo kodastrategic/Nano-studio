@@ -1,0 +1,172 @@
+{
+  "CAMPOS_EDITAVEIS": {
+    "CENARIO": "interior de hospital moderno",
+    "COR_DA_ATMOSFERA": "ciano médico profundo / teal",
+    "COR_LUZ_DE_CONTORNO": "dourado quente / âmbar",
+    "GENERO_DO_PERSONAGEM": "mulher",
+    "PAPEL_DO_PERSONAGEM": "advogada especializada em direito da saúde",
+    "POSE_DO_PERSONAGEM": "braços cruzados",
+    "ROUPA_PRINCIPAL": "blazer azul-marinho sob medida",
+    "TOM_EMOCIONAL": "determinação confiante, autoridade calma",
+    "LADO_DO_PERSONAGEM": "direita",
+    "LADO_DO_ESPACO_PARA_COPY": "esquerda"
+  },
+
+  "conceito_da_cena": {
+    "tema_narrativo": "thriller médico-jurídico de alto risco",
+    "papel_na_historia": "figura central heroica sob pressão",
+    "leitura_emocional": "@TOM_EMOCIONAL"
+  },
+
+  "composicao": {
+    "proporcao": "16:9",
+    "posicionamento_do_personagem": {
+      "regra": "regra dos terços",
+      "lado": "@LADO_DO_PERSONAGEM",
+      "descricao": "personagem posicionado estritamente no terço @LADO_DO_PERSONAGEM da imagem"
+    },
+    "espaco_negativo": {
+      "lado": "@LADO_DO_ESPACO_PARA_COPY",
+      "finalidade": "inserção de texto e copy de conversão",
+      "estilo_visual": "gradiente escuro com baixo ruído visual"
+    }
+  },
+
+  "personagem": {
+    "genero": "@GENERO_DO_PERSONAGEM",
+    "papel": "@PAPEL_DO_PERSONAGEM",
+    "vestimenta": [
+      "@ROUPA_PRINCIPAL"
+    ],
+    "pose": "@POSE_DO_PERSONAGEM",
+    "expressao": "@TOM_EMOCIONAL",
+    "postura": "ereta, firme, presença de autoridade",
+    "identidade_visual": {
+      "origem": "imagem anexada",
+      "regras": [
+        "preservar traços faciais",
+        "preservar formato do rosto",
+        "preservar tom de pele",
+        "preservar cabelo exatamente como na imagem de referência",
+        "não redefinir idade ou etnia"
+      ]
+    }
+  },
+
+  "camera": {
+    "corpo": "ARRI Alexa LF",
+    "lente": "Panavision Primo 50mm",
+    "abertura": "T1.9",
+    "profundidade_de_campo": "rasa",
+    "prioridade_de_foco": [
+      "olhos",
+      "estrutura facial"
+    ]
+  },
+
+  "iluminacao": {
+    "esquema": "split lighting dramático",
+    "luz_principal": {
+      "tipo": "direcional suave",
+      "angulo": "45 graus",
+      "intensidade": "média",
+      "cor": "neutra"
+    },
+    "luz_de_contorno": {
+      "tipo": "backlight de borda dura",
+      "cor": "@COR_LUZ_DE_CONTORNO",
+      "intensidade": "alta",
+      "alvos": [
+        "contorno do cabelo",
+        "ombros",
+        "bordas da roupa"
+      ],
+      "finalidade": "separação forte do personagem em relação ao fundo"
+    },
+    "luz_de_preenchimento": {
+      "tipo": "preenchimento volumétrico",
+      "intensidade": "baixa",
+      "finalidade": "manter detalhes nas sombras sem achatar a imagem"
+    }
+  },
+
+  "efeitos_de_atmosfera": {
+    "luz_volumetrica": {
+      "ativada": true,
+      "visibilidade": "feixes suaves visíveis no ar",
+      "direcao": "traseira para frontal"
+    },
+    "particulas_flotantes": {
+      "tipo": "poeira / micro folículos",
+      "densidade": "baixa a média",
+      "comportamento": "flutuando lentamente, visíveis apenas quando cruzam a luz",
+      "finalidade": "profundidade, textura e realismo cinematográfico"
+    },
+    "lens_flare": {
+      "ativado": true,
+      "estilo": "anamórfico cinematográfico",
+      "intensidade": "sutil",
+      "cor": "@COR_LUZ_DE_CONTORNO",
+      "comportamento": "orgânico, físico, não digital"
+    }
+  },
+
+  "fundo": {
+    "ambiente": "@CENARIO",
+    "linguagem_visual": [
+      "superfícies de vidro",
+      "silhuetas arquitetônicas",
+      "elementos médicos desfocados"
+    ],
+    "tom_de_cor": "@COR_DA_ATMOSFERA",
+    "foco": "bokeh pesado",
+    "brilho": "subexposto"
+  },
+
+  "colorizacao": {
+    "paleta": [
+      "@COR_DA_ATMOSFERA",
+      "@COR_LUZ_DE_CONTORNO",
+      "sombras neutras"
+    ],
+    "estilo": "cinematográfico teal and orange",
+    "contraste": "alto",
+    "prioridade_pele": "tons naturais, sem saturação excessiva"
+  },
+
+  "textura_e_realismo": {
+    "resolucao": "8K",
+    "textura_de_pele": "hiper-realista, poros visíveis, sem efeito plástico",
+    "detalhe_de_tecido": "trama, costura e fibras visíveis",
+    "grao_de_filme": "cinematográfico sutil",
+    "nitidez": "óptica, não artificial"
+  },
+
+  "qualidade_final": {
+    "fotorealismo": "nível cinema / streaming",
+    "nitidez": "personagem nítido, fundo suave",
+    "ruido": "apenas grão natural de filme"
+  },
+
+  "negative_prompt": [
+    "personagem centralizado",
+    "personagem no lado errado",
+    "texto",
+    "logo",
+    "marca d'água",
+    "cartoon",
+    "3d",
+    "ilustração",
+    "pele plastificada",
+    "cores saturadas demais",
+    "iluminação plana",
+    "fotografia amadora",
+    "gore hospitalar",
+    "sangue",
+    "fundo poluído",
+    "mãos deformadas",
+    "olhos artificiais"
+  ],
+
+  "instrucao_final": "Crie um retrato cinematográfico de alto impacto utilizando exclusivamente os CAMPOS_EDITAVEIS como camada de controle. A imagem deve herdar integralmente a identidade visual da pessoa presente na imagem anexada. A composição deve respeitar rigorosamente o posicionamento lateral, o espaço negativo para copy, a iluminação dramática com luz de contorno definida, atmosfera volumétrica com partículas flutuantes, lens flare físico e texturas realistas. O resultado deve parecer um key art profissional de plataforma de streaming."
+}

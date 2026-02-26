@@ -1,0 +1,64 @@
+{
+  "CAMPO_EDITAVEL": {
+    "CARACTERIZACAO_DO_BEBE": "roupa de cowboy faroeste"
+  },
+
+  "INPUTS_FIXOS": {
+    "FOTO_DO_BEBE": "usar como referência principal e absoluta de identidade",
+    "ESTILO_FINAL": "pintura digital semi-realista com leve estilização infantil",
+    "FUNDO": "suave neutro claro ou degradê pastel delicado",
+    "EXPRESSAO": "natural e sorrindo conforme referência"
+  },
+
+  "IDENTIDADE_E_PRIORIDADE_MAXIMA": {
+    "preservar_identidade_total": true,
+    "manter_proporcoes_reais_do_rosto": true,
+    "manter_formato_exato_dos_olhos": true,
+    "manter_formato_exato_do_nariz": true,
+    "manter_formato_exato_da_boca": true,
+    "manter_distancia_real_entre_elementos_faciais": true,
+    "nao_exagerar_tamanho_dos_olhos": true,
+    "nao_aumentar_cabeca_excessivamente": true,
+    "nao_transformar_em_personagem_generico": true,
+    "referencia_visual_tem_prioridade_sobre_estilo": true
+  },
+
+  "APLICACAO_DA_CARACTERIZACAO": {
+    "interpretar_campo_editavel": true,
+    "adaptar_roupa_e_acessorios_conforme_texto_inserido": true,
+    "manter_proporcao_coerente_com_idade": true,
+    "evitar_exageros_cartoon": true,
+    "estilo_da_roupa": "pintura digital refinada e integrada ao estilo geral"
+  },
+
+  "ESTILO_ARTISTICO_CONTROLADO": {
+    "tecnica": "digital painting profissional",
+    "nivel_realismo": "semi-realista",
+    "estilizacao": "apenas suavização leve das formas",
+    "olhos": "brilho natural sem aumento de escala",
+    "bochechas": "leve suavização, sem exagero",
+    "contornos": "suaves integrados à pintura",
+    "pinceladas": "blend limpo e refinado",
+    "acabamento": "ilustração infantil elegante e delicada"
+  },
+
+  "ILUMINACAO_E_CORES": {
+    "luz": "suave frontal levemente lateral",
+    "sombras": "macias e naturais",
+    "paleta": "cores suaves, levemente mais vibrantes que foto",
+    "pele": "textura suave porém realista"
+  },
+
+  "POSE_E_COMPOSICAO": {
+    "posicao": "bebê sentado naturalmente",
+    "proporcoes_corporais": "reais e respeitando a foto",
+    "enquadramento": "corpo inteiro centralizado",
+    "equilibrio_visual": "natural e harmonioso"
+  },
+
+  "QUALIDADE_FINAL": {
+    "resolucao": "alta definição",
+    "acabamento": "arte digital refinada",
+    "aparencia": "retrato infantil artístico fiel à criança real"
+  }
+}

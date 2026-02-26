@@ -1,0 +1,121 @@
+{
+  "type": "cinematic_fintech_portrait",
+  "reference_input": {
+    "person_image": "use the attached image of the person as full identity reference",
+    "identity_rules": [
+      "preserve facial features",
+      "preserve body proportions",
+      "preserve hair and beard",
+      "preserve tattoos and skin marks",
+      "do not change ethnicity or age",
+      "do not stylize the face",
+      "no face swap distortion",
+      "maintain realistic anatomy"
+    ]
+  },
+  "subject": {
+    "description": "confident and authoritative man representing high-performance digital marketing and fintech intelligence",
+    "expression": "focused, analytical, calm confidence",
+    "pose": "upright posture, relaxed shoulders, controlled and powerful stance",
+    "action": "one hand slightly raised interacting with floating digital elements, suggesting strategic control of data and growth systems"
+  },
+  "wardrobe": {
+    "style": "modern casual premium / fintech performance lifestyle",
+    "clothing": [
+      "black minimalist t-shirt or long-sleeve",
+      "lightweight techwear jacket or hoodie"
+    ],
+    "materials": [
+      "matte fabric",
+      "technical textile",
+      "subtle texture, no shine"
+    ],
+    "details": "no logos, no patterns, no suit, no tie"
+  },
+  "environment": {
+    "background": {
+      "primary": "deep black background",
+      "secondary_elements": [
+        "floating paid traffic icons (ads, clicks, impressions)",
+        "visual sales funnel structure (top, middle and bottom funnel layers)",
+        "lead generation symbols (contacts, user nodes, conversion points)",
+        "performance dashboards with upward metrics",
+        "ROI, CTR and growth indicators represented as abstract UI charts",
+        "abstract European market elements subtly integrated"
+      ],
+      "style": "semi-transparent, holographic, glassmorphism UI",
+      "integration": "elements float naturally around the subject without clutter or overlap"
+    }
+  },
+  "lighting": {
+    "main_light": "low-key cinematic lighting focused on face and torso",
+    "rim_light": {
+      "color": "#80FF00",
+      "intensity": "strong but refined",
+      "position": "behind and around the subject creating a clean contour outline"
+    },
+    "accent_lights": [
+      "soft #80FF00 reflections from charts and funnel elements",
+      "subtle green highlights on hands and edges"
+    ],
+    "mood": "modern, analytical, high-end fintech and performance marketing"
+  },
+  "color_palette": {
+    "dominant_colors": [
+      "black",
+      "deep green",
+      "#80FF00"
+    ],
+    "avoid": [
+      "red",
+      "warm orange tones",
+      "oversaturated neon",
+      "blue-heavy cyberpunk palettes"
+    ]
+  },
+  "camera": {
+    "shot_type": "medium portrait",
+    "angle": "slightly low angle to reinforce authority and leadership",
+    "lens_style": "cinematic realism",
+    "depth_of_field": "sharp subject with softly blurred UI elements in background"
+  },
+  "style": {
+    "visual_language": "fintech, paid traffic, performance marketing, digital growth systems",
+    "realism": "high realism",
+    "finish": "clean, sharp, premium, professional — not sci-fi exaggerated"
+  },
+  "symbolism": {
+    "themes": [
+      "paid traffic mastery",
+      "sales funnel optimization",
+      "lead generation",
+      "scalable digital systems",
+      "financial intelligence",
+      "European market authority"
+    ]
+  },
+  "constraints": {
+    "no_suit": true,
+    "no_text": true,
+    "no_logos": true,
+    "no_watermarks": true,
+    "no_cartoon_style": true,
+    "no_exaggerated_effects": true,
+    "no_game_ui_style": true
+  },
+  "output_requirements": {
+    "background": "black",
+    "key_visuals": [
+      "green #80FF00 rim light outline",
+      "floating funnel and paid traffic elements",
+      "glassmorphism dashboards",
+      "clean data-driven visuals"
+    ],
+    "emotion": "confidence, control, strategic intelligence",
+    "use_case": [
+      "landing page hero image",
+      "high-ticket marketing branding",
+      "fintech and paid traffic authority positioning"
+    ]
+  }
+}
