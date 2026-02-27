@@ -191,8 +191,8 @@ const handlePaste = async (mode) => {
                     const reader = new FileReader();
                     reader.onload = (e) => { 
                         if (mode === 'studio') attachedRefs.push(e.target.result);
-                        else if (mode === 'hero') heroRefs.push(e.target.result);
-                        else if (mode === 'obj') objRefs.push(e.target.result);
+                        else if (mode === 'hero') heroRefs.push(ev.target.result);
+                        else if (mode === 'obj') objRefs.push(ev.target.result);
                         renderRefs(mode); 
                     };
                     reader.readAsDataURL(blob);
@@ -320,266 +320,7 @@ const heroGenBtn = document.getElementById('hero-gen-btn');
 if(heroGenBtn) heroGenBtn.onclick = async () => {
     const key = apiKeyInput.value.trim();
     if (!key) { alert("Chave API não configurada."); return; }
-    const item = createFeedItem(heroFeedGrid);
-    heroStatusMsg.innerText = "⏳ Construindo...";
-    try {
-        const templateResp = await fetch('hero_templates/hero_v1.json');
-        const template = await templateResp.json();
-        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : null;
-        const isChecked = (id) => document.getElementById(id) ? document.getElementById(id).checked : false;
-
-        const interfaceValues = {
-            "PROFISSAO": isChecked('hero-profissao-toggle') ? (getVal('hero-profissao') || "Profissional") : "Pessoa",
-            "CONTEXTO_DO_AMBIENTE": getVal('hero-ambiente') || "Ambiente moderno",
-            "GENERO": getVal('hero-genero'),
-            "ESTILO_VISUAL_DA_PESSOA": getVal('hero-estilo'),
-            "ANGULO_DE_CAMERA": isChecked('hero-angulo-toggle') ? getVal('hero-angulo') : "eye level frontal",
-            "PLANO": getVal('hero-plano'),
-            "POSE": isChecked('hero-pose-custom-toggle') ? (getVal('hero-pose-custom') || "pose natural") : getVal('hero-pose'),
-            "EXPRESSAO": getVal('hero-expressao'),
-            "ROUPA_PRINCIPAL": getVal('hero-roupa') || "traje profissional alinhado",
-            "LADO_DO_PERSONAGEM": getVal('hero-lado'),
-            "LADO_DO_ESPACO_NEGATIVO": getVal('hero-lado') === 'direita' ? 'esquerda' : 'direita',
-            "COR_ATMOSFERA": getVal('hero-luzv-cor') || "#000000",
-            "COLOR_GRADING": getVal('hero-preset') || "cinematográfico moderno",
-            "OBJETO_CENA": isChecked('hero-objeto-toggle') ? getVal('hero-objeto-desc') : "nenhum",
-            "DETALHES_EXTRA": isChecked('hero-detalhes-toggle') ? getVal('hero-detalhes-desc') : "conforme referência"
-        };
-
-        template.PARAMETROS_EDITAVEIS = interfaceValues;
-        let finalPromptText = JSON.stringify(template);
-        for (const [k, v] of Object.entries(interfaceValues)) {
-            finalPromptText = finalPromptText.split(`@${k}`).join(v);
-        }
-
-        const aspect = getVal('hero-aspect-select') || "16:9";
-        const quality = getVal('hero-quality-select') || "4K";
-        const model = getVal('hero-model-select') || "imagen-3-pro";
-        const response = await callGeminiAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality, model);
-        finishFeedItem(item, `data:image/png;base64,${response}`);
-        heroStatusMsg.innerText = "✨ Hero Pro Gerado!";
-    } catch (e) { 
-        heroStatusMsg.innerText = "❌ Erro: " + e.message; 
-        item.remove(); 
-    }
-};
-
-// Funções de Toggle (Mantidas para UI)
-function toggleAnguloField() { const c = document.getElementById('controls-angulo'); c.style.display = document.getElementById('hero-angulo-toggle').checked ? 'block' : 'none'; if(c.style.display === 'block') updateKodaSelect('hero-angulo'); }
-function toggleObjetoField() { document.getElementById('controls-objeto').style.display = document.getElementById('hero-objeto-toggle').checked ? 'block' : 'none'; }
-function toggleDetailsField() { document.getElementById('controls-detalhes').style.display = document.getElementById('hero-detalhes-toggle').checked ? 'block' : 'none'; }
-function toggleProfissaoField() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
-function togglePoseMode() {
-    const isCustom = document.getElementById('hero-pose-custom-toggle').checked;
-    const selectCont = document.getElementById('hero-pose-select-container');
-    const customCont = document.getElementById('hero-pose-custom-container');
-    const saveBtn = document.getElementById('save-pose-btn');
     
-    if (isCustom) {
-        selectCont.style.display = 'none';
-        customCont.style.display = 'block';
-        saveBtn.style.display = 'block';
-    } else {
-        selectCont.style.display = 'block';
-        customCont.style.display = 'none';
-        saveBtn.style.display = 'none';
-        updateKodaSelect('hero-pose');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo'].forEach(initKodaSelect);
-    refreshPoseList();
-});
-
-// Salvar Pose
-document.getElementById('save-pose-btn').onclick = () => document.getElementById('save-pose-modal').style.display='flex';
-document.getElementById('confirm-save-pose').onclick = () => {
-    const name = document.getElementById('pose-name-input').value.trim();
-    const content = document.getElementById('hero-pose-custom').value.trim();
-    if (!name || !content) return;
-    
-    const poses = getLocalPoses();
-    poses[name] = content;
-    localStorage.setItem('banana_poses', JSON.stringify(poses));
-    
-    alert("✅ Pose salva!");
-    document.getElementById('save-pose-modal').style.display='none';
-    refreshPoseList();
-};
-
-// Gerenciar Poses
-let editingPoseName = "";
-
-document.getElementById('manage-poses-btn').onclick = () => {
-    const poses = getLocalPoses();
-    const listContainer = document.getElementById('manage-poses-list');
-    listContainer.innerHTML = "";
-    
-    if (Object.keys(poses).length === 0) {
-        listContainer.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Nenhuma pose customizada salva.</p>";
-    }
-
-    Object.keys(poses).forEach(name => {
-        const item = document.createElement('div');
-        item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
-        item.innerHTML = `
-            <span style="font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${name}</span>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-edit-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--accent-blue); color:white; border:none; border-radius:4px;">EDITAR</button>
-                <button class="btn-delete-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
-            </div>
-        `;
-
-        // Botão Editar Pose
-        item.querySelector('.btn-edit-pose').onclick = () => {
-            editingPoseName = name;
-            document.getElementById('edit-pose-title').innerText = `Editar Pose: ${name}`;
-            document.getElementById('edit-pose-textarea').value = poses[name];
-            document.getElementById('edit-pose-modal').style.display = 'flex';
-        };
-
-        // Botão Excluir Pose
-        item.querySelector('.btn-delete-pose').onclick = () => {
-            if(confirm(`Excluir a pose "${name}"?`)) {
-                const p = getLocalPoses();
-                delete p[name];
-                localStorage.setItem('banana_poses', JSON.stringify(p));
-                document.getElementById('manage-poses-btn').click(); // Refresh
-                refreshPoseList();
-            }
-        };
-        listContainer.appendChild(item);
-    });
-    document.getElementById('manage-poses-modal').style.display = 'flex';
-};
-
-// Salvar Edição de Pose
-document.getElementById('confirm-edit-pose-save').onclick = () => {
-    const newContent = document.getElementById('edit-pose-textarea').value.trim();
-    if (!newContent) return;
-    
-    const poses = getLocalPoses();
-    poses[editingPoseName] = newContent;
-    localStorage.setItem('banana_poses', JSON.stringify(poses));
-    
-    alert("✅ Alteração de pose salva!");
-    document.getElementById('edit-pose-modal').style.display = 'none';
-    refreshPoseList();
-};
-function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
-
-// --- LOGICA DE POSES SALVAS ---
-function getLocalPoses() {
-    const p = localStorage.getItem('banana_poses');
-    return p ? JSON.parse(p) : {};
-}
-
-function refreshPoseList() {
-    renderPoseCarousel();
-}
-
-async function renderPoseCarousel() {
-    if (!poseTrack) return;
-    
-    // Lista de Poses Iniciais (Hardcoded)
-    const presetPoses = [
-        { id: 'p1', name: 'Braços Cruzados', text: 'braços cruzados', thumb: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' },
-        { id: 'p2', name: 'Mãos nos Bolsos', text: 'mãos nos bolsos da calça', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
-        { id: 'p3', name: 'Mão no Queixo', text: 'mão no queixo pensativo', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
-        { id: 'p4', name: 'Mão na Cintura', text: 'mão na cintura atitude', thumb: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80' },
-        { id: 'p5', name: 'Caminhando', text: 'caminhando em direção à câmera', thumb: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80' }
-    ];
-
-    // Buscar poses do IndexedDB
-    const customPoses = await PoseDB.getAllPoses();
-    allPosesData = [...presetPoses, ...customPoses];
-
-    poseTrack.innerHTML = "";
-    allPosesData.forEach((pose, idx) => {
-        const card = document.createElement('div');
-        card.className = `pose-card ${idx === currentPoseIdx ? 'active' : ''}`;
-        card.innerHTML = `
-            <div class="pose-card-label">${pose.name}</div>
-            <img src="${pose.thumb}" alt="${pose.name}" onerror="this.src='https://placehold.co/160x200/000/fff?text=POSE'">
-        `;
-        card.onclick = () => selectPose(idx);
-        poseTrack.appendChild(card);
-    });
-
-    updateCarouselPosition();
-}
-
-function selectPose(idx) {
-    currentPoseIdx = idx;
-    const cards = poseTrack.querySelectorAll('.pose-card');
-    cards.forEach((c, i) => c.classList.toggle('active', i === idx));
-    updateCarouselPosition();
-}
-
-function updateCarouselPosition() {
-    const cardWidth = 160 + 15; // width + gap
-    const offset = -(currentPoseIdx * cardWidth);
-    poseTrack.style.transform = `translateX(${offset}px)`;
-}
-
-if (posePrevBtn) posePrevBtn.onclick = () => { if (currentPoseIdx > 0) selectPose(currentPoseIdx - 1); };
-if (poseNextBtn) poseNextBtn.onclick = () => { if (currentPoseIdx < allPosesData.length - 1) selectPose(currentPoseIdx + 1); };
-
-// Lógica de Thumbnail no Modal
-const poseThumbInput = document.getElementById('pose-thumb-input');
-const poseThumbPreview = document.getElementById('pose-thumb-preview');
-let currentPoseThumb = "";
-
-if (poseThumbInput) {
-    poseThumbInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            currentPoseThumb = ev.target.result;
-            poseThumbPreview.querySelector('img').src = currentPoseThumb;
-            poseThumbPreview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    };
-}
-
-// Sobrescrever Salvar Pose para incluir Imagem e usar IndexedDB
-document.getElementById('confirm-save-pose').onclick = async () => {
-    const name = document.getElementById('pose-name-input').value.trim();
-    const content = document.getElementById('hero-pose-custom').value.trim();
-    
-    if (!name || !content) return;
-    
-    const newPose = {
-        id: 'custom_' + Date.now(),
-        name: name,
-        text: content,
-        thumb: currentPoseThumb || 'https://placehold.co/160x200/111/fff?text=Pose'
-    };
-
-    await PoseDB.savePose(newPose);
-    
-    alert("✅ Pose Salva com Sucesso no Banco de Dados!");
-    document.getElementById('save-pose-modal').style.display='none';
-    
-    // Reset inputs
-    document.getElementById('pose-name-input').value = "";
-    currentPoseThumb = "";
-    poseThumbPreview.style.display = 'none';
-    
-    renderPoseCarousel();
-};
-
-// Sobrescrever Lógica de Geração do Hero para pegar a pose do Carrossel
-const originalHeroGen = heroGenBtn.onclick;
-heroGenBtn.onclick = async () => {
-    const key = apiKeyInput.value.trim();
-    if (!key) { alert("Chave API não configurada."); return; }
-    
-    // Se o modo custom (DIGITE POSE) estiver ativo, usa o textarea.
-    // Se não, usa o dado da pose selecionada no carrossel.
     const isCustomMode = document.getElementById('hero-pose-custom-toggle').checked;
     let poseText = "";
     
@@ -635,38 +376,207 @@ heroGenBtn.onclick = async () => {
     }
 };
 
-// Gerenciar Poses (Atualizado para IndexedDB)
-document.getElementById('manage-poses-btn').onclick = async () => {
-    const poses = await PoseDB.getAllPoses();
-    const listContainer = document.getElementById('manage-poses-list');
-    listContainer.innerHTML = "";
+// Funções de Toggle (Mantidas para UI)
+function toggleAnguloField() { const c = document.getElementById('controls-angulo'); c.style.display = document.getElementById('hero-angulo-toggle').checked ? 'block' : 'none'; if(c.style.display === 'block') updateKodaSelect('hero-angulo'); }
+function toggleObjetoField() { document.getElementById('controls-objeto').style.display = document.getElementById('hero-objeto-toggle').checked ? 'block' : 'none'; }
+function toggleDetailsField() { document.getElementById('controls-detalhes').style.display = document.getElementById('hero-detalhes-toggle').checked ? 'block' : 'none'; }
+function toggleProfissaoField() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
+function togglePoseMode() {
+    const isCustom = document.getElementById('hero-pose-custom-toggle').checked;
+    const selectCont = document.getElementById('hero-pose-carousel-wrapper');
+    const customCont = document.getElementById('hero-pose-custom-container');
     
-    if (poses.length === 0) {
-        listContainer.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Nenhuma pose personalizada no banco de dados.</p>";
+    if (isCustom) {
+        selectCont.style.display = 'none';
+        customCont.style.display = 'block';
+    } else {
+        selectCont.style.display = 'flex';
+        customCont.style.display = 'none';
+        renderPoseCarousel();
     }
+}
 
-    poses.forEach(pose => {
-        const item = document.createElement('div');
-        item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
-        item.innerHTML = `
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img src="${pose.thumb}" style="width:30px; height:40px; object-fit:cover; border-radius:4px;">
-                <span style="font-size:13px; font-weight:bold;">${pose.name}</span>
-            </div>
-            <button class="btn-delete-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
-        `;
+document.addEventListener('DOMContentLoaded', () => {
+    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo'].forEach(initKodaSelect);
+    refreshPoseList();
+});
 
-        item.querySelector('.btn-delete-pose').onclick = async () => {
-            if(confirm(`Excluir a pose "${pose.name}" permanentemente?`)) {
-                await PoseDB.deletePose(pose.id);
-                document.getElementById('manage-poses-btn').click(); // Refresh modal
-                renderPoseCarousel();
+// Gerenciar Poses (v1.4.1)
+const managePosesBtn = document.getElementById('manage-poses-btn');
+const managePosesModal = document.getElementById('manage-poses-modal');
+const openNewPoseBtn = document.getElementById('open-new-pose-modal');
+const savePoseModal = document.getElementById('save-pose-modal');
+let editingPoseId = "";
+let editPoseThumbData = "";
+
+if (managePosesBtn) {
+    managePosesBtn.onclick = async () => {
+        const customPoses = await PoseDB.getAllPoses();
+        const listContainer = document.getElementById('manage-poses-list');
+        listContainer.innerHTML = "";
+        
+        const presetPoses = [
+            { id: 'p1', name: 'Braços Cruzados', text: 'braços cruzados', thumb: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' },
+            { id: 'p2', name: 'Mãos nos Bolsos', text: 'mãos nos bolsos da calça', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
+            { id: 'p3', name: 'Mão no Queixo', text: 'mão no queixo pensativo', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
+            { id: 'p4', name: 'Mão na Cintura', text: 'mão na cintura atitude', thumb: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80' },
+            { id: 'p5', name: 'Caminhando', text: 'caminhando em direção à câmera', thumb: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80' }
+        ];
+
+        const allPoses = [...presetPoses, ...customPoses];
+
+        allPoses.forEach(pose => {
+            const item = document.createElement('div');
+            item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
+            item.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="${pose.thumb}" style="width:30px; height:40px; object-fit:cover; border-radius:4px;" onerror="this.src='https://placehold.co/30x40/111/fff?text=P'">
+                    <span style="font-size:13px; font-weight:bold;">${pose.name}</span>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-edit-pose-item" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--accent-blue); color:white; border:none; border-radius:4px;">EDITAR</button>
+                    ${!pose.id.startsWith('p') ? `<button class="btn-delete-pose-item" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>` : ''}
+                </div>
+            `;
+
+            item.querySelector('.btn-edit-pose-item').onclick = () => {
+                editingPoseId = pose.id;
+                document.getElementById('edit-pose-name-input').value = pose.name;
+                document.getElementById('edit-pose-textarea').value = pose.text;
+                const prev = document.getElementById('edit-pose-thumb-preview');
+                prev.querySelector('img').src = pose.thumb;
+                prev.style.display = 'block';
+                document.getElementById('edit-pose-modal').style.display = 'flex';
+            };
+
+            const delBtn = item.querySelector('.btn-delete-pose-item');
+            if (delBtn) {
+                delBtn.onclick = async () => {
+                    if(confirm(`Excluir a pose "${pose.name}"?`)) {
+                        await PoseDB.deletePose(pose.id);
+                        managePosesBtn.click(); // Refresh
+                        renderPoseCarousel();
+                    }
+                };
             }
+            listContainer.appendChild(item);
+        });
+        managePosesModal.style.display = 'flex';
+    };
+}
+
+if (openNewPoseBtn) {
+    openNewPoseBtn.onclick = () => {
+        savePoseModal.style.display = 'flex';
+    };
+}
+
+// Thumbnail logic
+const poseThumbInput = document.getElementById('pose-thumb-input');
+const poseThumbPreview = document.getElementById('pose-thumb-preview');
+let currentPoseThumb = "";
+
+if (poseThumbInput) {
+    poseThumbInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            currentPoseThumb = ev.target.result;
+            poseThumbPreview.querySelector('img').src = currentPoseThumb;
+            poseThumbPreview.style.display = 'block';
         };
-        listContainer.appendChild(item);
-    });
-    document.getElementById('manage-poses-modal').style.display = 'flex';
+        reader.readAsDataURL(file);
+    };
+}
+
+const editPoseThumbInput = document.getElementById('edit-pose-thumb-input');
+const editPoseThumbPreview = document.getElementById('edit-pose-thumb-preview');
+
+if (editPoseThumbInput) {
+    editPoseThumbInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            editPoseThumbData = ev.target.result;
+            editPoseThumbPreview.querySelector('img').src = editPoseThumbData;
+            editPoseThumbPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    };
+}
+
+// Confirm Actions
+document.getElementById('confirm-save-pose').onclick = async () => {
+    const name = document.getElementById('pose-name-input').value.trim();
+    const content = document.getElementById('hero-pose-custom').value.trim();
+    if (!name || !content) return;
+    const newPose = { id: 'custom_' + Date.now(), name: name, text: content, thumb: currentPoseThumb || 'https://placehold.co/160x200/111/fff?text=Pose' };
+    await PoseDB.savePose(newPose);
+    alert("✅ Pose salva!");
+    document.getElementById('save-pose-modal').style.display='none';
+    currentPoseThumb = "";
+    renderPoseCarousel();
 };
+
+document.getElementById('confirm-edit-pose-save').onclick = async () => {
+    const name = document.getElementById('edit-pose-name-input').value.trim();
+    const text = document.getElementById('edit-pose-textarea').value.trim();
+    if (!name || !text) return;
+    const id = editingPoseId.startsWith('p') ? 'custom_' + Date.now() : editingPoseId;
+    const updatedPose = { id: id, name: name, text: text, thumb: editPoseThumbData || document.getElementById('edit-pose-thumb-preview').querySelector('img').src };
+    await PoseDB.savePose(updatedPose);
+    alert("✅ Pose atualizada!");
+    document.getElementById('edit-pose-modal').style.display = 'none';
+    editPoseThumbData = "";
+    managePosesBtn.click();
+    renderPoseCarousel();
+};
+
+function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
+
+function refreshPoseList() {
+    renderPoseCarousel();
+}
+
+async function renderPoseCarousel() {
+    if (!poseTrack) return;
+    const presetPoses = [
+        { id: 'p1', name: 'Braços Cruzados', text: 'braços cruzados', thumb: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' },
+        { id: 'p2', name: 'Mãos nos Bolsos', text: 'mãos nos bolsos da calça', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
+        { id: 'p3', name: 'Mão no Queixo', text: 'mão no queixo pensativo', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
+        { id: 'p4', name: 'Mão na Cintura', text: 'mão na cintura atitude', thumb: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80' },
+        { id: 'p5', name: 'Caminhando', text: 'caminhando em direção à câmera', thumb: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80' }
+    ];
+    const customPoses = await PoseDB.getAllPoses();
+    allPosesData = [...presetPoses, ...customPoses];
+    poseTrack.innerHTML = "";
+    allPosesData.forEach((pose, idx) => {
+        const card = document.createElement('div');
+        card.className = `pose-card ${idx === currentPoseIdx ? 'active' : ''}`;
+        card.innerHTML = `<div class="pose-card-label">${pose.name}</div><img src="${pose.thumb}" onerror="this.src='https://placehold.co/160x200/000/fff?text=POSE'">`;
+        card.onclick = () => selectPose(idx);
+        poseTrack.appendChild(card);
+    });
+    updateCarouselPosition();
+}
+
+function selectPose(idx) {
+    currentPoseIdx = idx;
+    const cards = poseTrack.querySelectorAll('.pose-card');
+    cards.forEach((c, i) => c.classList.toggle('active', i === idx));
+    updateCarouselPosition();
+}
+
+function updateCarouselPosition() {
+    const cardWidth = 160 + 15;
+    const offset = -(currentPoseIdx * cardWidth);
+    poseTrack.style.transform = `translateX(${offset}px)`;
+}
+
+if (posePrevBtn) posePrevBtn.onclick = () => { if (currentPoseIdx > 0) selectPose(currentPoseIdx - 1); };
+if (poseNextBtn) poseNextBtn.onclick = () => { if (currentPoseIdx < allPosesData.length - 1) selectPose(currentPoseIdx + 1); };
 
 document.getElementById('modal-download-btn').onclick = () => {
     const link = document.createElement('a');
@@ -718,10 +628,6 @@ function updateKodaSelect(id) {
 }
 
 document.addEventListener('click', () => { document.querySelectorAll('.koda-select-container').forEach(c => c.classList.remove('active')); });
-
-document.addEventListener('DOMContentLoaded', () => {
-    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select'].forEach(initKodaSelect);
-});
 
 // Desativa o botão shutdown na web
 const shutdownBtn = document.getElementById('shutdown-btn');
