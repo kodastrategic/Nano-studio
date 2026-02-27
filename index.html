@@ -461,14 +461,21 @@
         </div>
     </div>
 
-    <!-- MODAL SALVAR POSE -->
-    <div id="save-pose-modal" class="modal">
+    <!-- MODAL SALVAR POSE (v1.4.9) -->
+    <div id="save-pose-modal" class="modal" style="z-index: 10001;">
         <div class="modal-content">
-            <h3>Salvar Nova Pose</h3>
+            <h3>Adicionar Nova Pose</h3>
+            
             <div class="input-group">
                 <label>Nome da Pose</label>
-                <input type="text" id="pose-name-input" placeholder="Ex: Pose Épica Terry Crews">
+                <input type="text" id="pose-name-input" placeholder="Ex: Pose Clássica">
             </div>
+
+            <div class="input-group">
+                <label>Prompt da Pose (Descrição para AI)</label>
+                <textarea id="pose-prompt-input" rows="4" placeholder="Ex: sentado de forma elegante com pernas cruzadas..."></textarea>
+            </div>
+
             <div class="input-group">
                 <label>Miniatura (Thumbnail)</label>
                 <input type="file" id="pose-thumb-input" accept="image/*" style="display:none;">
@@ -477,15 +484,16 @@
                     <img src="" style="max-height:100px; border-radius:8px; border:1px solid var(--accent-blue);">
                 </div>
             </div>
+
             <div style="display:flex; gap:10px; margin-top:20px;">
                 <button onclick="document.getElementById('save-pose-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
-                <button id="confirm-save-pose" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar</button>
+                <button id="confirm-save-pose" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar na Biblioteca</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL GERENCIAR POSES -->
-    <div id="manage-poses-modal" class="modal">
+    <div id="manage-poses-modal" class="modal" style="z-index: 10000;">
         <div class="modal-content" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="margin:0;">Gerenciar Poses / Biblioteca</h3>
@@ -558,5 +566,6 @@
         }
     </script>
 </body>
-</html>   
+</html>  
+ 
  
