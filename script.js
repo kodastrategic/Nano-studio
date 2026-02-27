@@ -381,20 +381,24 @@ function toggleAnguloField() { const c = document.getElementById('controls-angul
 function toggleObjetoField() { document.getElementById('controls-objeto').style.display = document.getElementById('hero-objeto-toggle').checked ? 'block' : 'none'; }
 function toggleDetailsField() { document.getElementById('controls-detalhes').style.display = document.getElementById('hero-detalhes-toggle').checked ? 'block' : 'none'; }
 function toggleProfissaoField() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
-function togglePoseMode() {
+
+// TOGGLE POSE MODE (v1.4.3 Fix)
+window.togglePoseMode = function() {
     const isCustom = document.getElementById('hero-pose-custom-toggle').checked;
     const carouselCont = document.getElementById('hero-pose-carousel-wrapper');
     const customCont = document.getElementById('hero-pose-custom-container');
     const actionBtnCont = document.getElementById('pose-action-btn-container');
     
+    console.log("Toggle Pose Mode:", isCustom);
+
     if (isCustom) {
-        carouselCont.style.display = 'none';
-        actionBtnCont.style.display = 'none';
-        customCont.style.display = 'block';
+        if(carouselCont) carouselCont.style.display = 'none';
+        if(actionBtnCont) actionBtnCont.style.display = 'none';
+        if(customCont) customCont.style.display = 'block';
     } else {
-        carouselCont.style.display = 'flex';
-        actionBtnCont.style.display = 'flex';
-        customCont.style.display = 'none';
+        if(carouselCont) carouselCont.style.display = 'flex';
+        if(actionBtnCont) actionBtnCont.style.display = 'flex';
+        if(customCont) customCont.style.display = 'none';
         renderPoseCarousel();
     }
 }
@@ -418,13 +422,11 @@ if (managePosesBtn) {
         const listContainer = document.getElementById('manage-poses-list');
         listContainer.innerHTML = "";
         
-        const presetPoses = [
-            { id: 'p1', name: 'Braços Cruzados', text: 'braços cruzados', thumb: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' },
-            { id: 'p2', name: 'Mãos nos Bolsos', text: 'mãos nos bolsos da calça', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
-            { id: 'p3', name: 'Mão no Queixo', text: 'mão no queixo pensativo', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
-            { id: 'p4', name: 'Mão na Cintura', text: 'mão na cintura atitude', thumb: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80' },
-            { id: 'p5', name: 'Caminhando', text: 'caminhando em direção à câmera', thumb: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80' }
-        ];
+        let presetPoses = [];
+        try {
+            const resp = await fetch('assets/poses/poses.json?v=' + Date.now());
+            if (resp.ok) presetPoses = await resp.json();
+        } catch (e) { console.error("Erro JSON:", e); }
 
         const allPoses = [...presetPoses, ...customPoses];
 
@@ -545,13 +547,13 @@ function refreshPoseList() {
 
 async function renderPoseCarousel() {
     if (!poseTrack) return;
-    const presetPoses = [
-        { id: 'p1', name: 'Braços Cruzados', text: 'braços cruzados', thumb: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' },
-        { id: 'p2', name: 'Mãos nos Bolsos', text: 'mãos nos bolsos da calça', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
-        { id: 'p3', name: 'Mão no Queixo', text: 'mão no queixo pensativo', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
-        { id: 'p4', name: 'Mão na Cintura', text: 'mão na cintura atitude', thumb: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80' },
-        { id: 'p5', name: 'Caminhando', text: 'caminhando em direção à câmera', thumb: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80' }
-    ];
+    
+    let presetPoses = [];
+    try {
+        const resp = await fetch('assets/poses/poses.json?v=' + Date.now());
+        if (resp.ok) presetPoses = await resp.json();
+    } catch (e) { console.error("Erro JSON Carousel:", e); }
+
     const customPoses = await PoseDB.getAllPoses();
     allPosesData = [...presetPoses, ...customPoses];
     poseTrack.innerHTML = "";
