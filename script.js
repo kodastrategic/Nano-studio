@@ -376,11 +376,22 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
     }
 };
 
+// TOGGLE CAMERA ANGLE (Fix v1.4.6)
+window.toggleAnguloField = function() {
+    const checkbox = document.getElementById('hero-angulo-toggle');
+    const controls = document.getElementById('controls-angulo');
+    if (checkbox && controls) {
+        controls.style.display = checkbox.checked ? 'block' : 'none';
+        if (checkbox.checked) {
+            updateKodaSelect('hero-angulo');
+        }
+    }
+}
+
 // Funções de Toggle (Mantidas para UI)
-function toggleAnguloField() { const c = document.getElementById('controls-angulo'); c.style.display = document.getElementById('hero-angulo-toggle').checked ? 'block' : 'none'; if(c.style.display === 'block') updateKodaSelect('hero-angulo'); }
-function toggleObjetoField() { document.getElementById('controls-objeto').style.display = document.getElementById('hero-objeto-toggle').checked ? 'block' : 'none'; }
-function toggleDetailsField() { document.getElementById('controls-detalhes').style.display = document.getElementById('hero-detalhes-toggle').checked ? 'block' : 'none'; }
-function toggleProfissaoField() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
+window.toggleObjetoField = function() { document.getElementById('controls-objeto').style.display = document.getElementById('hero-objeto-toggle').checked ? 'block' : 'none'; }
+window.toggleDetailsField = function() { document.getElementById('controls-detalhes').style.display = document.getElementById('hero-detalhes-toggle').checked ? 'block' : 'none'; }
+window.toggleProfissaoField = function() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
 
 // TOGGLE POSE MODE (v1.4.3 Fix)
 window.togglePoseMode = function() {
@@ -539,7 +550,19 @@ document.getElementById('confirm-edit-pose-save').onclick = async () => {
     renderPoseCarousel();
 };
 
-function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
+// TOGGLE EFFECTS (Fix v1.4.5)
+window.toggleEffectControls = function(id) {
+    const checkbox = document.getElementById(`hero-${id}`);
+    const controls = document.getElementById(`controls-${id}`);
+    if (checkbox && controls) {
+        controls.style.display = checkbox.checked ? 'flex' : 'none';
+        // Se abrir o controle, inicializar o Koda Select se houver dropdown dentro
+        if (checkbox.checked) {
+            const selects = controls.querySelectorAll('select');
+            selects.forEach(s => updateKodaSelect(s.id));
+        }
+    }
+}
 
 function refreshPoseList() {
     renderPoseCarousel();
