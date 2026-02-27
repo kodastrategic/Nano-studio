@@ -1,3 +1,5 @@
+import { PoseDB } from './poseDB.js';
+
 // Seletores Studio
 const feedGrid = document.getElementById('feed-grid');
 const previewModal = document.getElementById('preview-modal');
@@ -11,6 +13,13 @@ const savedPromptsSelect = document.getElementById('saved-prompts-select');
 const heroFeedGrid = document.getElementById('hero-feed-grid');
 const heroStatusMsg = document.getElementById('hero-status-msg');
 const heroRefCarousel = document.getElementById('hero-ref-carousel');
+
+// Seletores Carrossel de Poses
+const poseTrack = document.getElementById('pose-carousel-track');
+const posePrevBtn = document.getElementById('pose-prev-btn');
+const poseNextBtn = document.getElementById('pose-next-btn');
+let currentPoseIdx = 0;
+let allPosesData = [];
 
 // Seletores Referências
 const refCarousel = document.getElementById('ref-carousel');
@@ -467,30 +476,197 @@ function getLocalPoses() {
 }
 
 function refreshPoseList() {
-    const poses = getLocalPoses();
-    const select = document.getElementById('hero-pose');
-    if (!select) return;
-
-    // Manter as originais (Corporativo, Editorial, Ação)
-    const groups = Array.from(select.querySelectorAll('optgroup'));
-    const originalGroups = groups.filter(g => !g.classList.contains('custom-poses'));
-    
-    select.innerHTML = "";
-    originalGroups.forEach(g => select.appendChild(g));
-
-    if (Object.keys(poses).length > 0) {
-        const customGroup = document.createElement('optgroup');
-        customGroup.className = "custom-poses";
-        customGroup.label = "⭐ Poses Salvas";
-        Object.keys(poses).forEach(name => {
-            const opt = document.createElement('option');
-            opt.value = poses[name]; opt.textContent = name;
-            customGroup.appendChild(opt);
-        });
-        select.appendChild(customGroup);
-    }
-    updateKodaSelect('hero-pose');
+    renderPoseCarousel();
 }
+
+async function renderPoseCarousel() {
+    if (!poseTrack) return;
+    
+    // Lista de Poses Iniciais (Hardcoded)
+    const presetPoses = [
+        { id: 'p1', name: 'Braços Cruzados', text: 'braços cruzados', thumb: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' },
+        { id: 'p2', name: 'Mãos nos Bolsos', text: 'mãos nos bolsos da calça', thumb: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
+        { id: 'p3', name: 'Mão no Queixo', text: 'mão no queixo pensativo', thumb: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
+        { id: 'p4', name: 'Mão na Cintura', text: 'mão na cintura atitude', thumb: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80' },
+        { id: 'p5', name: 'Caminhando', text: 'caminhando em direção à câmera', thumb: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80' }
+    ];
+
+    // Buscar poses do IndexedDB
+    const customPoses = await PoseDB.getAllPoses();
+    allPosesData = [...presetPoses, ...customPoses];
+
+    poseTrack.innerHTML = "";
+    allPosesData.forEach((pose, idx) => {
+        const card = document.createElement('div');
+        card.className = `pose-card ${idx === currentPoseIdx ? 'active' : ''}`;
+        card.innerHTML = `
+            <div class="pose-card-label">${pose.name}</div>
+            <img src="${pose.thumb}" alt="${pose.name}" onerror="this.src='https://placehold.co/160x200/000/fff?text=POSE'">
+        `;
+        card.onclick = () => selectPose(idx);
+        poseTrack.appendChild(card);
+    });
+
+    updateCarouselPosition();
+}
+
+function selectPose(idx) {
+    currentPoseIdx = idx;
+    const cards = poseTrack.querySelectorAll('.pose-card');
+    cards.forEach((c, i) => c.classList.toggle('active', i === idx));
+    updateCarouselPosition();
+}
+
+function updateCarouselPosition() {
+    const cardWidth = 160 + 15; // width + gap
+    const offset = -(currentPoseIdx * cardWidth);
+    poseTrack.style.transform = `translateX(${offset}px)`;
+}
+
+if (posePrevBtn) posePrevBtn.onclick = () => { if (currentPoseIdx > 0) selectPose(currentPoseIdx - 1); };
+if (poseNextBtn) poseNextBtn.onclick = () => { if (currentPoseIdx < allPosesData.length - 1) selectPose(currentPoseIdx + 1); };
+
+// Lógica de Thumbnail no Modal
+const poseThumbInput = document.getElementById('pose-thumb-input');
+const poseThumbPreview = document.getElementById('pose-thumb-preview');
+let currentPoseThumb = "";
+
+if (poseThumbInput) {
+    poseThumbInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            currentPoseThumb = ev.target.result;
+            poseThumbPreview.querySelector('img').src = currentPoseThumb;
+            poseThumbPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    };
+}
+
+// Sobrescrever Salvar Pose para incluir Imagem e usar IndexedDB
+document.getElementById('confirm-save-pose').onclick = async () => {
+    const name = document.getElementById('pose-name-input').value.trim();
+    const content = document.getElementById('hero-pose-custom').value.trim();
+    
+    if (!name || !content) return;
+    
+    const newPose = {
+        id: 'custom_' + Date.now(),
+        name: name,
+        text: content,
+        thumb: currentPoseThumb || 'https://placehold.co/160x200/111/fff?text=Pose'
+    };
+
+    await PoseDB.savePose(newPose);
+    
+    alert("✅ Pose Salva com Sucesso no Banco de Dados!");
+    document.getElementById('save-pose-modal').style.display='none';
+    
+    // Reset inputs
+    document.getElementById('pose-name-input').value = "";
+    currentPoseThumb = "";
+    poseThumbPreview.style.display = 'none';
+    
+    renderPoseCarousel();
+};
+
+// Sobrescrever Lógica de Geração do Hero para pegar a pose do Carrossel
+const originalHeroGen = heroGenBtn.onclick;
+heroGenBtn.onclick = async () => {
+    const key = apiKeyInput.value.trim();
+    if (!key) { alert("Chave API não configurada."); return; }
+    
+    // Se o modo custom (DIGITE POSE) estiver ativo, usa o textarea.
+    // Se não, usa o dado da pose selecionada no carrossel.
+    const isCustomMode = document.getElementById('hero-pose-custom-toggle').checked;
+    let poseText = "";
+    
+    if (isCustomMode) {
+        poseText = document.getElementById('hero-pose-custom').value.trim() || "pose natural";
+    } else {
+        const selectedPose = allPosesData[currentPoseIdx];
+        poseText = selectedPose ? selectedPose.text : "pose natural";
+    }
+
+    const item = createFeedItem(heroFeedGrid);
+    heroStatusMsg.innerText = "⏳ Construindo...";
+    
+    try {
+        const templateResp = await fetch('hero_templates/hero_v1.json');
+        const template = await templateResp.json();
+        const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : null;
+        const isChecked = (id) => document.getElementById(id) ? document.getElementById(id).checked : false;
+
+        const interfaceValues = {
+            "PROFISSAO": isChecked('hero-profissao-toggle') ? (getVal('hero-profissao') || "Profissional") : "Pessoa",
+            "CONTEXTO_DO_AMBIENTE": getVal('hero-ambiente') || "Ambiente moderno",
+            "GENERO": getVal('hero-genero'),
+            "ESTILO_VISUAL_DA_PESSOA": getVal('hero-estilo'),
+            "ANGULO_DE_CAMERA": isChecked('hero-angulo-toggle') ? getVal('hero-angulo') : "eye level frontal",
+            "PLANO": getVal('hero-plano'),
+            "POSE": poseText,
+            "EXPRESSAO": getVal('hero-expressao'),
+            "ROUPA_PRINCIPAL": getVal('hero-roupa') || "traje profissional alinhado",
+            "LADO_DO_PERSONAGEM": getVal('hero-lado'),
+            "LADO_DO_ESPACO_NEGATIVO": getVal('hero-lado') === 'direita' ? 'esquerda' : 'direita',
+            "COR_ATMOSFERA": getVal('hero-luzv-cor') || "#000000",
+            "COLOR_GRADING": getVal('hero-preset') || "cinematográfico moderno",
+            "OBJETO_CENA": isChecked('hero-objeto-toggle') ? getVal('hero-objeto-desc') : "nenhum",
+            "DETALHES_EXTRA": isChecked('hero-detalhes-toggle') ? getVal('hero-detalhes-desc') : "conforme referência"
+        };
+
+        template.PARAMETROS_EDITAVEIS = interfaceValues;
+        let finalPromptText = JSON.stringify(template);
+        for (const [k, v] of Object.entries(interfaceValues)) {
+            finalPromptText = finalPromptText.split(`@${k}`).join(v);
+        }
+
+        const aspect = getVal('hero-aspect-select') || "16:9";
+        const quality = getVal('hero-quality-select') || "4K";
+        const model = getVal('hero-model-select') || "gemini-3.1-flash-image-preview";
+        const response = await callGeminiAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality, model);
+        finishFeedItem(item, `data:image/png;base64,${response}`);
+        heroStatusMsg.innerText = "✨ Hero Pro Gerado!";
+    } catch (e) { 
+        heroStatusMsg.innerText = "❌ Erro: " + e.message; 
+        item.remove(); 
+    }
+};
+
+// Gerenciar Poses (Atualizado para IndexedDB)
+document.getElementById('manage-poses-btn').onclick = async () => {
+    const poses = await PoseDB.getAllPoses();
+    const listContainer = document.getElementById('manage-poses-list');
+    listContainer.innerHTML = "";
+    
+    if (poses.length === 0) {
+        listContainer.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Nenhuma pose personalizada no banco de dados.</p>";
+    }
+
+    poses.forEach(pose => {
+        const item = document.createElement('div');
+        item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
+        item.innerHTML = `
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="${pose.thumb}" style="width:30px; height:40px; object-fit:cover; border-radius:4px;">
+                <span style="font-size:13px; font-weight:bold;">${pose.name}</span>
+            </div>
+            <button class="btn-delete-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
+        `;
+
+        item.querySelector('.btn-delete-pose').onclick = async () => {
+            if(confirm(`Excluir a pose "${pose.name}" permanentemente?`)) {
+                await PoseDB.deletePose(pose.id);
+                document.getElementById('manage-poses-btn').click(); // Refresh modal
+                renderPoseCarousel();
+            }
+        };
+        listContainer.appendChild(item);
+    });
+    document.getElementById('manage-poses-modal').style.display = 'flex';
+};
 
 document.getElementById('modal-download-btn').onclick = () => {
     const link = document.createElement('a');

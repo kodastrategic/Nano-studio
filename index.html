@@ -11,7 +11,7 @@
     <nav class="top-nav">
         <div style="font-size: 20px; font-weight: 700; margin-right: 20px;">🍌</div>
         <button class="nav-tab active" id="tab-studio-btn" onclick="switchTab('studio')">🎨 STUDIO</button>
-        <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO <span style="font-size: 8px; vertical-align: top; background: var(--accent-blue); padding: 2px 4px; border-radius: 4px; margin-left: 4px;">v1.3</span></button>
+        <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO <span style="font-size: 8px; vertical-align: top; background: var(--accent-blue); padding: 2px 4px; border-radius: 4px; margin-left: 4px;">v1.4</span></button>
     </nav>
 
     <!-- ABA STUDIO -->
@@ -189,7 +189,18 @@
                     <button id="manage-poses-btn" title="Gerenciar Poses" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:white; border-radius:6px; height: 32px; cursor:pointer; font-size:11px; font-weight:bold; transition: all 0.2s;">⚙️ EDITAR LISTA</button>
                 </div>
                 
-                <div id="hero-pose-select-container">
+                <!-- Seletor Visual de Pose (Carrossel) -->
+                <div id="hero-pose-carousel-wrapper" class="pose-carousel-wrapper">
+                    <button class="carousel-nav prev" id="pose-prev-btn">‹</button>
+                    <div class="pose-carousel-viewport">
+                        <div class="pose-carousel-track" id="pose-carousel-track">
+                            <!-- Items inseridos via JS -->
+                        </div>
+                    </div>
+                    <button class="carousel-nav next" id="pose-next-btn">›</button>
+                </div>
+
+                <div id="hero-pose-select-container" style="display:none;">
                     <select id="hero-pose">
                         <optgroup label="Corporativo & Social">
                             <option value="braços cruzados">Braços Cruzados</option>
@@ -457,8 +468,19 @@
     <!-- MODAL SALVAR POSE -->
     <div id="save-pose-modal" class="modal">
         <div class="modal-content">
-            <h3>Nome da Pose</h3>
-            <input type="text" id="pose-name-input" placeholder="Ex: Pose Épica">
+            <h3>Salvar Nova Pose</h3>
+            <div class="input-group">
+                <label>Nome da Pose</label>
+                <input type="text" id="pose-name-input" placeholder="Ex: Pose Épica Terry Crews">
+            </div>
+            <div class="input-group">
+                <label>Miniatura (Thumbnail)</label>
+                <input type="file" id="pose-thumb-input" accept="image/*" style="display:none;">
+                <button onclick="document.getElementById('pose-thumb-input').click()" class="btn-ref" style="width:100%; height:40px; margin-top:5px;">📷 SELECIONAR FOTO</button>
+                <div id="pose-thumb-preview" style="margin-top:10px; text-align:center; display:none;">
+                    <img src="" style="max-height:100px; border-radius:8px; border:1px solid var(--accent-blue);">
+                </div>
+            </div>
             <div style="display:flex; gap:10px; margin-top:20px;">
                 <button onclick="document.getElementById('save-pose-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
                 <button id="confirm-save-pose" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar</button>
@@ -503,7 +525,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
     <script>
         function switchTab(tab) {
             document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
