@@ -383,14 +383,17 @@ function toggleDetailsField() { document.getElementById('controls-detalhes').sty
 function toggleProfissaoField() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
 function togglePoseMode() {
     const isCustom = document.getElementById('hero-pose-custom-toggle').checked;
-    const selectCont = document.getElementById('hero-pose-carousel-wrapper');
+    const carouselCont = document.getElementById('hero-pose-carousel-wrapper');
     const customCont = document.getElementById('hero-pose-custom-container');
+    const actionBtnCont = document.getElementById('pose-action-btn-container');
     
     if (isCustom) {
-        selectCont.style.display = 'none';
+        carouselCont.style.display = 'none';
+        actionBtnCont.style.display = 'none';
         customCont.style.display = 'block';
     } else {
-        selectCont.style.display = 'flex';
+        carouselCont.style.display = 'flex';
+        actionBtnCont.style.display = 'flex';
         customCont.style.display = 'none';
         renderPoseCarousel();
     }
