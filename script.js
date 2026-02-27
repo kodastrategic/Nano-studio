@@ -528,14 +528,42 @@ if (editPoseThumbInput) {
 // Confirm Actions
 document.getElementById('confirm-save-pose').onclick = async () => {
     const name = document.getElementById('pose-name-input').value.trim();
-    const content = document.getElementById('hero-pose-custom').value.trim();
-    if (!name || !content) return;
-    const newPose = { id: 'custom_' + Date.now(), name: name, text: content, thumb: currentPoseThumb || 'https://placehold.co/160x200/111/fff?text=Pose' };
-    await PoseDB.savePose(newPose);
-    alert("✅ Pose salva!");
-    document.getElementById('save-pose-modal').style.display='none';
-    currentPoseThumb = "";
-    renderPoseCarousel();
+    const content = document.getElementById('pose-prompt-input').value.trim();
+    
+    if (!name || !content) {
+        alert("Por favor, preencha o nome e a descrição da pose.");
+        return;
+    }
+    
+    const newPose = { 
+        id: 'custom_' + Date.now(), 
+        name: name, 
+        text: content, 
+        thumb: currentPoseThumb || 'https://placehold.co/160x200/111/fff?text=Pose' 
+    };
+    
+    try {
+        await PoseDB.savePose(newPose);
+        alert("✅ Pose salva na biblioteca com sucesso!");
+        
+        // Fechar modal e limpar campos
+        document.getElementById('save-pose-modal').style.display = 'none';
+        document.getElementById('pose-name-input').value = "";
+        document.getElementById('pose-prompt-input').value = "";
+        currentPoseThumb = "";
+        if(document.getElementById('pose-thumb-preview')) {
+            document.getElementById('pose-thumb-preview').style.display = 'none';
+        }
+        
+        // Atualizar carrossel e lista de gerenciamento
+        renderPoseCarousel();
+        if (managePosesModal.style.display === 'flex') {
+            managePosesBtn.click(); // Força o refresh da lista se o modal de gerenciamento estiver aberto atrás
+        }
+    } catch (err) {
+        console.error("Erro ao salvar pose:", err);
+        alert("❌ Erro ao salvar pose no banco de dados.");
+    }
 };
 
 document.getElementById('confirm-edit-pose-save').onclick = async () => {
