@@ -234,7 +234,7 @@ document.getElementById('ref-delete-btn').onclick = () => {
 };
 
 // --- API CORE ---
-async function callGeminiAPI(key, prompt, refs, aspect, quality, modelId = "gemini-3-pro-image-preview") {
+async function callGeminiAPI(key, prompt, refs, aspect, quality, modelId = "gemini-3.1-flash-image-preview") {
     let parts = [{ text: prompt }];
     refs.forEach((ref) => {
         try {
