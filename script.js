@@ -357,7 +357,26 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
             "COR_ATMOSFERA": getVal('hero-luzv-cor') || "#000000",
             "COLOR_GRADING": getVal('hero-preset') || "cinematográfico moderno",
             "OBJETO_CENA": isChecked('hero-objeto-toggle') ? getVal('hero-objeto-desc') : "nenhum",
-            "DETALHES_EXTRA": isChecked('hero-detalhes-toggle') ? getVal('hero-detalhes-desc') : "conforme referência"
+            "DETALHES_EXTRA": isChecked('hero-detalhes-toggle') ? getVal('hero-detalhes-desc') : "conforme referência",
+            "BACKLIGHT": {
+                "ativo": isChecked('hero-backlight'),
+                "cor_hex": getVal('hero-backlight-cor'),
+                "intensidade": getVal('hero-backlight-intensidade')
+            },
+            "LENS_FLARE": {
+                "ativo": isChecked('hero-flare'),
+                "cor_hex": getVal('hero-flare-cor'),
+                "estilo": getVal('hero-flare-estilo')
+            },
+            "LUZ_VOLUMETRICA": {
+                "ativo": isChecked('hero-luzv'),
+                "cor_hex": getVal('hero-luzv-cor'),
+                "intensidade": getVal('hero-luzv-intensidade')
+            },
+            "PARTICULAS_ATMOSFERICAS": {
+                "ativo": isChecked('hero-part'),
+                "tipo": getVal('hero-part-tipo')
+            }
         };
 
         template.PARAMETROS_EDITAVEIS = interfaceValues;
