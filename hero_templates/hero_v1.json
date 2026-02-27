@@ -41,10 +41,9 @@
     "leitura_emocional": "@EXPRESSAO"
   },
   "composicao": {
-    "regra": "regra dos terços",
-    "personagem_no_terco": "@LADO_DO_PERSONAGEM",
-    "espaco_negativo_no_terco_oposto": "@LADO_DO_ESPACO_NEGATIVO",
-    "espaco_negativo_estilo": "limpo com gradiente sutil"
+    "regra": "@REGRA_COMPOSICAO",
+    "personagem_posicao": "@LADO_DO_PERSONAGEM",
+    "espaco_negativo": "@LADO_DO_ESPACO_NEGATIVO"
   },
   "personagem": {
     "profissao": "@PROFISSAO",

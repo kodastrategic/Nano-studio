@@ -340,6 +340,7 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
         const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : null;
         const isChecked = (id) => document.getElementById(id) ? document.getElementById(id).checked : false;
 
+        const ladoPersonagem = getVal('hero-lado');
         const interfaceValues = {
             "PROFISSAO": isChecked('hero-profissao-toggle') ? (getVal('hero-profissao') || "Profissional") : "Pessoa",
             "CONTEXTO_DO_AMBIENTE": getVal('hero-ambiente') || "Ambiente moderno",
@@ -350,8 +351,9 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
             "POSE": poseText,
             "EXPRESSAO": getVal('hero-expressao'),
             "ROUPA_PRINCIPAL": getVal('hero-roupa') || "traje profissional alinhado",
-            "LADO_DO_PERSONAGEM": getVal('hero-lado'),
-            "LADO_DO_ESPACO_NEGATIVO": getVal('hero-lado') === 'direita' ? 'esquerda' : 'direita',
+            "LADO_DO_PERSONAGEM": ladoPersonagem === 'centro' ? 'centro (centralizado)' : ladoPersonagem,
+            "LADO_DO_ESPACO_NEGATIVO": ladoPersonagem === 'centro' ? 'nenhum' : (ladoPersonagem === 'direita' ? 'esquerda' : 'direita'),
+            "REGRA_COMPOSICAO": ladoPersonagem === 'centro' ? 'centralizada' : 'regra dos terços',
             "COR_ATMOSFERA": getVal('hero-luzv-cor') || "#000000",
             "COLOR_GRADING": getVal('hero-preset') || "cinematográfico moderno",
             "OBJETO_CENA": isChecked('hero-objeto-toggle') ? getVal('hero-objeto-desc') : "nenhum",
