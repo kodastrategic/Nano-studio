@@ -479,6 +479,18 @@
         </div>
     </div>
 
+    <!-- MODAL EDITAR POSE ESPECÍFICA -->
+    <div id="edit-pose-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3 id="edit-pose-title">Editar Pose</h3>
+            <textarea id="edit-pose-textarea" rows="10" style="width:100%; background:var(--bg-input); color:white; border:1px solid var(--border-color); border-radius:8px; padding:10px; font-family:inherit;"></textarea>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="document.getElementById('edit-pose-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
+                <button id="confirm-edit-pose-save" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar Alteração</button>
+            </div>
+        </div>
+    </div>
+
     <div id="ref-modal" class="preview-modal">
         <div class="close-btn" id="close-ref-modal" style="position:absolute; right:30px; top:30px; font-size:30px;">✕</div>
         <div class="preview-content">

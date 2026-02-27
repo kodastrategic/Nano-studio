@@ -400,6 +400,8 @@ document.getElementById('confirm-save-pose').onclick = () => {
 };
 
 // Gerenciar Poses
+let editingPoseName = "";
+
 document.getElementById('manage-poses-btn').onclick = () => {
     const poses = getLocalPoses();
     const listContainer = document.getElementById('manage-poses-list');
@@ -413,10 +415,22 @@ document.getElementById('manage-poses-btn').onclick = () => {
         const item = document.createElement('div');
         item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
         item.innerHTML = `
-            <span style="font-size:13px; font-weight:bold;">${name}</span>
-            <button class="btn-delete-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
+            <span style="font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${name}</span>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-edit-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--accent-blue); color:white; border:none; border-radius:4px;">EDITAR</button>
+                <button class="btn-delete-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
+            </div>
         `;
 
+        // Botão Editar Pose
+        item.querySelector('.btn-edit-pose').onclick = () => {
+            editingPoseName = name;
+            document.getElementById('edit-pose-title').innerText = `Editar Pose: ${name}`;
+            document.getElementById('edit-pose-textarea').value = poses[name];
+            document.getElementById('edit-pose-modal').style.display = 'flex';
+        };
+
+        // Botão Excluir Pose
         item.querySelector('.btn-delete-pose').onclick = () => {
             if(confirm(`Excluir a pose "${name}"?`)) {
                 const p = getLocalPoses();
@@ -429,6 +443,20 @@ document.getElementById('manage-poses-btn').onclick = () => {
         listContainer.appendChild(item);
     });
     document.getElementById('manage-poses-modal').style.display = 'flex';
+};
+
+// Salvar Edição de Pose
+document.getElementById('confirm-edit-pose-save').onclick = () => {
+    const newContent = document.getElementById('edit-pose-textarea').value.trim();
+    if (!newContent) return;
+    
+    const poses = getLocalPoses();
+    poses[editingPoseName] = newContent;
+    localStorage.setItem('banana_poses', JSON.stringify(poses));
+    
+    alert("✅ Alteração de pose salva!");
+    document.getElementById('edit-pose-modal').style.display = 'none';
+    refreshPoseList();
 };
 function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
 
