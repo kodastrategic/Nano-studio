@@ -378,36 +378,8 @@ function togglePoseMode() {
     }
 }
 
-// --- LOGICA DE POSES SALVAS ---
-function getLocalPoses() {
-    const p = localStorage.getItem('banana_poses');
-    return p ? JSON.parse(p) : {};
-}
-
-function refreshPoseList() {
-    const poses = getLocalPoses();
-    const select = document.getElementById('hero-pose');
-    // Manter as originais
-    const originalGroups = select.querySelectorAll('optgroup:not(.custom-poses)');
-    select.innerHTML = "";
-    originalGroups.forEach(g => select.appendChild(g));
-
-    if (Object.keys(poses).length > 0) {
-        const customGroup = document.createElement('optgroup');
-        customGroup.className = "custom-poses";
-        customGroup.label = "⭐ Poses Salvas";
-        Object.keys(poses).forEach(name => {
-            const opt = document.createElement('option');
-            opt.value = poses[name]; opt.textContent = name;
-            customGroup.appendChild(opt);
-        });
-        select.appendChild(customGroup);
-    }
-    updateKodaSelect('hero-pose');
-}
-
-// Inicializar lista de poses
 document.addEventListener('DOMContentLoaded', () => {
+    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo'].forEach(initKodaSelect);
     refreshPoseList();
 });
 
@@ -459,6 +431,38 @@ document.getElementById('manage-poses-btn').onclick = () => {
     document.getElementById('manage-poses-modal').style.display = 'flex';
 };
 function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
+
+// --- LOGICA DE POSES SALVAS ---
+function getLocalPoses() {
+    const p = localStorage.getItem('banana_poses');
+    return p ? JSON.parse(p) : {};
+}
+
+function refreshPoseList() {
+    const poses = getLocalPoses();
+    const select = document.getElementById('hero-pose');
+    if (!select) return;
+
+    // Manter as originais (Corporativo, Editorial, Ação)
+    const groups = Array.from(select.querySelectorAll('optgroup'));
+    const originalGroups = groups.filter(g => !g.classList.contains('custom-poses'));
+    
+    select.innerHTML = "";
+    originalGroups.forEach(g => select.appendChild(g));
+
+    if (Object.keys(poses).length > 0) {
+        const customGroup = document.createElement('optgroup');
+        customGroup.className = "custom-poses";
+        customGroup.label = "⭐ Poses Salvas";
+        Object.keys(poses).forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = poses[name]; opt.textContent = name;
+            customGroup.appendChild(opt);
+        });
+        select.appendChild(customGroup);
+    }
+    updateKodaSelect('hero-pose');
+}
 
 document.getElementById('modal-download-btn').onclick = () => {
     const link = document.createElement('a');

@@ -168,59 +168,70 @@
                     </select>
                 </div>
             </div>
-            <div class="hero-controls">
-                <div class="input-group">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                        <label class="toggle-wrapper" style="margin-bottom: 0;">
-                            <span style="font-size: 11px; opacity: 0.8;">POSES SALVAS</span>
-                            <div class="toggle" style="margin: 0 8px;">
-                                <input class="toggle-state" type="checkbox" id="hero-pose-custom-toggle" onchange="togglePoseMode()">
-                                <div class="indicator"></div>
-                            </div>
-                            <span style="font-size: 11px; opacity: 0.8;">DIGITE POSE</span>
-                        </label>
-                        <div style="display:flex; gap:5px;">
-                            <button id="save-pose-btn" title="Salvar Pose" style="background:var(--accent-blue); border:none; color:white; border-radius:4px; padding:2px 6px; cursor:pointer; font-size:10px; display:none;">💾</button>
-                            <button id="manage-poses-btn" title="Gerenciar Poses" style="background:var(--bg-card); border:1px solid var(--border-color); color:white; border-radius:4px; padding:2px 6px; cursor:pointer; font-size:10px;">⚙️</button>
+            <!-- SEÇÃO DEDICADA: POSICIONAMENTO -->
+            <div class="section-title">4. Pose e Posicionamento</div>
+            <div class="pose-box-container" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                    <label class="toggle-wrapper" style="margin-bottom: 0;">
+                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted);">POSES SALVAS</span>
+                        <div class="toggle" style="margin: 0 12px;">
+                            <input class="toggle-state" type="checkbox" id="hero-pose-custom-toggle" onchange="togglePoseMode()">
+                            <div class="indicator"></div>
                         </div>
+                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted);">DIGITE POSE</span>
+                    </label>
+                    <div style="display:flex; gap:8px;">
+                        <button id="save-pose-btn" title="Salvar Pose" style="background:var(--accent-blue); border:none; color:white; border-radius:6px; width: 32px; height: 32px; cursor:pointer; font-size:14px; display:none; transition: all 0.2s;">💾</button>
+                        <button id="manage-poses-btn" title="Gerenciar Poses" style="background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:white; border-radius:6px; width: 32px; height: 32px; cursor:pointer; font-size:14px; transition: all 0.2s;">⚙️</button>
                     </div>
-                    <div id="hero-pose-select-container">
-                        <select id="hero-pose">
-                            <optgroup label="Corporativo & Social">
-                                <option value="braços cruzados">Braços Cruzados</option>
-                                <option value="mãos nos bolsos da calça">Mãos nos Bolsos</option>
-                                <option value="mão no queixo">Mão no Queixo</option>
-                                <option value="ajustando o punho da camisa ou relógio">Ajustando Relógio/Punho</option>
-                                <option value="mão na nuca">Mão na Nuca</option>
-                            </optgroup>
-                            <optgroup label="Editorial & Moda">
-                                <option value="mão na cintura">Mão na Cintura</option>
-                                <option value="mão na cabeça entre os cabelos">Mão na Cabeça</option>
-                                <option value="braços erguidos acima da cabeça">Editorial (Braços Altos)</option>
-                                <option value="corpo levemente inclinado para frente">Inclinado (Atitude)</option>
-                                <option value="sentado de forma despojada">Sentado Despojado</option>
-                            </optgroup>
-                            <optgroup label="Ação & Dinamismo">
-                                <option value="caminhando em direção à câmera">Caminhando</option>
-                                <option value="correndo">Correndo</option>
-                                <option value="agachado estilo streetwear">Agachado</option>
-                                <option value="pulando no ar">Pulando</option>
-                            </optgroup>
+                </div>
+                
+                <div id="hero-pose-select-container">
+                    <select id="hero-pose">
+                        <optgroup label="Corporativo & Social">
+                            <option value="braços cruzados">Braços Cruzados</option>
+                            <option value="mãos nos bolsos da calça">Mãos nos Bolsos</option>
+                            <option value="mão no queixo">Mão no Queixo</option>
+                            <option value="ajustando o punho da camisa ou relógio">Ajustando Relógio/Punho</option>
+                            <option value="mão na nuca">Mão na Nuca</option>
+                        </optgroup>
+                        <optgroup label="Editorial & Moda">
+                            <option value="mão na cintura">Mão na Cintura</option>
+                            <option value="mão na cabeça entre os cabelos">Mão na Cabeça</option>
+                            <option value="braços erguidos acima da cabeça">Editorial (Braços Altos)</option>
+                            <option value="corpo levemente inclinado para frente">Inclinado (Atitude)</option>
+                            <option value="sentado de forma despojada">Sentado Despojado</option>
+                        </optgroup>
+                        <optgroup label="Ação & Dinamismo">
+                            <option value="caminhando em direção à câmera">Caminhando</option>
+                            <option value="correndo">Correndo</option>
+                            <option value="agachado estilo streetwear">Agachado</option>
+                            <option value="pulando no ar">Pulando</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div id="hero-pose-custom-container" style="display:none;">
+                    <textarea id="hero-pose-custom" rows="3" placeholder="Descreva a pose personalizada em detalhes..."></textarea>
+                </div>
+
+                <div class="hero-controls" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <div class="input-group">
+                        <label>Lado Personagem</label>
+                        <select id="hero-lado">
+                            <option value="direita">Direita</option><option value="esquerda">Esquerda</option><option value="centro">Centro</option>
                         </select>
                     </div>
-                    <div id="hero-pose-custom-container" style="display:none;">
-                        <input type="text" id="hero-pose-custom" placeholder="Descreva a pose personalizada...">
+                    <div class="input-group">
+                        <label>Plano</label>
+                        <select id="hero-plano">
+                            <option value="meio corpo">Meio Corpo</option><option value="rosto">Close-up Rosto</option><option value="corpo inteiro">Corpo Inteiro</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
+            <div class="section-title">5. Expressão e Ângulo</div>
             <div class="hero-controls">
-                <div class="input-group">
-                    <label>Lado Personagem</label>
-                    <select id="hero-lado">
-                        <option value="direita">Direita</option><option value="esquerda">Esquerda</option><option value="centro">Centro</option>
-                    </select>
-                </div>
                 <div class="input-group">
                     <label>Expressão</label>
                     <select id="hero-expressao">
@@ -249,33 +260,6 @@
                         </optgroup>
                     </select>
                 </div>
-            </div>
-
-            <div class="effect-group">
-                <label class="toggle-wrapper">
-                    <span>Ângulo de Câmera</span>
-                    <div class="toggle">
-                        <input class="toggle-state" type="checkbox" id="hero-angulo-toggle" onchange="toggleAnguloField()">
-                        <div class="indicator"></div>
-                    </div>
-                </label>
-                <div id="controls-angulo" style="display:none; margin-top: 10px;">
-                    <select id="hero-angulo">
-                        <option value="ao nível dos olhos">Nível dos Olhos (Eye-level)</option>
-                        <option value="de baixo para cima (low angle)">Contra-Plongée (Low Angle)</option>
-                        <option value="de cima para baixo (high angle)">Plongée (High Angle)</option>
-                        <option value="extremo low angle (worm's eye view)">Worm's Eye (Vista de Verme)</option>
-                        <option value="visto de cima (bird's eye view)">Bird's Eye (Vista de Pássaro)</option>
-                        <option value="ângulo holandês (dutch angle) inclinado">Holandês (Inclinado)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Plano</label>
-                <select id="hero-plano">
-                    <option value="meio corpo">Meio Corpo</option><option value="rosto">Close-up Rosto</option><option value="corpo inteiro">Corpo Inteiro</option>
-                </select>
             </div>
 
             <div class="section-title">4. Objetos e Acessórios</div>
