@@ -234,7 +234,7 @@ document.getElementById('ref-delete-btn').onclick = () => {
 };
 
 // --- API CORE ---
-async function callGeminiAPI(key, prompt, refs, aspect, quality, model = "imagen-3-pro") {
+async function callGeminiAPI(key, prompt, refs, aspect, quality, modelId = "gemini-3-pro-image-preview") {
     let parts = [{ text: prompt }];
     refs.forEach((ref) => {
         try {
@@ -244,12 +244,8 @@ async function callGeminiAPI(key, prompt, refs, aspect, quality, model = "imagen
         } catch (e) { console.error("Erro ref:", e); }
     });
 
-    const modelEndpoint = model === "nano-banana-2" 
-        ? "nano-banana-2-preview" 
-        : "gemini-3-pro-image-preview";
-
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelEndpoint}:generateContent?key=${key}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${key}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
