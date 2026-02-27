@@ -1,0 +1,32 @@
+[
+    {
+        "id": "p1",
+        "name": "Braços Cruzados",
+        "text": "braços cruzados",
+        "thumb": "assets/poses/bracos_cruzados.jpg"
+    },
+    {
+        "id": "p2",
+        "name": "Mãos nos Bolsos",
+        "text": "mãos nos bolsos da calça",
+        "thumb": "assets/poses/maos_bolsos.jpg"
+    },
+    {
+        "id": "p3",
+        "name": "Mão no Queixo",
+        "text": "mão no queixo pensativo",
+        "thumb": "assets/poses/mao_queixo.jpg"
+    },
+    {
+        "id": "p4",
+        "name": "Mão na Cintura",
+        "text": "mão na cintura atitude",
+        "thumb": "assets/poses/mao_cintura.jpg"
+    },
+    {
+        "id": "p5",
+        "name": "Caminhando",
+        "text": "caminhando em direção à câmera",
+        "thumb": "assets/poses/caminhando.jpg"
+    }
+]
