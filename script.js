@@ -234,7 +234,7 @@ document.getElementById('ref-delete-btn').onclick = () => {
 };
 
 // --- API CORE ---
-async function callGeminiAPI(key, prompt, refs, aspect, quality) {
+async function callGeminiAPI(key, prompt, refs, aspect, quality, model = "imagen-3-pro") {
     let parts = [{ text: prompt }];
     refs.forEach((ref) => {
         try {
@@ -244,8 +244,12 @@ async function callGeminiAPI(key, prompt, refs, aspect, quality) {
         } catch (e) { console.error("Erro ref:", e); }
     });
 
+    const modelEndpoint = model === "nano-banana-2" 
+        ? "nano-banana-2-preview" 
+        : "gemini-3-pro-image-preview";
+
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${key}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelEndpoint}:generateContent?key=${key}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -292,12 +296,13 @@ document.getElementById('gen-btn').onclick = async () => {
     const key = apiKeyInput.value.trim();
     const aspect = document.getElementById('aspect-select').value;
     const quality = document.getElementById('quality-select').value;
+    const model = document.getElementById('model-select').value;
     
     if (!prompt || !key) { alert("Configure a chave API."); return; }
     const item = createFeedItem(feedGrid);
     statusMsg.innerText = "⏳ Gerando...";
     try {
-        const response = await callGeminiAPI(key, prompt, attachedRefs, aspect, quality);
+        const response = await callGeminiAPI(key, prompt, attachedRefs, aspect, quality, model);
         finishFeedItem(item, `data:image/png;base64,${response}`);
         statusMsg.innerText = "✨ Pronto!";
     } catch (e) { 
@@ -344,7 +349,8 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
 
         const aspect = getVal('hero-aspect-select') || "16:9";
         const quality = getVal('hero-quality-select') || "4K";
-        const response = await callGeminiAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality);
+        const model = getVal('hero-model-select') || "imagen-3-pro";
+        const response = await callGeminiAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality, model);
         finishFeedItem(item, `data:image/png;base64,${response}`);
         heroStatusMsg.innerText = "✨ Hero Pro Gerado!";
     } catch (e) { 
@@ -412,7 +418,7 @@ function updateKodaSelect(id) {
 document.addEventListener('click', () => { document.querySelectorAll('.koda-select-container').forEach(c => c.classList.remove('active')); });
 
 document.addEventListener('DOMContentLoaded', () => {
-    ['aspect-select', 'quality-select', 'saved-prompts-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select'].forEach(initKodaSelect);
+    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select'].forEach(initKodaSelect);
 });
 
 // Desativa o botão shutdown na web
