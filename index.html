@@ -171,7 +171,8 @@
             <!-- SEÇÃO DEDICADA: POSICIONAMENTO -->
             <div class="section-title">4. Pose e Posicionamento</div>
             <div class="pose-box-container" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <!-- Toggle Mode -->
+                <div style="display:flex; justify-content:center; align-items:center; margin-bottom: 15px;">
                     <label class="toggle-wrapper" style="margin-bottom: 0;">
                         <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted);">POSES SALVAS</span>
                         <div class="toggle" style="margin: 0 12px;">
@@ -180,10 +181,12 @@
                         </div>
                         <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted);">DIGITE POSE</span>
                     </label>
-                    <div style="display:flex; gap:8px;">
-                        <button id="save-pose-btn" title="Salvar Pose" style="background:var(--accent-blue); border:none; color:white; border-radius:6px; width: 32px; height: 32px; cursor:pointer; font-size:14px; display:none; transition: all 0.2s;">💾</button>
-                        <button id="manage-poses-btn" title="Gerenciar Poses" style="background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:white; border-radius:6px; width: 32px; height: 32px; cursor:pointer; font-size:14px; transition: all 0.2s;">⚙️</button>
-                    </div>
+                </div>
+
+                <!-- Botões de Ação (Abaixo do Toggle) -->
+                <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                    <button id="save-pose-btn" title="Salvar Pose" style="flex:1; background:var(--accent-blue); border:none; color:white; border-radius:6px; height: 32px; cursor:pointer; font-size:11px; font-weight:bold; display:none; transition: all 0.2s;">💾 SALVAR POSE</button>
+                    <button id="manage-poses-btn" title="Gerenciar Poses" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:white; border-radius:6px; height: 32px; cursor:pointer; font-size:11px; font-weight:bold; transition: all 0.2s;">⚙️ EDITAR LISTA</button>
                 </div>
                 
                 <div id="hero-pose-select-container">
