@@ -43,7 +43,6 @@
                 <select id="model-select">
                     <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
                     <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
-                    <option value="imagen-4.0-ultra-generate-001">💎 Imagen 4.0 Ultra</option>
                 </select>
             </div>
             <div class="input-group">
@@ -126,7 +125,6 @@
                     <select id="hero-model-select">
                         <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
                         <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
-                        <option value="imagen-4.0-ultra-generate-001">💎 Imagen 4.0 Ultra</option>
                     </select>
                 </div>
             </div>
@@ -172,29 +170,40 @@
             </div>
             <div class="hero-controls">
                 <div class="input-group">
-                    <label>Pose</label>
-                    <select id="hero-pose">
-                        <optgroup label="Corporativo & Social">
-                            <option value="braços cruzados">Braços Cruzados</option>
-                            <option value="mãos nos bolsos da calça">Mãos nos Bolsos</option>
-                            <option value="mão no queixo">Mão no Queixo</option>
-                            <option value="ajustando o punho da camisa ou relógio">Ajustando Relógio/Punho</option>
-                            <option value="mão na nuca">Mão na Nuca</option>
-                        </optgroup>
-                        <optgroup label="Editorial & Moda">
-                            <option value="mão na cintura">Mão na Cintura</option>
-                            <option value="mão na cabeça entre os cabelos">Mão na Cabeça</option>
-                            <option value="braços erguidos acima da cabeça">Editorial (Braços Altos)</option>
-                            <option value="corpo levemente inclinado para frente">Inclinado (Atitude)</option>
-                            <option value="sentado de forma despojada">Sentado Despojado</option>
-                        </optgroup>
-                        <optgroup label="Ação & Dinamismo">
-                            <option value="caminhando em direção à câmera">Caminhando</option>
-                            <option value="correndo">Correndo</option>
-                            <option value="agachado estilo streetwear">Agachado</option>
-                            <option value="pulando no ar">Pulando</option>
-                        </optgroup>
-                    </select>
+                    <label class="toggle-wrapper" style="margin-bottom: 8px;">
+                        <span>Pose</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-pose-custom-toggle" onchange="togglePoseMode()">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="hero-pose-select-container">
+                        <select id="hero-pose">
+                            <optgroup label="Corporativo & Social">
+                                <option value="braços cruzados">Braços Cruzados</option>
+                                <option value="mãos nos bolsos da calça">Mãos nos Bolsos</option>
+                                <option value="mão no queixo">Mão no Queixo</option>
+                                <option value="ajustando o punho da camisa ou relógio">Ajustando Relógio/Punho</option>
+                                <option value="mão na nuca">Mão na Nuca</option>
+                            </optgroup>
+                            <optgroup label="Editorial & Moda">
+                                <option value="mão na cintura">Mão na Cintura</option>
+                                <option value="mão na cabeça entre os cabelos">Mão na Cabeça</option>
+                                <option value="braços erguidos acima da cabeça">Editorial (Braços Altos)</option>
+                                <option value="corpo levemente inclinado para frente">Inclinado (Atitude)</option>
+                                <option value="sentado de forma despojada">Sentado Despojado</option>
+                            </optgroup>
+                            <optgroup label="Ação & Dinamismo">
+                                <option value="caminhando em direção à câmera">Caminhando</option>
+                                <option value="correndo">Correndo</option>
+                                <option value="agachado estilo streetwear">Agachado</option>
+                                <option value="pulando no ar">Pulando</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div id="hero-pose-custom-container" style="display:none;">
+                        <input type="text" id="hero-pose-custom" placeholder="Descreva a pose personalizada...">
+                    </div>
                 </div>
             </div>
 

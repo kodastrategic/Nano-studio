@@ -326,7 +326,7 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
             "ESTILO_VISUAL_DA_PESSOA": getVal('hero-estilo'),
             "ANGULO_DE_CAMERA": isChecked('hero-angulo-toggle') ? getVal('hero-angulo') : "eye level frontal",
             "PLANO": getVal('hero-plano'),
-            "POSE": getVal('hero-pose'),
+            "POSE": isChecked('hero-pose-custom-toggle') ? (getVal('hero-pose-custom') || "pose natural") : getVal('hero-pose'),
             "EXPRESSAO": getVal('hero-expressao'),
             "ROUPA_PRINCIPAL": getVal('hero-roupa') || "traje profissional alinhado",
             "LADO_DO_PERSONAGEM": getVal('hero-lado'),
@@ -360,6 +360,20 @@ function toggleAnguloField() { const c = document.getElementById('controls-angul
 function toggleObjetoField() { document.getElementById('controls-objeto').style.display = document.getElementById('hero-objeto-toggle').checked ? 'block' : 'none'; }
 function toggleDetailsField() { document.getElementById('controls-detalhes').style.display = document.getElementById('hero-detalhes-toggle').checked ? 'block' : 'none'; }
 function toggleProfissaoField() { document.getElementById('controls-profissao').style.display = document.getElementById('hero-profissao-toggle').checked ? 'block' : 'none'; }
+function togglePoseMode() {
+    const isCustom = document.getElementById('hero-pose-custom-toggle').checked;
+    const selectCont = document.getElementById('hero-pose-select-container');
+    const customCont = document.getElementById('hero-pose-custom-container');
+    
+    if (isCustom) {
+        selectCont.style.display = 'none';
+        customCont.style.display = 'block';
+    } else {
+        selectCont.style.display = 'block';
+        customCont.style.display = 'none';
+        updateKodaSelect('hero-pose');
+    }
+}
 function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
 
 document.getElementById('modal-download-btn').onclick = () => {
