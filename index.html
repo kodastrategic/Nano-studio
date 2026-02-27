@@ -11,7 +11,7 @@
     <nav class="top-nav">
         <div style="font-size: 20px; font-weight: 700; margin-right: 20px;">🍌</div>
         <button class="nav-tab active" id="tab-studio-btn" onclick="switchTab('studio')">🎨 STUDIO</button>
-        <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO</button>
+        <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO <span style="font-size: 8px; vertical-align: top; background: var(--accent-blue); padding: 2px 4px; border-radius: 4px; margin-left: 4px;">v1.3</span></button>
     </nav>
 
     <!-- ABA STUDIO -->
@@ -170,13 +170,20 @@
             </div>
             <div class="hero-controls">
                 <div class="input-group">
-                    <label class="toggle-wrapper" style="margin-bottom: 8px;">
-                        <span>Pose</span>
-                        <div class="toggle">
-                            <input class="toggle-state" type="checkbox" id="hero-pose-custom-toggle" onchange="togglePoseMode()">
-                            <div class="indicator"></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                        <label class="toggle-wrapper" style="margin-bottom: 0;">
+                            <span style="font-size: 11px; opacity: 0.8;">POSES SALVAS</span>
+                            <div class="toggle" style="margin: 0 8px;">
+                                <input class="toggle-state" type="checkbox" id="hero-pose-custom-toggle" onchange="togglePoseMode()">
+                                <div class="indicator"></div>
+                            </div>
+                            <span style="font-size: 11px; opacity: 0.8;">DIGITE POSE</span>
+                        </label>
+                        <div style="display:flex; gap:5px;">
+                            <button id="save-pose-btn" title="Salvar Pose" style="background:var(--accent-blue); border:none; color:white; border-radius:4px; padding:2px 6px; cursor:pointer; font-size:10px; display:none;">💾</button>
+                            <button id="manage-poses-btn" title="Gerenciar Poses" style="background:var(--bg-card); border:1px solid var(--border-color); color:white; border-radius:4px; padding:2px 6px; cursor:pointer; font-size:10px;">⚙️</button>
                         </div>
-                    </label>
+                    </div>
                     <div id="hero-pose-select-container">
                         <select id="hero-pose">
                             <optgroup label="Corporativo & Social">
@@ -456,6 +463,31 @@
             <div style="display:flex; gap:10px; margin-top:20px;">
                 <button onclick="document.getElementById('edit-prompt-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
                 <button id="confirm-edit-save" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar Alteração</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SALVAR POSE -->
+    <div id="save-pose-modal" class="modal">
+        <div class="modal-content">
+            <h3>Nome da Pose</h3>
+            <input type="text" id="pose-name-input" placeholder="Ex: Pose Épica">
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="document.getElementById('save-pose-modal').style.display='none'" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer;">Cancelar</button>
+                <button id="confirm-save-pose" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white;">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GERENCIAR POSES -->
+    <div id="manage-poses-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Gerenciar Poses Custom</h3>
+                <div class="close-btn" onclick="document.getElementById('manage-poses-modal').style.display='none'" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            <div id="manage-poses-list" style="display:flex; flex-direction:column; gap:10px;">
+                <!-- Lista será gerada via JS -->
             </div>
         </div>
     </div>

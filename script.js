@@ -364,16 +364,100 @@ function togglePoseMode() {
     const isCustom = document.getElementById('hero-pose-custom-toggle').checked;
     const selectCont = document.getElementById('hero-pose-select-container');
     const customCont = document.getElementById('hero-pose-custom-container');
+    const saveBtn = document.getElementById('save-pose-btn');
     
     if (isCustom) {
         selectCont.style.display = 'none';
         customCont.style.display = 'block';
+        saveBtn.style.display = 'block';
     } else {
         selectCont.style.display = 'block';
         customCont.style.display = 'none';
+        saveBtn.style.display = 'none';
         updateKodaSelect('hero-pose');
     }
 }
+
+// --- LOGICA DE POSES SALVAS ---
+function getLocalPoses() {
+    const p = localStorage.getItem('banana_poses');
+    return p ? JSON.parse(p) : {};
+}
+
+function refreshPoseList() {
+    const poses = getLocalPoses();
+    const select = document.getElementById('hero-pose');
+    // Manter as originais
+    const originalGroups = select.querySelectorAll('optgroup:not(.custom-poses)');
+    select.innerHTML = "";
+    originalGroups.forEach(g => select.appendChild(g));
+
+    if (Object.keys(poses).length > 0) {
+        const customGroup = document.createElement('optgroup');
+        customGroup.className = "custom-poses";
+        customGroup.label = "⭐ Poses Salvas";
+        Object.keys(poses).forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = poses[name]; opt.textContent = name;
+            customGroup.appendChild(opt);
+        });
+        select.appendChild(customGroup);
+    }
+    updateKodaSelect('hero-pose');
+}
+
+// Inicializar lista de poses
+document.addEventListener('DOMContentLoaded', () => {
+    refreshPoseList();
+});
+
+// Salvar Pose
+document.getElementById('save-pose-btn').onclick = () => document.getElementById('save-pose-modal').style.display='flex';
+document.getElementById('confirm-save-pose').onclick = () => {
+    const name = document.getElementById('pose-name-input').value.trim();
+    const content = document.getElementById('hero-pose-custom').value.trim();
+    if (!name || !content) return;
+    
+    const poses = getLocalPoses();
+    poses[name] = content;
+    localStorage.setItem('banana_poses', JSON.stringify(poses));
+    
+    alert("✅ Pose salva!");
+    document.getElementById('save-pose-modal').style.display='none';
+    refreshPoseList();
+};
+
+// Gerenciar Poses
+document.getElementById('manage-poses-btn').onclick = () => {
+    const poses = getLocalPoses();
+    const listContainer = document.getElementById('manage-poses-list');
+    listContainer.innerHTML = "";
+    
+    if (Object.keys(poses).length === 0) {
+        listContainer.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Nenhuma pose customizada salva.</p>";
+    }
+
+    Object.keys(poses).forEach(name => {
+        const item = document.createElement('div');
+        item.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px;";
+        item.innerHTML = `
+            <span style="font-size:13px; font-weight:bold;">${name}</span>
+            <button class="btn-delete-pose" style="padding:6px 12px; font-size:11px; cursor:pointer; background:var(--danger-red); color:white; border:none; border-radius:4px;">EXCLUIR</button>
+        `;
+
+        item.querySelector('.btn-delete-pose').onclick = () => {
+            if(confirm(`Excluir a pose "${name}"?`)) {
+                const p = getLocalPoses();
+                delete p[name];
+                localStorage.setItem('banana_poses', JSON.stringify(p));
+                document.getElementById('manage-poses-btn').click(); // Refresh
+                refreshPoseList();
+            }
+        };
+        listContainer.appendChild(item);
+    });
+    document.getElementById('manage-poses-modal').style.display = 'flex';
+};
 function toggleEffectControls(id) { const c = document.getElementById(`controls-${id}`); c.style.display = document.getElementById(`hero-${id}`).checked ? 'flex' : 'none'; }
 
 document.getElementById('modal-download-btn').onclick = () => {
