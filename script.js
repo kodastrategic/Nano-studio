@@ -441,6 +441,8 @@ const batchProcessBtn = document.getElementById('batch-process-btn');
 const batchQueueContainer = document.getElementById('batch-queue-container');
 const batchStatusMsg = document.getElementById('batch-status-msg');
 
+const sleep = ms => new Promise(res => setTimeout(res, ms));
+
 if (batchProcessBtn) {
     batchProcessBtn.onclick = async () => {
         const rawJson = batchJsonInput.value.trim();
@@ -460,13 +462,14 @@ if (batchProcessBtn) {
         }
 
         batchQueueContainer.innerHTML = "";
-        batchStatusMsg.innerText = `⏳ Iniciando geração de ${promptList.length} imagens...`;
+        batchStatusMsg.innerText = `⏳ Preparando fila para ${promptList.length} imagens...`;
 
-        for (const item of promptList) {
-            const slideNum = item.slide || promptList.indexOf(item) + 1;
+        for (let i = 0; i < promptList.length; i++) {
+            const item = promptList[i];
+            const slideNum = item.slide || (i + 1);
             const promptText = item.prompt;
 
-            // Criar item na fila
+            // Criar item na fila individualmente
             const queueItem = document.createElement('div');
             queueItem.className = 'feed-item';
             queueItem.style.width = '100%';
@@ -477,32 +480,58 @@ if (batchProcessBtn) {
             queueItem.style.alignItems = 'center';
             queueItem.style.padding = '20px';
             queueItem.style.gap = '20px';
+            queueItem.id = `batch-item-${i}`;
             
             queueItem.innerHTML = `
-                <div class="batch-preview-slot" style="width:120px; height:120px; background:var(--bg-input); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <div class="batch-preview-slot" style="width:120px; height:120px; background:var(--bg-input); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border: 1px solid var(--border-color);">
                     <div class="spinner"><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 </div>
                 <div style="flex-grow:1;">
-                    <div style="color:var(--accent-blue); font-weight:bold; font-size:12px; margin-bottom:5px;">SLIDE ${slideNum}</div>
+                    <div style="color:var(--accent-blue); font-weight:bold; font-size:12px; margin-bottom:5px; display:flex; justify-content:space-between;">
+                        <span>SLIDE ${slideNum}</span>
+                        <span class="status-label" style="font-size:10px; opacity:0.6;">AGUARDANDO...</span>
+                    </div>
                     <div style="font-size:11px; color:var(--text-muted); line-height:1.4;">${promptText}</div>
                 </div>
             `;
             batchQueueContainer.appendChild(queueItem);
+        }
+
+        // Processamento Sequencial com Delay
+        for (let i = 0; i < promptList.length; i++) {
+            const item = promptList[i];
+            const queueItem = document.getElementById(`batch-item-${i}`);
+            const statusLabel = queueItem.querySelector('.status-label');
+            const slot = queueItem.querySelector('.batch-preview-slot');
+
+            statusLabel.innerText = "GERANDO...";
+            statusLabel.style.color = "var(--accent-blue)";
+            batchStatusMsg.innerText = `🚀 Gerando imagem ${i+1} de ${promptList.length}...`;
 
             try {
-                const response = await callGeminiAPI(key, promptText, [], aspect, "4K", model);
+                // Envia APENAS o prompt individual para a API
+                const response = await callGeminiAPI(key, item.prompt, [], aspect, "4K", model);
                 const imgSrc = `data:image/png;base64,${response}`;
                 
-                const slot = queueItem.querySelector('.batch-preview-slot');
                 slot.innerHTML = `<img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; cursor:pointer;">`;
                 slot.onclick = () => { expandedImg.src = imgSrc; previewModal.style.display = 'flex'; };
+                statusLabel.innerText = "CONCLUÍDO";
+                statusLabel.style.color = "#00ff88";
                 
             } catch (err) {
-                queueItem.querySelector('.batch-preview-slot').innerHTML = "❌";
-                console.error(`Erro no slide ${slideNum}:`, err);
+                slot.innerHTML = "<span style='font-size:20px;'>⚠️</span>";
+                statusLabel.innerText = "ERRO NA API";
+                statusLabel.style.color = "var(--danger-red)";
+                console.error(`Erro no slide ${i+1}:`, err);
+            }
+
+            // Intervalo de 800ms entre as requisições para evitar rate limit / trava
+            if (i < promptList.length - 1) {
+                statusLabel.innerText = "AGUARDANDO COOLDOWN...";
+                await sleep(800);
             }
         }
-        batchStatusMsg.innerText = "✨ Geração em lote finalizada!";
+        batchStatusMsg.innerText = "✨ Processamento em lote finalizado!";
     };
 }
 
