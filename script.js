@@ -48,9 +48,50 @@ function loadApiSettings() {
     if (savedOrKey) document.getElementById('openrouter-key-input').value = savedOrKey;
 
     const savedProvider = localStorage.getItem('banana_provider_mode');
-    if (savedProvider) document.getElementById('provider-select').value = savedProvider;
+    if (savedProvider) {
+        document.getElementById('provider-select').value = savedProvider;
+        updateModelOptions(savedProvider);
+    }
 }
 loadApiSettings();
+
+// Função para trocar modelos baseado no provedor
+function updateModelOptions(provider) {
+    const modelSelect = document.getElementById('model-select');
+    const heroModelSelect = document.getElementById('hero-model-select');
+    const batchModelSelect = document.getElementById('batch-model-select');
+    
+    const selects = [modelSelect, heroModelSelect, batchModelSelect];
+    
+    selects.forEach(select => {
+        if (!select) return;
+        select.innerHTML = '';
+        if (provider === 'openrouter') {
+            const opt = document.createElement('option');
+            opt.value = "google/gemini-2.5-flash-image";
+            opt.textContent = "🔋 Gemini 2.5 Flash (OR)";
+            opt.selected = true;
+            select.appendChild(opt);
+        } else {
+            const opt1 = document.createElement('option');
+            opt1.value = "gemini-3.1-flash-image-preview";
+            opt1.textContent = "⚡ Gemini 3.1 Flash";
+            opt1.selected = true;
+            
+            const opt2 = document.createElement('option');
+            opt2.value = "gemini-3-pro-image-preview";
+            opt2.textContent = "📸 Gemini 3 Pro (Image)";
+            
+            select.appendChild(opt1);
+            select.appendChild(opt2);
+        }
+        updateKodaSelect(select.id);
+    });
+}
+
+document.getElementById('provider-select').onchange = (e) => {
+    updateModelOptions(e.target.value);
+};
 
 document.getElementById('save-keys-btn').onclick = () => {
     const key = apiKeyInput.value.trim();
@@ -326,7 +367,7 @@ document.getElementById('gen-btn').onclick = async () => {
             const response = await fetch('/api/generate-image', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, openrouterKey: orKey, model: "google/gemini-2.5-flash-image" })
+                body: JSON.stringify({ prompt, openrouterKey: orKey, model: model }) // USA O MODELO SELECIONADO
             });
             const result = await response.json();
             if (result.error) throw new Error(result.error);
