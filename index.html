@@ -12,6 +12,7 @@
         <div style="font-size: 20px; font-weight: 700; margin-right: 20px;">🍌</div>
         <button class="nav-tab active" id="tab-studio-btn" onclick="switchTab('studio')">🎨 STUDIO</button>
         <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO <span style="font-size: 8px; vertical-align: top; background: var(--accent-blue); padding: 2px 4px; border-radius: 4px; margin-left: 4px;">v1.4</span></button>
+        <button class="nav-tab" id="tab-batch-btn" onclick="switchTab('batch')">📦 LOTE</button>
     </nav>
 
     <!-- ABA STUDIO -->
@@ -404,6 +405,48 @@
         </div>
     </div>
 
+    <!-- ABA GERAÇÃO EM LOTE -->
+    <div id="batch-tab" class="tab-page">
+        <div class="sidebar">
+            <div class="section-title">Gerenciador de Lote</div>
+            <div class="input-group">
+                <label>Colar JSON de Prompts</label>
+                <textarea id="batch-json-input" rows="15" placeholder='[ { "slide": 1, "prompt": "Descrição..." }, ... ]'></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label>Modelo AI</label>
+                <select id="batch-model-select">
+                    <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
+                    <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Formato</label>
+                <select id="batch-aspect-select">
+                    <option value="1:1">⬜ 1:1</option>
+                    <option value="16:9" selected>▭ 16:9</option>
+                    <option value="9:16">▯ 9:16</option>
+                    <option value="4:3">📺 4:3</option>
+                    <option value="3:4">📸 3:4</option>
+                </select>
+            </div>
+
+            <button class="btn-generate" id="batch-process-btn">🚀 INICIAR GERAÇÃO EM LOTE</button>
+            
+            <div id="batch-status-msg" style="margin-top:20px; color:var(--text-muted); font-size:12px; text-align:center;">
+                Aguardando lista de prompts...
+            </div>
+        </div>
+        <div class="viewport">
+            <div class="section-title" style="text-align:center; margin-top:0;">Fila de Processamento</div>
+            <div id="batch-queue-container" style="display:flex; flex-direction:column; gap:15px; padding:20px;">
+                <!-- Itens da fila aparecerão aqui -->
+            </div>
+        </div>
+    </div>
+
     <!-- MODALS -->
     <div id="settings-panel" class="settings-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
@@ -556,13 +599,12 @@
         function switchTab(tab) {
             document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-            if(tab === 'studio') {
-                document.getElementById('studio-tab').classList.add('active');
-                document.getElementById('tab-studio-btn').classList.add('active');
-            } else {
-                document.getElementById('hero-tab').classList.add('active');
-                document.getElementById('tab-hero-btn').classList.add('active');
-            }
+            
+            const selectedPage = document.getElementById(`${tab}-tab`);
+            const selectedBtn = document.getElementById(`tab-${tab}-btn`);
+            
+            if(selectedPage) selectedPage.classList.add('active');
+            if(selectedBtn) selectedBtn.classList.add('active');
         }
     </script>
 </body>

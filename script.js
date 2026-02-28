@@ -435,8 +435,79 @@ window.togglePoseMode = function() {
     }
 }
 
+// --- BATCH PROCESSING LOGIC ---
+const batchJsonInput = document.getElementById('batch-json-input');
+const batchProcessBtn = document.getElementById('batch-process-btn');
+const batchQueueContainer = document.getElementById('batch-queue-container');
+const batchStatusMsg = document.getElementById('batch-status-msg');
+
+if (batchProcessBtn) {
+    batchProcessBtn.onclick = async () => {
+        const rawJson = batchJsonInput.value.trim();
+        const key = apiKeyInput.value.trim();
+        const aspect = document.getElementById('batch-aspect-select').value;
+        const model = document.getElementById('batch-model-select').value;
+
+        if (!key) { alert("Chave API não configurada."); return; }
+        if (!rawJson) { alert("Cole o JSON de prompts primeiro."); return; }
+
+        let promptList = [];
+        try {
+            promptList = JSON.parse(rawJson);
+        } catch (e) {
+            alert("Erro no formato do JSON. Verifique a sintaxe.");
+            return;
+        }
+
+        batchQueueContainer.innerHTML = "";
+        batchStatusMsg.innerText = `⏳ Iniciando geração de ${promptList.length} imagens...`;
+
+        for (const item of promptList) {
+            const slideNum = item.slide || promptList.indexOf(item) + 1;
+            const promptText = item.prompt;
+
+            // Criar item na fila
+            const queueItem = document.createElement('div');
+            queueItem.className = 'feed-item';
+            queueItem.style.width = '100%';
+            queueItem.style.height = 'auto';
+            queueItem.style.minHeight = '150px';
+            queueItem.style.display = 'flex';
+            queueItem.style.flexDirection = 'row';
+            queueItem.style.alignItems = 'center';
+            queueItem.style.padding = '20px';
+            queueItem.style.gap = '20px';
+            
+            queueItem.innerHTML = `
+                <div class="batch-preview-slot" style="width:120px; height:120px; background:var(--bg-input); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div class="spinner"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                </div>
+                <div style="flex-grow:1;">
+                    <div style="color:var(--accent-blue); font-weight:bold; font-size:12px; margin-bottom:5px;">SLIDE ${slideNum}</div>
+                    <div style="font-size:11px; color:var(--text-muted); line-height:1.4;">${promptText}</div>
+                </div>
+            `;
+            batchQueueContainer.appendChild(queueItem);
+
+            try {
+                const response = await callGeminiAPI(key, promptText, [], aspect, "4K", model);
+                const imgSrc = `data:image/png;base64,${response}`;
+                
+                const slot = queueItem.querySelector('.batch-preview-slot');
+                slot.innerHTML = `<img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; cursor:pointer;">`;
+                slot.onclick = () => { expandedImg.src = imgSrc; previewModal.style.display = 'flex'; };
+                
+            } catch (err) {
+                queueItem.querySelector('.batch-preview-slot').innerHTML = "❌";
+                console.error(`Erro no slide ${slideNum}:`, err);
+            }
+        }
+        batchStatusMsg.innerText = "✨ Geração em lote finalizada!";
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo'].forEach(initKodaSelect);
+    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo', 'batch-model-select', 'batch-aspect-select'].forEach(initKodaSelect);
     refreshPoseList();
 });
 
