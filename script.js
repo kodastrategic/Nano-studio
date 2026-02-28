@@ -448,6 +448,7 @@ if (batchProcessBtn) {
         const rawJson = batchJsonInput.value.trim();
         const key = apiKeyInput.value.trim();
         const aspect = document.getElementById('batch-aspect-select').value;
+        const quality = document.getElementById('batch-quality-select').value;
         const model = document.getElementById('batch-model-select').value;
 
         if (!key) { alert("Chave API não configurada."); return; }
@@ -505,7 +506,7 @@ if (batchProcessBtn) {
             currentGrid.appendChild(itemEl);
 
             try {
-                const response = await callGeminiAPI(key, item.prompt, [], aspect, "4K", model);
+                const response = await callGeminiAPI(key, item.prompt, [], aspect, quality, model);
                 const imgSrc = `data:image/png;base64,${response}`;
                 
                 itemEl.innerHTML = `<img src="${imgSrc}"><div style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; font-size:8px; font-weight:bold;">SLIDE ${slideNum}</div>`;
@@ -545,7 +546,7 @@ async function downloadBatchAsZip(images, folderName) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo', 'batch-model-select', 'batch-aspect-select'].forEach(initKodaSelect);
+    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo', 'batch-model-select', 'batch-aspect-select', 'batch-quality-select'].forEach(initKodaSelect);
     refreshPoseList();
 });
 
