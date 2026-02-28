@@ -458,14 +458,31 @@
     <!-- MODALS -->
     <div id="settings-panel" class="settings-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <h2>Ajustes</h2><div class="close-btn" id="close-settings">✕</div>
+            <h2>Ajustes de API</h2><div class="close-btn" id="close-settings">✕</div>
         </div>
+        
+        <div class="section-title" style="margin-bottom: 15px;">Provedor Ativo</div>
         <div class="input-group">
-            <label>Chave API (Gemini)</label>
-            <input type="password" id="api-key-input" placeholder="Sua chave...">
-            <button class="btn-save" id="save-key-btn" style="width:100%;">ATUALIZAR CHAVE</button>
+            <select id="provider-select">
+                <option value="primary">💎 Primário (Google AI Direct)</option>
+                <option value="openrouter">🔋 Econômico (OpenRouter)</option>
+            </select>
         </div>
-        <button class="btn-shutdown" id="shutdown-btn">🛑 ENCERRAR ESTÚDIO</button>
+
+        <div class="section-title" style="margin-top: 25px; margin-bottom: 10px;">Primary API Key (Google AI)</div>
+        <div class="input-group">
+            <input type="password" id="api-key-input" placeholder="Sua chave Google AI...">
+        </div>
+
+        <div class="section-title" style="margin-top: 25px; margin-bottom: 10px;">OpenRouter API Key</div>
+        <div class="input-group">
+            <input type="password" id="openrouter-key-input" placeholder="Sua chave OpenRouter...">
+            <span style="font-size: 9px; color: var(--text-muted); display: block; margin-top: 5px;">Atenção: A chave é enviada para processamento econômico via proxy.</span>
+        </div>
+
+        <button class="btn-save" id="save-keys-btn" style="width:100%; margin-top: 20px;">SALVAR CONFIGURAÇÕES</button>
+        
+        <button class="btn-shutdown" id="shutdown-btn" style="margin-top: 40px;">🛑 ENCERRAR ESTÚDIO</button>
     </div>
 
     <div id="preview-modal" class="preview-modal">

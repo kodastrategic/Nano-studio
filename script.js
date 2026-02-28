@@ -40,19 +40,28 @@ document.getElementById('close-preview').onclick = () => previewModal.style.disp
 document.getElementById('close-ref-modal').onclick = () => refModal.style.display = 'none';
 
 // --- WEB READY: Carregamento Automático da Chave ---
-function loadApiKey() {
+function loadApiSettings() {
     const savedKey = localStorage.getItem('banana_api_key');
-    if (savedKey) {
-        apiKeyInput.value = savedKey;
-        console.log("🔑 Chave API carregada do navegador.");
-    }
-}
-loadApiKey();
+    if (savedKey) apiKeyInput.value = savedKey;
 
-document.getElementById('save-key-btn').onclick = () => {
+    const savedOrKey = localStorage.getItem('banana_openrouter_key');
+    if (savedOrKey) document.getElementById('openrouter-key-input').value = savedOrKey;
+
+    const savedProvider = localStorage.getItem('banana_provider_mode');
+    if (savedProvider) document.getElementById('provider-select').value = savedProvider;
+}
+loadApiSettings();
+
+document.getElementById('save-keys-btn').onclick = () => {
     const key = apiKeyInput.value.trim();
+    const orKey = document.getElementById('openrouter-key-input').value.trim();
+    const provider = document.getElementById('provider-select').value;
+
     localStorage.setItem('banana_api_key', key);
-    alert("✅ Chave salva no navegador!");
+    localStorage.setItem('banana_openrouter_key', orKey);
+    localStorage.setItem('banana_provider_mode', provider);
+    
+    alert("✅ Configurações salvas!");
 };
 
 // --- WEB READY: Presets via localStorage ---
@@ -299,17 +308,38 @@ function finishFeedItem(item, src) {
 document.getElementById('gen-btn').onclick = async () => {
     const prompt = promptInput.value.trim();
     const key = apiKeyInput.value.trim();
+    const orKey = document.getElementById('openrouter-key-input').value.trim();
+    const provider = document.getElementById('provider-select').value;
     const aspect = document.getElementById('aspect-select').value;
     const quality = document.getElementById('quality-select').value;
     const model = document.getElementById('model-select').value;
     
-    if (!prompt || !key) { alert("Configure a chave API."); return; }
+    if (!prompt) { alert("Digite um prompt."); return; }
+    
     const item = createFeedItem(feedGrid);
     statusMsg.innerText = "⏳ Gerando...";
+    
     try {
-        const response = await callGeminiAPI(key, prompt, attachedRefs, aspect, quality, model);
-        finishFeedItem(item, `data:image/png;base64,${response}`);
-        statusMsg.innerText = "✨ Pronto!";
+        let finalSrc = "";
+        if (provider === 'openrouter') {
+            if (!orKey) throw new Error("Configure a OpenRouter Key nos ajustes.");
+            const response = await fetch('/api/generate-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt, openrouterKey: orKey, model: "google/gemini-2.5-flash-image" })
+            });
+            const result = await response.json();
+            if (result.error) throw new Error(result.error);
+            finalSrc = result.imageUrl;
+            statusMsg.innerText = `✨ Pronto! (${result.meta.ms}ms via OpenRouter)`;
+        } else {
+            if (!key) throw new Error("Configure a Primary API Key.");
+            const response = await callGeminiAPI(key, prompt, attachedRefs, aspect, quality, model);
+            finalSrc = `data:image/png;base64,${response}`;
+            statusMsg.innerText = "✨ Pronto!";
+        }
+        
+        finishFeedItem(item, finalSrc);
     } catch (e) { 
         statusMsg.innerText = "❌ ERRO: " + e.message; 
         item.remove();
@@ -546,7 +576,7 @@ async function downloadBatchAsZip(images, folderName) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo', 'batch-model-select', 'batch-aspect-select', 'batch-quality-select'].forEach(initKodaSelect);
+    ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo', 'batch-model-select', 'batch-aspect-select', 'batch-quality-select', 'provider-select'].forEach(initKodaSelect);
     refreshPoseList();
 });
 
