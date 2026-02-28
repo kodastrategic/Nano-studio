@@ -438,7 +438,7 @@ window.togglePoseMode = function() {
 // --- BATCH PROCESSING LOGIC ---
 const batchJsonInput = document.getElementById('batch-json-input');
 const batchProcessBtn = document.getElementById('batch-process-btn');
-const batchQueueContainer = document.getElementById('batch-queue-container');
+const batchGroupsContainer = document.getElementById('batch-groups-container');
 const batchStatusMsg = document.getElementById('batch-status-msg');
 
 const sleep = ms => new Promise(res => setTimeout(res, ms));
@@ -461,78 +461,87 @@ if (batchProcessBtn) {
             return;
         }
 
-        batchQueueContainer.innerHTML = "";
-        batchStatusMsg.innerText = `⏳ Preparando fila para ${promptList.length} imagens...`;
+        // Criar um novo grupo de geração
+        const groupId = `batch-${Date.now()}`;
+        const groupWrapper = document.createElement('div');
+        groupWrapper.className = 'batch-group';
+        groupWrapper.style.cssText = "background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:15px; padding:20px; position:relative;";
+        
+        const timestamp = new Date().toLocaleTimeString();
+        groupWrapper.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:15px;">
+                <div>
+                    <h3 style="margin:0; font-size:14px; color:var(--accent-blue);">Pacote de Geração #${timestamp}</h3>
+                    <span style="font-size:10px; opacity:0.5;">${promptList.length} Slides • Modelo: ${model}</span>
+                </div>
+                <button class="btn-save download-all-btn" style="margin:0; padding:8px 15px; font-size:10px; display:none;">📥 BAIXAR EM LOTE (.ZIP)</button>
+            </div>
+            <div class="feed-grid batch-grid" id="grid-${groupId}" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px;">
+                <!-- Imagens entram aqui -->
+            </div>
+        `;
+        
+        batchGroupsContainer.prepend(groupWrapper);
+        const currentGrid = document.getElementById(`grid-${groupId}`);
+        const downloadBtn = groupWrapper.querySelector('.download-all-btn');
+        let generatedImages = [];
+
+        batchStatusMsg.innerText = `⏳ Gerando pacote de ${promptList.length} imagens...`;
 
         for (let i = 0; i < promptList.length; i++) {
             const item = promptList[i];
             const slideNum = item.slide || (i + 1);
-            const promptText = item.prompt;
 
-            // Criar item na fila individualmente
-            const queueItem = document.createElement('div');
-            queueItem.className = 'feed-item';
-            queueItem.style.width = '100%';
-            queueItem.style.height = 'auto';
-            queueItem.style.minHeight = '150px';
-            queueItem.style.display = 'flex';
-            queueItem.style.flexDirection = 'row';
-            queueItem.style.alignItems = 'center';
-            queueItem.style.padding = '20px';
-            queueItem.style.gap = '20px';
-            queueItem.id = `batch-item-${i}`;
-            
-            queueItem.innerHTML = `
-                <div class="batch-preview-slot" style="width:120px; height:120px; background:var(--bg-input); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border: 1px solid var(--border-color);">
+            // Criar placeholder na grid
+            const itemEl = document.createElement('div');
+            itemEl.className = 'feed-item';
+            itemEl.style.width = '100%';
+            itemEl.innerHTML = `
+                <div class="spinner-container" style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:20px;">
                     <div class="spinner"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                </div>
-                <div style="flex-grow:1;">
-                    <div style="color:var(--accent-blue); font-weight:bold; font-size:12px; margin-bottom:5px; display:flex; justify-content:space-between;">
-                        <span>SLIDE ${slideNum}</span>
-                        <span class="status-label" style="font-size:10px; opacity:0.6;">AGUARDANDO...</span>
-                    </div>
-                    <div style="font-size:11px; color:var(--text-muted); line-height:1.4;">${promptText}</div>
+                    <span style="font-size:9px; color:var(--accent-blue); font-weight:bold;">SLIDE ${slideNum}</span>
                 </div>
             `;
-            batchQueueContainer.appendChild(queueItem);
-        }
-
-        // Processamento Sequencial com Delay
-        for (let i = 0; i < promptList.length; i++) {
-            const item = promptList[i];
-            const queueItem = document.getElementById(`batch-item-${i}`);
-            const statusLabel = queueItem.querySelector('.status-label');
-            const slot = queueItem.querySelector('.batch-preview-slot');
-
-            statusLabel.innerText = "GERANDO...";
-            statusLabel.style.color = "var(--accent-blue)";
-            batchStatusMsg.innerText = `🚀 Gerando imagem ${i+1} de ${promptList.length}...`;
+            currentGrid.appendChild(itemEl);
 
             try {
-                // Envia APENAS o prompt individual para a API
                 const response = await callGeminiAPI(key, item.prompt, [], aspect, "4K", model);
                 const imgSrc = `data:image/png;base64,${response}`;
                 
-                slot.innerHTML = `<img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; cursor:pointer;">`;
-                slot.onclick = () => { expandedImg.src = imgSrc; previewModal.style.display = 'flex'; };
-                statusLabel.innerText = "CONCLUÍDO";
-                statusLabel.style.color = "#00ff88";
+                itemEl.innerHTML = `<img src="${imgSrc}"><div style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; font-size:8px; font-weight:bold;">SLIDE ${slideNum}</div>`;
+                itemEl.onclick = () => { expandedImg.src = imgSrc; previewModal.style.display = 'flex'; };
                 
+                generatedImages.push({ name: `slide_${slideNum}.png`, data: response });
+
             } catch (err) {
-                slot.innerHTML = "<span style='font-size:20px;'>⚠️</span>";
-                statusLabel.innerText = "ERRO NA API";
-                statusLabel.style.color = "var(--danger-red)";
-                console.error(`Erro no slide ${i+1}:`, err);
+                itemEl.innerHTML = "<div style='padding:20px; text-align:center; color:var(--danger-red); font-size:10px;'>⚠️ ERRO</div>";
             }
 
-            // Intervalo de 800ms entre as requisições para evitar rate limit / trava
-            if (i < promptList.length - 1) {
-                statusLabel.innerText = "AGUARDANDO COOLDOWN...";
-                await sleep(800);
-            }
+            if (i < promptList.length - 1) await sleep(800);
         }
-        batchStatusMsg.innerText = "✨ Processamento em lote finalizado!";
+
+        // Mostrar botão de download se houver imagens
+        if (generatedImages.length > 0) {
+            downloadBtn.style.display = 'block';
+            downloadBtn.onclick = () => downloadBatchAsZip(generatedImages, `carrossel_${timestamp.replace(/:/g,'-')}`);
+        }
+        
+        batchStatusMsg.innerText = "✨ Lote concluído!";
     };
+}
+
+async function downloadBatchAsZip(images, folderName) {
+    // Como não temos a biblioteca JSZip carregada nativamente, vamos baixar um por um
+    // No futuro podemos injetar o JSZip via CDN no index.html
+    alert("Iniciando download das imagens do lote...");
+    images.forEach((img, index) => {
+        setTimeout(() => {
+            const link = document.createElement('a');
+            link.download = img.name;
+            link.href = `data:image/png;base64,${img.data}`;
+            link.click();
+        }, index * 200);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
