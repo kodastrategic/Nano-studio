@@ -60,6 +60,7 @@
     cursor: grab;
     transition: transform 0.1s, border-color 0.2s;
     position: relative;
+    group;
 }
 
 .pipeline-card:hover {
@@ -76,6 +77,7 @@
     font-weight: 600;
     margin-bottom: 8px;
     display: block;
+    padding-right: 40px; /* espaço para ações */
 }
 
 .card-tag {
@@ -84,6 +86,37 @@
     border-radius: 4px;
     background: rgba(255,255,255,0.05);
     color: var(--text-muted);
+}
+
+.card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+    gap: 5px;
+}
+
+.pipeline-card:hover .card-actions {
+    display: flex;
+}
+
+.card-btn {
+    background: rgba(255,255,255,0.05);
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 10px;
+}
+
+.card-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-main);
+}
+
+.card-btn.del:hover {
+    color: #ff4d4d;
 }
 
 .add-card-btn {
