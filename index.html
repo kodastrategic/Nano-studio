@@ -666,6 +666,36 @@
         </div>
     </div>
 
+    <!-- MODAL DETALHES DA DEMANDA -->
+    <div id="demand-modal" class="modal" style="z-index: 10005;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Detalhes da Demanda</h3>
+                <div class="close-btn" id="close-demand-modal" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Nome do Cliente</label>
+                <input type="text" id="demand-client-input" placeholder="Ex: DCREX, Becker Smart...">
+            </div>
+
+            <div class="input-group">
+                <label>Título</label>
+                <input type="text" id="demand-title-input" placeholder="O que precisa ser feito?">
+            </div>
+
+            <div class="input-group">
+                <label>Descrição</label>
+                <textarea id="demand-desc-input" rows="6" placeholder="Detalhes da tarefa, referências, links..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button id="cancel-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border-color); background:transparent; color:white; cursor:pointer;">Fechar</button>
+                <button id="save-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white; font-weight:bold;">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="script.js"></script>
     <script>
         function switchTab(tab) {
