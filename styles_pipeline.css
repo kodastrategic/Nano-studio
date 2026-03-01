@@ -1,0 +1,112 @@
+/* styles_pipeline.css */
+.pipeline-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: calc(100vh - 80px);
+    overflow-x: auto;
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+.pipeline-column {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+.column-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.column-title {
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.column-count {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.column-cards {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pipeline-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: grab;
+    transition: transform 0.1s, border-color 0.2s;
+    position: relative;
+}
+
+.pipeline-card:hover {
+    border-color: var(--accent-blue);
+}
+
+.pipeline-card.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.card-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+}
+
+.add-card-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.add-card-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-main);
+}
+
+/* Cores das colunas (estilo Notion) */
+.dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; }
+.dot-gray { background: #888; }
+.dot-blue { background: #3498db; }
+.dot-yellow { background: #f1c40f; }
+.dot-green { background: #2ecc71; }

@@ -1,4 +1,5 @@
 import { PoseDB } from './poseDB.js';
+import { initPipeline } from './pipeline.js';
 
 // Seletores Studio
 const feedGrid = document.getElementById('feed-grid');
@@ -617,6 +618,7 @@ async function downloadBatchAsZip(images, folderName) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initPipeline();
     ['aspect-select', 'quality-select', 'model-select', 'saved-prompts-select', 'hero-model-select', 'hero-estilo', 'hero-pose', 'hero-expressao', 'hero-preset', 'hero-genero', 'hero-lado', 'hero-plano', 'hero-aspect-select', 'hero-quality-select', 'hero-angulo', 'batch-model-select', 'batch-aspect-select', 'batch-quality-select', 'provider-select'].forEach(initKodaSelect);
     refreshPoseList();
 });
