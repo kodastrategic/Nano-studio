@@ -51,85 +51,100 @@ export async function initPipeline() {
 }
 
 function setupMainEvents() {
-    // Painel Lateral (Configurações)
+    // 1. CONFIGURAÇÕES (Engrenagem e Painel Lateral)
     const configPanel = document.getElementById('pipeline-config-panel');
     const menuBtn = document.getElementById('pipeline-menu-btn');
-    const closeMenuBtn = document.getElementById('close-pipeline-config');
+    const closeConfigBtn = document.getElementById('close-pipeline-config');
 
-    if (menuBtn) menuBtn.addEventListener('click', () => configPanel.classList.add('active'));
-    if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => configPanel.classList.remove('active'));
+    if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+            console.log("Config button clicked");
+            configPanel.classList.add('active');
+        });
+    }
+    if (closeConfigBtn) {
+        closeConfigBtn.addEventListener('click', () => configPanel.classList.remove('active'));
+    }
 
-    // Sub-modais de Config (Clientes e Jobs)
+    // 2. MODAIS DE CADASTRO (Clientes e Jobs)
     const openClients = document.getElementById('open-clients-modal');
     const openJobs = document.getElementById('open-jobs-modal');
 
-    if (openClients) openClients.addEventListener('click', () => document.getElementById('clients-config-modal').style.display = 'flex');
-    if (openJobs) openJobs.addEventListener('click', () => document.getElementById('jobs-config-modal').style.display = 'flex');
+    if (openClients) {
+        openClients.addEventListener('click', () => {
+            document.getElementById('clients-config-modal').style.display = 'flex';
+        });
+    }
+    if (openJobs) {
+        openJobs.addEventListener('click', () => {
+            document.getElementById('jobs-config-modal').style.display = 'flex';
+        });
+    }
 
-    // Fechar Sub-modais genérico
-    const closeIds = [
+    // 3. FECHAMENTO DE MODAIS (Genérico)
+    const closeButtons = [
         'close-clients-modal', 'close-clients-bottom',
         'close-jobs-modal', 'close-jobs-bottom',
         'close-demand-modal', 'cancel-demand-btn'
     ];
-    closeIds.forEach(id => {
+    closeButtons.forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 const modal = btn.closest('.modal');
                 if (modal) modal.style.display = 'none';
             });
         }
     });
 
-    // Cadastro de Itens
-    const addClientBtn = document.getElementById('add-client-btn-main');
-    if (addClientBtn) {
-        addClientBtn.addEventListener('click', async () => {
-            const name = prompt('Nome do novo cliente:');
-            if (name) { await dbPut(STORE_CLIENTS, { id: Date.now().toString(), name }); await refreshConfigLists(); }
-        });
-    }
-
-    const addJobBtn = document.getElementById('add-job-btn-main');
-    if (addJobBtn) {
-        addJobBtn.addEventListener('click', async () => {
-            const name = prompt('Nome do novo tipo de job:');
-            if (name) { await dbPut(STORE_JOBS, { id: Date.now().toString(), name }); await refreshConfigLists(); }
-        });
-    }
-
-    // Filtros
-    const fClient = document.getElementById('filter-client');
-    const fJob = document.getElementById('filter-job');
-    const clearBtn = document.getElementById('clear-filters');
-
-    if (fClient) fClient.addEventListener('change', applyFilters);
-    if (fJob) fJob.addEventListener('change', applyFilters);
-    if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-            fClient.value = '';
-            fJob.value = '';
-            applyFilters();
-        });
-    }
-
-    // Botão Salvar Demanda (Modal de Detalhes)
+    // 4. SALVAR DEMANDA (O que não estava funcionando)
     const saveDemandBtn = document.getElementById('save-demand-btn');
     if (saveDemandBtn) {
-        saveDemandBtn.addEventListener('click', async () => {
+        saveDemandBtn.addEventListener('click', async (e) => {
+            console.log("Save demand clicked", currentEditingDemand);
             if (!currentEditingDemand) return;
             
-            currentEditingDemand.client = document.getElementById('demand-client-select').value;
-            currentEditingDemand.jobType = document.getElementById('demand-job-select').value;
-            currentEditingDemand.title = document.getElementById('demand-title-input').value;
-            currentEditingDemand.desc = document.getElementById('demand-desc-input').value;
-            
+            const clientVal = document.getElementById('demand-client-select').value;
+            const jobVal = document.getElementById('demand-job-select').value;
+            const titleVal = document.getElementById('demand-title-input').value;
+            const descVal = document.getElementById('demand-desc-input').value;
+
+            currentEditingDemand.client = clientVal;
+            currentEditingDemand.jobType = jobVal;
+            currentEditingDemand.title = titleVal;
+            currentEditingDemand.desc = descVal;
+
             await dbPut(STORE_DEMANDS, currentEditingDemand);
             document.getElementById('demand-modal').style.display = 'none';
             await refreshDemands();
         });
     }
+
+    // 5. CADASTRO DE NOVOS ITENS
+    document.getElementById('add-client-btn-main').addEventListener('click', async () => {
+        const name = prompt('Nome do novo cliente:');
+        if (name) {
+            await dbPut(STORE_CLIENTS, { id: Date.now().toString(), name });
+            await refreshConfigLists();
+        }
+    });
+
+    document.getElementById('add-job-btn-main').addEventListener('click', async () => {
+        const name = prompt('Nome do novo tipo de job:');
+        if (name) {
+            await dbPut(STORE_JOBS, { id: Date.now().toString(), name });
+            await refreshConfigLists();
+        }
+    });
+
+    // 6. FILTROS
+    document.getElementById('filter-client').addEventListener('change', applyFilters);
+    document.getElementById('filter-job').addEventListener('change', applyFilters);
+    document.getElementById('clear-filters').addEventListener('click', () => {
+        document.getElementById('filter-client').value = '';
+        document.getElementById('filter-job').value = '';
+        applyFilters();
+    });
 }
 
 async function refreshDemands() {
@@ -141,6 +156,7 @@ function applyFilters() {
     const cf = document.getElementById('filter-client').value;
     const jf = document.getElementById('filter-job').value;
     const filtered = allDemandsCache.filter(d => (!cf || d.client === cf) && (!jf || d.jobType === jf));
+    
     const data = {
         'backlog': filtered.filter(d => d.status === 'backlog'),
         'todo': filtered.filter(d => d.status === 'todo'),
@@ -177,21 +193,27 @@ function createCard(card) {
 
     div.addEventListener('click', (e) => {
         if (e.target.closest('.del-btn')) return;
-        currentEditingDemand = card;
-        document.getElementById('demand-client-select').value = card.client || '';
-        document.getElementById('demand-job-select').value = card.jobType || '';
-        document.getElementById('demand-title-input').value = card.title || '';
-        document.getElementById('demand-desc-input').value = card.desc || '';
-        document.getElementById('demand-modal').style.display = 'flex';
+        openDemandModal(card);
     });
 
-    const delBtn = div.querySelector('.del-btn');
-    delBtn.addEventListener('click', async (e) => {
+    div.querySelector('.del-btn').addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (confirm('Excluir demanda?')) { await dbDelete(STORE_DEMANDS, card.id); await refreshDemands(); }
+        if (confirm('Excluir demanda?')) {
+            await dbDelete(STORE_DEMANDS, card.id);
+            await refreshDemands();
+        }
     });
 
     return div;
+}
+
+function openDemandModal(card) {
+    currentEditingDemand = card;
+    document.getElementById('demand-client-select').value = card.client || '';
+    document.getElementById('demand-job-select').value = card.jobType || '';
+    document.getElementById('demand-title-input').value = card.title || '';
+    document.getElementById('demand-desc-input').value = card.desc || '';
+    document.getElementById('demand-modal').style.display = 'flex';
 }
 
 async function refreshConfigLists() {
@@ -229,13 +251,13 @@ async function refreshConfigLists() {
                     <button class="del-item-btn" style="background:transparent; border:none; cursor:pointer; color:#ff4d4d">🗑️</button>
                 </div>
             `;
-            row.querySelector('.edit-item-btn').onclick = async () => {
+            row.querySelector('.edit-item-btn').addEventListener('click', async () => {
                 const n = prompt('Novo nome:', item.name);
                 if(n) { item.name = n; await dbPut(store, item); await refreshConfigLists(); await refreshDemands(); }
-            };
-            row.querySelector('.del-item-btn').onclick = async () => {
+            });
+            row.querySelector('.del-item-btn').addEventListener('click', async () => {
                 if(confirm('Excluir item?')) { await dbDelete(store, item.id); await refreshConfigLists(); }
-            };
+            });
             el.appendChild(row);
         });
     };
@@ -252,6 +274,7 @@ function updateCount(s) {
 function setupDragAndDrop() {
     const cards = document.querySelectorAll('.pipeline-card');
     const conts = document.querySelectorAll('.column-cards');
+    
     cards.forEach(card => {
         card.ondragstart = () => card.classList.add('dragging');
         card.ondragend = async () => {
@@ -264,6 +287,7 @@ function setupDragAndDrop() {
             }
         };
     });
+
     conts.forEach(container => {
         container.ondragover = (e) => {
             e.preventDefault();
@@ -280,10 +304,6 @@ function setupDragAndDrop() {
 }
 
 window.addNewPipelineCard = function(status) {
-    currentEditingDemand = { id: Date.now().toString(), title: '', client: '', jobType: '', desc: '', status };
-    document.getElementById('demand-client-select').value = '';
-    document.getElementById('demand-job-select').value = '';
-    document.getElementById('demand-title-input').value = '';
-    document.getElementById('demand-desc-input').value = '';
-    document.getElementById('demand-modal').style.display = 'flex';
+    const newDemand = { id: Date.now().toString(), title: '', client: '', jobType: '', desc: '', status };
+    openDemandModal(newDemand);
 };
