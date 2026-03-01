@@ -45,6 +45,35 @@
     outline: none;
 }
 
+.pipeline-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: calc(100vh - 145px); /* Ajustado para o novo header */
+    overflow-x: auto;
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+.pipeline-settings-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 2000;
+    padding: 30px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
+.pipeline-settings-panel.active {
+    right: 0;
+}
+
 .manage-btn-large {
     width: 100%;
     padding: 18px;
@@ -78,16 +107,7 @@
     border-radius: 8px;
     margin-bottom: 8px;
 }
-
-.pipeline-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    height: calc(100vh - 145px); /* Ajustado para o novo header */
-    overflow-x: auto;
-    background: var(--bg-main);
-    color: var(--text-main);
-}
+/* Restante do arquivo mantido... */
 
 /* Restante do arquivo mantido... */
 

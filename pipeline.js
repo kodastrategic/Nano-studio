@@ -50,21 +50,38 @@ export async function initPipeline() {
 }
 
 function setupMainEvents() {
-    // Menu Principal (Engrenagem)
-    document.getElementById('pipeline-menu-btn').onclick = () => {
-        document.getElementById('pipeline-config-modal').style.display = 'flex';
-    };
-    document.getElementById('close-pipeline-config').onclick = () => {
-        document.getElementById('pipeline-config-modal').style.display = 'none';
-    };
+    // Painel Lateral (Configurações)
+    const configPanel = document.getElementById('pipeline-config-panel');
+    const menuBtn = document.getElementById('pipeline-menu-btn');
+    const closeMenuBtn = document.getElementById('close-pipeline-config');
+
+    if (menuBtn) {
+        menuBtn.onclick = () => {
+            configPanel.classList.add('active');
+        };
+    }
+
+    if (closeMenuBtn) {
+        closeMenuBtn.onclick = () => {
+            configPanel.classList.remove('active');
+        };
+    }
 
     // Sub-modais de Config
-    document.getElementById('open-clients-modal').onclick = () => {
-        document.getElementById('clients-config-modal').style.display = 'flex';
-    };
-    document.getElementById('open-jobs-modal').onclick = () => {
-        document.getElementById('jobs-config-modal').style.display = 'flex';
-    };
+    const openClients = document.getElementById('open-clients-modal');
+    const openJobs = document.getElementById('open-jobs-modal');
+
+    if (openClients) {
+        openClients.onclick = () => {
+            document.getElementById('clients-config-modal').style.display = 'flex';
+        };
+    }
+
+    if (openJobs) {
+        openJobs.onclick = () => {
+            document.getElementById('jobs-config-modal').style.display = 'flex';
+        };
+    }
 
     ['close-clients-modal', 'close-clients-bottom'].forEach(id => {
         document.getElementById(id).onclick = () => document.getElementById('clients-config-modal').style.display = 'none';

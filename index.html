@@ -538,22 +538,22 @@
         <button class="btn-shutdown" id="shutdown-btn" style="margin-top: 40px;">🛑 ENCERRAR ESTÚDIO</button>
     </div>
 
-    <!-- MODAL MENU PIPELINE (MAIN CONFIG) -->
-    <div id="pipeline-config-modal" class="modal" style="z-index: 10010;">
-        <div class="modal-content" style="max-width: 400px; padding: 30px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                <h3 style="margin:0;">Configurações</h3>
-                <div class="close-btn" id="close-pipeline-config" style="cursor:pointer; font-size:20px;">✕</div>
-            </div>
-            <button class="manage-btn-large" id="open-clients-modal">
-                <span>👤 Gerenciar Clientes</span>
-                <span style="font-size:18px;">›</span>
-            </button>
-            <button class="manage-btn-large" id="open-jobs-modal">
-                <span>📋 Tipos de Job</span>
-                <span style="font-size:18px;">›</span>
-            </button>
+    <!-- PAINEL LATERAL DE CONFIGURAÇÕES DO PIPELINE (ESTILO AJUSTES API) -->
+    <div id="pipeline-config-panel" class="pipeline-settings-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 style="margin:0;">Ajustes Pipeline</h2>
+            <div class="close-btn" id="close-pipeline-config" style="cursor:pointer; font-size:20px;">✕</div>
         </div>
+        
+        <button class="manage-btn-large" id="open-clients-modal">
+            <span>👤 Gerenciar Clientes</span>
+            <span style="font-size:18px;">›</span>
+        </button>
+        
+        <button class="manage-btn-large" id="open-jobs-modal">
+            <span>📋 Tipos de Job</span>
+            <span style="font-size:18px;">›</span>
+        </button>
     </div>
 
     <!-- MODAL GERENCIAR CLIENTES (DETALHADO) -->
