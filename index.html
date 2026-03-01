@@ -459,61 +459,63 @@
 
     <!-- ABA PIPELINE DE DEMANDAS (NOVA) -->
     <div id="pipeline-tab" class="tab-page">
-        <!-- HEADER DA ABA COM FILTROS E MENU -->
-        <div class="pipeline-header">
-            <h2 style="margin:0; font-size:18px;">Pipeline de Demandas</h2>
-            
-            <div class="pipeline-actions">
-                <select id="filter-client" class="filter-select">
-                    <option value="">👤 Todos Clientes</option>
-                </select>
-                <select id="filter-job" class="filter-select">
-                    <option value="">📋 Todos Jobs</option>
-                </select>
-                <button class="btn-ref" id="clear-filters" style="font-size:11px; padding:8px 12px; background:rgba(255,255,255,0.05);">LIMPAR FILTROS</button>
-                <div class="config-btn-trigger" id="pipeline-menu-btn" title="Configurações">⚙️</div>
-            </div>
-        </div>
-
-        <div class="pipeline-container">
-            <!-- COLUNA: FUTURAS -->
-            <div class="pipeline-column" data-status="backlog">
-                <div class="column-header">
-                    <div class="column-title"><span class="dot dot-gray"></span> Futuras</div>
-                    <span class="column-count">0</span>
+        <div class="pipeline-tab-content">
+            <!-- HEADER DA ABA COM FILTROS E MENU -->
+            <div class="pipeline-header">
+                <h2 style="margin:0; font-size:18px;">Pipeline de Demandas</h2>
+                
+                <div class="pipeline-actions">
+                    <select id="filter-client" class="filter-select">
+                        <option value="">👤 Todos Clientes</option>
+                    </select>
+                    <select id="filter-job" class="filter-select">
+                        <option value="">📋 Todos Jobs</option>
+                    </select>
+                    <button class="btn-ref" id="clear-filters" style="font-size:11px; padding:8px 12px; background:rgba(255,255,255,0.05);">LIMPAR FILTROS</button>
+                    <div class="config-btn-trigger" id="pipeline-menu-btn" title="Configurações">⚙️</div>
                 </div>
-                <div class="column-cards"></div>
-                <button class="add-card-btn" onclick="addNewPipelineCard('backlog')">+ Adicionar projeto</button>
             </div>
 
-            <!-- COLUNA: NÃO INICIADO -->
-            <div class="pipeline-column" data-status="todo">
-                <div class="column-header">
-                    <div class="column-title"><span class="dot dot-yellow"></span> Não iniciado</div>
-                    <span class="column-count">0</span>
+            <div class="pipeline-container">
+                <!-- COLUNA: FUTURAS -->
+                <div class="pipeline-column" data-status="backlog">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-gray"></span> Futuras</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('backlog')">+ Adicionar projeto</button>
                 </div>
-                <div class="column-cards"></div>
-                <button class="add-card-btn" onclick="addNewPipelineCard('todo')">+ Adicionar projeto</button>
-            </div>
 
-            <!-- COLUNA: EM ANDAMENTO -->
-            <div class="pipeline-column" data-status="in-progress">
-                <div class="column-header">
-                    <div class="column-title"><span class="dot dot-blue"></span> Em andamento</div>
-                    <span class="column-count">0</span>
+                <!-- COLUNA: NÃO INICIADO -->
+                <div class="pipeline-column" data-status="todo">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-yellow"></span> Não iniciado</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('todo')">+ Adicionar projeto</button>
                 </div>
-                <div class="column-cards"></div>
-                <button class="add-card-btn" onclick="addNewPipelineCard('in-progress')">+ Adicionar projeto</button>
-            </div>
 
-            <!-- COLUNA: CONCLUÍDO -->
-            <div class="pipeline-column" data-status="done">
-                <div class="column-header">
-                    <div class="column-title"><span class="dot dot-green"></span> Concluído</div>
-                    <span class="column-count">0</span>
+                <!-- COLUNA: EM ANDAMENTO -->
+                <div class="pipeline-column" data-status="in-progress">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-blue"></span> Em andamento</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('in-progress')">+ Adicionar projeto</button>
                 </div>
-                <div class="column-cards"></div>
-                <button class="add-card-btn" onclick="addNewPipelineCard('done')">+ Adicionar projeto</button>
+
+                <!-- COLUNA: CONCLUÍDO -->
+                <div class="pipeline-column" data-status="done">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-green"></span> Concluído</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('done')">+ Adicionar projeto</button>
+                </div>
             </div>
         </div>
     </div>
@@ -538,25 +540,23 @@
         <button class="btn-shutdown" id="shutdown-btn" style="margin-top: 40px;">🛑 ENCERRAR ESTÚDIO</button>
     </div>
 
-    <!-- PAINEL LATERAL DE CONFIGURAÇÕES DO PIPELINE (ESTILO AJUSTES API) -->
+    <!-- PAINEL LATERAL DE CONFIGURAÇÕES DO PIPELINE -->
     <div id="pipeline-config-panel" class="pipeline-settings-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
             <h2 style="margin:0;">Ajustes Pipeline</h2>
             <div class="close-btn" id="close-pipeline-config" style="cursor:pointer; font-size:20px;">✕</div>
         </div>
-        
         <button class="manage-btn-large" id="open-clients-modal">
             <span>👤 Gerenciar Clientes</span>
             <span style="font-size:18px;">›</span>
         </button>
-        
         <button class="manage-btn-large" id="open-jobs-modal">
             <span>📋 Tipos de Job</span>
             <span style="font-size:18px;">›</span>
         </button>
     </div>
 
-    <!-- MODAL GERENCIAR CLIENTES (DETALHADO) -->
+    <!-- MODAL GERENCIAR CLIENTES -->
     <div id="clients-config-modal" class="modal" style="z-index: 10011;">
         <div class="modal-content" style="max-width: 500px; max-height: 80vh;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -571,7 +571,7 @@
         </div>
     </div>
 
-    <!-- MODAL GERENCIAR JOBS (DETALHADO) -->
+    <!-- MODAL GERENCIAR JOBS -->
     <div id="jobs-config-modal" class="modal" style="z-index: 10011;">
         <div class="modal-content" style="max-width: 500px; max-height: 80vh;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
