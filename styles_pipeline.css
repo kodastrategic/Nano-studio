@@ -14,17 +14,25 @@
     align-items: center;
 }
 
-.hamburger-menu {
+.config-btn-trigger {
     cursor: pointer;
-    font-size: 20px;
-    padding: 8px;
-    border-radius: 8px;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 50%;
     background: rgba(255,255,255,0.05);
-    transition: background 0.2s;
+    transition: all 0.2s;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
 }
 
-.hamburger-menu:hover {
+.config-btn-trigger:hover {
     background: rgba(255,255,255,0.1);
+    border-color: var(--accent-blue);
+    transform: rotate(45deg);
 }
 
 .filter-select {
@@ -35,6 +43,40 @@
     border-radius: 8px;
     font-size: 13px;
     outline: none;
+}
+
+.manage-btn-large {
+    width: 100%;
+    padding: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.manage-btn-large:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--accent-blue);
+}
+
+.list-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
 
 .pipeline-container {
