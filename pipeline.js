@@ -44,6 +44,7 @@ let currentEditingDemand = null;
 let allDemandsCache = [];
 
 export async function initPipeline() {
+    console.log("Pipeline Initializing...");
     await refreshConfigLists();
     await refreshDemands();
     setupMainEvents();
@@ -56,80 +57,96 @@ function setupMainEvents() {
     const closeMenuBtn = document.getElementById('close-pipeline-config');
 
     if (menuBtn) {
-        menuBtn.onclick = () => {
-            configPanel.classList.add('active');
-        };
+        menuBtn.onclick = () => configPanel.classList.add('active');
     }
 
     if (closeMenuBtn) {
-        closeMenuBtn.onclick = () => {
-            configPanel.classList.remove('active');
-        };
+        closeMenuBtn.onclick = () => configPanel.classList.remove('active');
     }
 
-    // Sub-modais de Config
+    // Sub-modais de Config (Clientes e Jobs)
     const openClients = document.getElementById('open-clients-modal');
     const openJobs = document.getElementById('open-jobs-modal');
 
     if (openClients) {
-        openClients.onclick = () => {
-            document.getElementById('clients-config-modal').style.display = 'flex';
-        };
+        openClients.onclick = () => document.getElementById('clients-config-modal').style.display = 'flex';
     }
 
     if (openJobs) {
-        openJobs.onclick = () => {
-            document.getElementById('jobs-config-modal').style.display = 'flex';
-        };
+        openJobs.onclick = () => document.getElementById('jobs-config-modal').style.display = 'flex';
     }
 
-    ['close-clients-modal', 'close-clients-bottom'].forEach(id => {
-        document.getElementById(id).onclick = () => document.getElementById('clients-config-modal').style.display = 'none';
-    });
-    ['close-jobs-modal', 'close-jobs-bottom'].forEach(id => {
-        document.getElementById(id).onclick = () => document.getElementById('jobs-config-modal').style.display = 'none';
+    // Fechar Sub-modais
+    const closeIds = [
+        'close-clients-modal', 'close-clients-bottom',
+        'close-jobs-modal', 'close-jobs-bottom',
+        'close-demand-modal', 'cancel-demand-btn'
+    ];
+    closeIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.onclick = () => {
+                const modal = btn.closest('.modal');
+                if (modal) modal.style.display = 'none';
+            };
+        }
     });
 
     // Filtros
-    document.getElementById('filter-client').onchange = applyFilters;
-    document.getElementById('filter-job').onchange = applyFilters;
-    document.getElementById('clear-filters').onclick = () => {
-        document.getElementById('filter-client').value = '';
-        document.getElementById('filter-job').value = '';
-        applyFilters();
-    };
+    const fClient = document.getElementById('filter-client');
+    const fJob = document.getElementById('filter-job');
+    const clearBtn = document.getElementById('clear-filters');
 
-    // Cadastro de Itens (Botões Grandes)
-    document.getElementById('add-client-btn-main').onclick = async () => {
-        const name = prompt('Nome do novo cliente:');
-        if (name) {
-            await dbPut(STORE_CLIENTS, { id: Date.now().toString(), name });
-            await refreshConfigLists();
-        }
-    };
+    if (fClient) fClient.onchange = applyFilters;
+    if (fJob) fJob.onchange = applyFilters;
+    if (clearBtn) {
+        clearBtn.onclick = () => {
+            fClient.value = '';
+            fJob.value = '';
+            applyFilters();
+        };
+    }
 
-    document.getElementById('add-job-btn-main').onclick = async () => {
-        const name = prompt('Nome do novo tipo de job:');
-        if (name) {
-            await dbPut(STORE_JOBS, { id: Date.now().toString(), name });
-            await refreshConfigLists();
-        }
-    };
+    // Cadastro de Itens (Clientes e Jobs)
+    const addClientBtn = document.getElementById('add-client-btn-main');
+    const addJobBtn = document.getElementById('add-job-btn-main');
 
-    // Modal de Demanda (Save/Close)
-    document.getElementById('close-demand-modal').onclick = () => document.getElementById('demand-modal').style.display = 'none';
-    document.getElementById('cancel-demand-btn').onclick = () => document.getElementById('demand-modal').style.display = 'none';
-    
-    document.getElementById('save-demand-btn').onclick = async () => {
-        if (!currentEditingDemand) return;
-        currentEditingDemand.client = document.getElementById('demand-client-select').value;
-        currentEditingDemand.jobType = document.getElementById('demand-job-select').value;
-        currentEditingDemand.title = document.getElementById('demand-title-input').value;
-        currentEditingDemand.desc = document.getElementById('demand-desc-input').value;
-        await dbPut(STORE_DEMANDS, currentEditingDemand);
-        document.getElementById('demand-modal').style.display = 'none';
-        await refreshDemands();
-    };
+    if (addClientBtn) {
+        addClientBtn.onclick = async () => {
+            const name = prompt('Nome do novo cliente:');
+            if (name) {
+                await dbPut(STORE_CLIENTS, { id: Date.now().toString(), name });
+                await refreshConfigLists();
+            }
+        };
+    }
+
+    if (addJobBtn) {
+        addJobBtn.onclick = async () => {
+            const name = prompt('Nome do novo tipo de job:');
+            if (name) {
+                await dbPut(STORE_JOBS, { id: Date.now().toString(), name });
+                await refreshConfigLists();
+            }
+        };
+    }
+
+    // Botão Salvar Demanda (Modal de Detalhes)
+    const saveDemandBtn = document.getElementById('save-demand-btn');
+    if (saveDemandBtn) {
+        saveDemandBtn.onclick = async () => {
+            if (!currentEditingDemand) return;
+            
+            currentEditingDemand.client = document.getElementById('demand-client-select').value;
+            currentEditingDemand.jobType = document.getElementById('demand-job-select').value;
+            currentEditingDemand.title = document.getElementById('demand-title-input').value;
+            currentEditingDemand.desc = document.getElementById('demand-desc-input').value;
+            
+            await dbPut(STORE_DEMANDS, currentEditingDemand);
+            document.getElementById('demand-modal').style.display = 'none';
+            await refreshDemands();
+        };
+    }
 }
 
 async function refreshDemands() {
@@ -140,7 +157,9 @@ async function refreshDemands() {
 function applyFilters() {
     const cf = document.getElementById('filter-client').value;
     const jf = document.getElementById('filter-job').value;
+    
     const filtered = allDemandsCache.filter(d => (!cf || d.client === cf) && (!jf || d.jobType === jf));
+    
     const data = {
         'backlog': filtered.filter(d => d.status === 'backlog'),
         'todo': filtered.filter(d => d.status === 'todo'),
@@ -172,9 +191,13 @@ function createCard(card) {
             <span class="card-tag" style="background:rgba(52,152,219,0.2); color:#3498db;">${card.client || 'Sem Cliente'}</span>
             <span class="card-tag" style="background:rgba(155,89,182,0.2); color:#9b59b6;">${card.jobType || 'Geral'}</span>
         </div>
-        <div class="card-actions"><button class="card-btn del-btn del">🗑️</button></div>
+        <div class="card-actions">
+            <button class="card-btn del-btn" style="background:transparent; border:none; cursor:pointer;">🗑️</button>
+        </div>
     `;
-    div.onclick = () => {
+
+    div.onclick = (e) => {
+        if (e.target.closest('.del-btn')) return;
         currentEditingDemand = card;
         document.getElementById('demand-client-select').value = card.client || '';
         document.getElementById('demand-job-select').value = card.jobType || '';
@@ -182,13 +205,16 @@ function createCard(card) {
         document.getElementById('demand-desc-input').value = card.desc || '';
         document.getElementById('demand-modal').style.display = 'flex';
     };
-    div.querySelector('.del-btn').onclick = async (e) => {
+
+    const delBtn = div.querySelector('.del-btn');
+    delBtn.onclick = async (e) => {
         e.stopPropagation();
         if (confirm('Excluir demanda?')) {
             await dbDelete(STORE_DEMANDS, card.id);
             await refreshDemands();
         }
     };
+
     return div;
 }
 
@@ -199,6 +225,7 @@ async function refreshConfigLists() {
     const upSelect = (ids, items, def) => {
         ids.forEach(id => {
             const s = document.getElementById(id);
+            if (!s) return;
             const val = s.value;
             s.innerHTML = `<option value="">${def}</option>`;
             items.forEach(i => {
@@ -209,11 +236,12 @@ async function refreshConfigLists() {
         });
     };
 
-    upSelect(['filter-client', 'demand-client-select'], clients, '👤 Todos Clientes');
-    upSelect(['filter-job', 'demand-job-select'], jobs, '📋 Todos Jobs');
+    upSelect(['filter-client', 'demand-client-select'], clients, '👤 Selecionar Cliente');
+    upSelect(['filter-job', 'demand-job-select'], jobs, '📋 Selecionar Job');
 
     const renderList = (id, items, store) => {
         const el = document.getElementById(id);
+        if (!el) return;
         el.innerHTML = '';
         items.forEach(item => {
             const row = document.createElement('div');
@@ -221,15 +249,15 @@ async function refreshConfigLists() {
             row.innerHTML = `
                 <span>${item.name}</span>
                 <div style="display:flex; gap:10px;">
-                    <button class="card-btn" style="color:var(--accent-blue)">✏️</button>
-                    <button class="card-btn del" style="color:#ff4d4d">🗑️</button>
+                    <button class="edit-item-btn" style="background:transparent; border:none; cursor:pointer; color:var(--accent-blue)">✏️</button>
+                    <button class="del-item-btn" style="background:transparent; border:none; cursor:pointer; color:#ff4d4d">🗑️</button>
                 </div>
             `;
-            row.querySelectorAll('button')[0].onclick = async () => {
+            row.querySelector('.edit-item-btn').onclick = async () => {
                 const n = prompt('Novo nome:', item.name);
                 if(n) { item.name = n; await dbPut(store, item); await refreshConfigLists(); await refreshDemands(); }
             };
-            row.querySelectorAll('button')[1].onclick = async () => {
+            row.querySelector('.del-item-btn').onclick = async () => {
                 if(confirm('Excluir item?')) { await dbDelete(store, item.id); await refreshConfigLists(); }
             };
             el.appendChild(row);
@@ -248,9 +276,10 @@ function updateCount(s) {
 function setupDragAndDrop() {
     const cards = document.querySelectorAll('.pipeline-card');
     const conts = document.querySelectorAll('.column-cards');
+    
     cards.forEach(card => {
-        card.addEventListener('dragstart', () => card.classList.add('dragging'));
-        card.addEventListener('dragend', async () => {
+        card.ondragstart = () => card.classList.add('dragging');
+        card.ondragend = async () => {
             card.classList.remove('dragging');
             const col = card.closest('.pipeline-column');
             if(col) {
@@ -258,19 +287,21 @@ function setupDragAndDrop() {
                 if(d) { d.status = col.dataset.status; await dbPut(STORE_DEMANDS, d); }
                 conts.forEach(c => updateCount(c.parentElement.dataset.status));
             }
-        });
+        };
     });
+
     conts.forEach(container => {
-        container.addEventListener('dragover', e => {
+        container.ondragover = (e) => {
             e.preventDefault();
             const dragging = document.querySelector('.dragging');
+            if (!dragging) return;
             const after = [...container.querySelectorAll('.pipeline-card:not(.dragging)')].reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = e.clientY - box.top - box.height / 2;
                 return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
             }, { offset: Number.NEGATIVE_INFINITY }).element;
             if (after == null) container.appendChild(dragging); else container.insertBefore(dragging, after);
-        });
+        };
     });
 }
 
