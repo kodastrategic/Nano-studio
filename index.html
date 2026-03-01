@@ -409,7 +409,52 @@
 
     <!-- ABA GERAÇÃO EM LOTE -->
     <div id="batch-tab" class="tab-page">
-        ... (conteúdo omitido para brevidade) ...
+        <div class="sidebar">
+            <div class="section-title">Gerenciador de Lote</div>
+            <div class="input-group">
+                <label>Colar JSON de Prompts</label>
+                <textarea id="batch-json-input" rows="15" placeholder='[ { "slide": 1, "prompt": "Descrição..." }, ... ]'></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label>Modelo AI</label>
+                <select id="batch-model-select">
+                    <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
+                    <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Formato</label>
+                <select id="batch-aspect-select">
+                    <option value="1:1">⬜ 1:1</option>
+                    <option value="16:9" selected>▭ 16:9</option>
+                    <option value="9:16">▯ 9:16</option>
+                    <option value="4:3">📺 4:3</option>
+                    <option value="3:4">📸 3:4</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Qualidade</label>
+                <select id="batch-quality-select">
+                    <option value="1K">⚡ 1K</option>
+                    <option value="4K" selected>🌟 4K</option>
+                </select>
+            </div>
+
+            <button class="btn-generate" id="batch-process-btn">🚀 INICIAR GERAÇÃO EM LOTE</button>
+            
+            <div id="batch-status-msg" style="margin-top:20px; color:var(--text-muted); font-size:12px; text-align:center;">
+                Aguardando lista de prompts...
+            </div>
+        </div>
+        <div class="viewport">
+            <div class="section-title" style="text-align:center; margin-top:0;">Fila de Processamento</div>
+            <div id="batch-groups-container" style="display:flex; flex-direction:column; gap:30px; padding:20px;">
+                <!-- Grupos de geração aparecerão aqui -->
+            </div>
+        </div>
     </div>
 
     <!-- ABA PIPELINE DE DEMANDAS (NOVA) -->
@@ -617,6 +662,36 @@
             <div style="display:flex; gap:15px; margin-top:20px; width:100%;">
                 <button class="btn-ref" id="ref-replace-btn" style="background:var(--accent-blue); color:white; font-size:14px;">🔄 SUBSTITUIR</button>
                 <button class="btn-ref" id="ref-delete-btn" style="background:var(--danger-red); color:white; border:none; font-size:14px;">🗑️ EXCLUIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALHES DA DEMANDA -->
+    <div id="demand-modal" class="modal" style="z-index: 10005;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Detalhes da Demanda</h3>
+                <div class="close-btn" id="close-demand-modal" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Nome do Cliente</label>
+                <input type="text" id="demand-client-input" placeholder="Ex: DCREX, Becker Smart...">
+            </div>
+
+            <div class="input-group">
+                <label>Título</label>
+                <input type="text" id="demand-title-input" placeholder="O que precisa ser feito?">
+            </div>
+
+            <div class="input-group">
+                <label>Descrição</label>
+                <textarea id="demand-desc-input" rows="6" placeholder="Detalhes da tarefa, referências, links..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button id="cancel-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border-color); background:transparent; color:white; cursor:pointer;">Fechar</button>
+                <button id="save-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white; font-weight:bold;">Salvar Alterações</button>
             </div>
         </div>
     </div>

@@ -17,7 +17,7 @@ function openDB() {
     });
 }
 
-async function saveDemand(demand) {
+async function saveDemandDB(demand) {
     const db = await openDB();
     const tx = db.transaction(STORE_NAME, 'readwrite');
     tx.objectStore(STORE_NAME).put(demand);
@@ -27,7 +27,7 @@ async function saveDemand(demand) {
     });
 }
 
-async function deleteDemand(id) {
+async function deleteDemandDB(id) {
     const db = await openDB();
     const tx = db.transaction(STORE_NAME, 'readwrite');
     tx.objectStore(STORE_NAME).delete(id);
@@ -47,10 +47,11 @@ async function getAllDemands() {
     });
 }
 
+let currentEditingDemand = null;
+
 export async function initPipeline() {
     const demands = await getAllDemands();
     
-    // Organizar por status
     const data = {
         'backlog': demands.filter(d => d.status === 'backlog'),
         'todo': demands.filter(d => d.status === 'todo'),
@@ -58,22 +59,8 @@ export async function initPipeline() {
         'done': demands.filter(d => d.status === 'done')
     };
 
-    // Se estiver vazio na primeira vez, pode adicionar exemplos ou começar limpo
-    if (demands.length === 0) {
-        const defaults = [
-            { id: '1', title: 'gravar video de apresentação DCREX', tag: 'Vídeo', status: 'todo' },
-            { id: '2', title: 'Iniciar meu Curso', tag: 'Educação', status: 'in-progress' }
-        ];
-        for (const d of defaults) await saveDemand(d);
-        renderPipeline({
-            'backlog': [],
-            'todo': [defaults[0]],
-            'in-progress': [defaults[1]],
-            'done': []
-        });
-    } else {
-        renderPipeline(data);
-    }
+    renderPipeline(data);
+    setupModalEvents();
 
     function renderPipeline(data) {
         Object.keys(data).forEach(status => {
@@ -96,34 +83,68 @@ export async function initPipeline() {
         div.dataset.id = card.id;
         div.innerHTML = `
             <span class="card-title">${card.title}</span>
-            <span class="card-tag">${card.tag || 'Geral'}</span>
+            <span class="card-tag">${card.client || 'Geral'}</span>
             <div class="card-actions">
-                <button class="card-btn edit-btn" title="Editar">✏️</button>
                 <button class="card-btn del-btn del" title="Excluir">🗑️</button>
             </div>
         `;
 
-        div.querySelector('.edit-btn').onclick = async (e) => {
-            e.stopPropagation();
-            const newTitle = prompt('Novo título:', card.title);
-            if (newTitle) {
-                card.title = newTitle;
-                div.querySelector('.card-title').textContent = newTitle;
-                await saveDemand(card);
-            }
-        };
+        // Abrir Modal ao clicar no card
+        div.onclick = () => openDemandModal(card);
 
         div.querySelector('.del-btn').onclick = async (e) => {
             e.stopPropagation();
             if (confirm('Excluir demanda?')) {
                 const status = div.closest('.pipeline-column').dataset.status;
-                await deleteDemand(card.id);
+                await deleteDemandDB(card.id);
                 div.remove();
                 updateCount(status);
             }
         };
 
         return div;
+    }
+
+    function openDemandModal(card) {
+        currentEditingDemand = card;
+        document.getElementById('demand-client-input').value = card.client || '';
+        document.getElementById('demand-title-input').value = card.title || '';
+        document.getElementById('demand-desc-input').value = card.desc || '';
+        document.getElementById('demand-modal').style.display = 'flex';
+    }
+
+    function setupModalEvents() {
+        const modal = document.getElementById('demand-modal');
+        const closeBtn = document.getElementById('close-demand-modal');
+        const cancelBtn = document.getElementById('cancel-demand-btn');
+        const saveBtn = document.getElementById('save-demand-btn');
+
+        const close = () => modal.style.display = 'none';
+        closeBtn.onclick = close;
+        cancelBtn.onclick = close;
+
+        saveBtn.onclick = async () => {
+            if (!currentEditingDemand) return;
+            
+            const newClient = document.getElementById('demand-client-input').value;
+            const newTitle = document.getElementById('demand-title-input').value;
+            const newDesc = document.getElementById('demand-desc-input').value;
+
+            currentEditingDemand.client = newClient;
+            currentEditingDemand.title = newTitle;
+            currentEditingDemand.desc = newDesc;
+
+            await saveDemandDB(currentEditingDemand);
+            
+            // Atualizar o card visualmente
+            const cardEl = document.querySelector(`.pipeline-card[data-id="${currentEditingDemand.id}"]`);
+            if (cardEl) {
+                cardEl.querySelector('.card-title').textContent = newTitle;
+                cardEl.querySelector('.card-tag').textContent = newClient || 'Geral';
+            }
+
+            close();
+        };
     }
 
     function updateCount(status) {
@@ -140,13 +161,19 @@ export async function initPipeline() {
             card.addEventListener('dragstart', () => card.classList.add('dragging'));
             card.addEventListener('dragend', async () => {
                 card.classList.remove('dragging');
-                const newStatus = card.closest('.pipeline-column').dataset.status;
-                const id = card.dataset.id;
-                const title = card.querySelector('.card-title').textContent;
-                const tag = card.querySelector('.card-tag').textContent;
+                const column = card.closest('.pipeline-column');
+                if (!column) return;
                 
-                // Salvar novo status no IndexedDB
-                await saveDemand({ id, title, tag, status: newStatus });
+                const newStatus = column.dataset.status;
+                const id = card.dataset.id;
+                
+                // Buscar dados atuais do banco para não perder client/desc
+                const all = await getAllDemands();
+                const demand = all.find(d => d.id === id);
+                if (demand) {
+                    demand.status = newStatus;
+                    await saveDemandDB(demand);
+                }
                 
                 containers.forEach(c => updateCount(c.parentElement.dataset.status));
             });
@@ -156,6 +183,7 @@ export async function initPipeline() {
             container.addEventListener('dragover', e => {
                 e.preventDefault();
                 const dragging = document.querySelector('.dragging');
+                if (!dragging) return;
                 const afterElement = getDragAfterElement(container, e.clientY);
                 if (afterElement == null) {
                     container.appendChild(dragging);
@@ -183,8 +211,8 @@ export async function initPipeline() {
         const title = prompt('Título da demanda:');
         if (!title) return;
         const id = Date.now().toString();
-        const demand = { id, title, tag: 'Geral', status };
-        await saveDemand(demand);
+        const demand = { id, title, client: '', desc: '', status };
+        await saveDemandDB(demand);
         
         const columnEl = document.querySelector(`[data-status="${status}"] .column-cards`);
         columnEl.appendChild(createCard(demand));
