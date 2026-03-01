@@ -1,0 +1,226 @@
+/* styles_pipeline.css */
+.pipeline-tab-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px); /* Altura total menos a nav superior */
+    background: var(--bg-main);
+    overflow: hidden;
+}
+
+.pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(255,255,255,0.01);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pipeline-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.config-btn-trigger {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.2s;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.config-btn-trigger:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--accent-blue);
+    transform: rotate(45deg);
+}
+
+.filter-select {
+    background: var(--bg-input);
+    color: white;
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    min-width: 160px;
+}
+
+.pipeline-container {
+    display: flex;
+    gap: 20px;
+    padding: 25px;
+    flex: 1;
+    overflow-x: auto;
+    align-items: flex-start;
+}
+
+.pipeline-column {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    min-width: 320px;
+    max-width: 320px;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+.column-header {
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.column-title {
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.column-count {
+    background: rgba(255,255,255,0.08);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.column-cards {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 100px;
+}
+
+.pipeline-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.pipeline-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.pipeline-card.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: block;
+    line-height: 1.4;
+}
+
+.card-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.add-card-btn {
+    width: calc(100% - 24px);
+    margin: 12px;
+    padding: 12px;
+    background: transparent;
+    border: 1px dashed var(--border-color);
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.add-card-btn:hover {
+    background: rgba(255,255,255,0.03);
+    color: var(--text-main);
+    border-color: var(--accent-blue);
+}
+
+.pipeline-settings-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 10000;
+    padding: 35px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    box-shadow: -15px 0 40px rgba(0,0,0,0.6);
+}
+
+.pipeline-settings-panel.active {
+    right: 0;
+}
+
+.manage-btn-large {
+    width: 100%;
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+    margin-bottom: 15px;
+}
+
+.manage-btn-large:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--accent-blue);
+    transform: translateX(-5px);
+}
+
+.list-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; }
+.dot-gray { background: #888; }
+.dot-blue { background: #3498db; }
+.dot-yellow { background: #f1c40f; }
+.dot-green { background: #2ecc71; }

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banana Studio | AI Image Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles_pipeline.css">
+</head>
+<body>
+    <!-- NAVEGAÇÃO SUPERIOR -->
+    <nav class="top-nav">
+        <div style="font-size: 20px; font-weight: 700; margin-right: 20px;">🍌</div>
+        <button class="nav-tab active" id="tab-studio-btn" onclick="switchTab('studio')">🎨 STUDIO</button>
+        <button class="nav-tab" id="tab-hero-btn" onclick="switchTab('hero')">⚡ HERO PRO <span style="font-size: 8px; vertical-align: top; background: var(--accent-blue); padding: 2px 4px; border-radius: 4px; margin-left: 4px;">v1.4</span></button>
+        <button class="nav-tab" id="tab-batch-btn" onclick="switchTab('batch')">📦 LOTE</button>
+        <button class="nav-tab" id="tab-pipeline-btn" onclick="switchTab('pipeline')">📋 DEMANDAS</button>
+    </nav>
+
+    <!-- ABA STUDIO -->
+    <div id="studio-tab" class="tab-page active">
+        <div class="sidebar">
+            <div class="section-title">Presets</div>
+            <div class="input-group">
+                <select id="saved-prompts-select"><option value="">✍️ Digitar Novo</option></select>
+            </div>
+            <div class="section-title">Criação</div>
+            <div class="input-group">
+                <label>Prompt</label>
+                <textarea id="prompt-input" rows="5" placeholder="Descreva sua visão..."></textarea>
+            </div>
+            <div class="input-group" style="display:flex; flex-direction:column; gap:8px; margin-bottom: 20px;">
+                <button class="btn-save" id="open-save-modal" style="width:100%; margin-top:0;">💾 SALVAR NOVO</button>
+                <button class="btn-save" id="open-manage-modal" style="width:100%; margin-top:0; background:var(--bg-card); border:1px solid var(--border-color); font-size: 11px;">⚙️ GERENCIAR LISTA</button>
+            </div>
+            <div class="section-title">2. Referências Visuais</div>
+            <div class="ref-actions">
+                <button class="btn-ref" id="ref-upload-btn">📤 UPLOAD</button>
+                <button class="btn-ref" id="ref-paste-btn">📋 COLAR</button>
+                <button class="btn-ref" id="ref-clear-btn">🗑️ LIMPAR</button>
+                <input type="file" id="ref-file-input" style="display:none;" accept="image/*" multiple>
+            </div>
+            <div class="ref-carousel-container"><div class="ref-carousel" id="ref-carousel"></div></div>
+            <div class="input-group">
+                <label>Modelo AI</label>
+                <select id="model-select">
+                    <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
+                    <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Formato</label>
+                <select id="aspect-select">
+                    <option value="1:1">⬜ 1:1</option>
+                    <option value="16:9">▭ 16:9</option>
+                    <option value="9:16">▯ 9:16</option>
+                    <option value="4:3">📺 4:3</option>
+                    <option value="3:4">📸 3:4</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Qualidade</label>
+                <select id="quality-select">
+                    <option value="1K">⚡ 1K</option>
+                    <option value="4K" selected>🌟 4K</option>
+                </select>
+            </div>
+            <button class="btn-generate" id="gen-btn">GERAR IMAGEM</button>
+            <div id="status-msg" style="margin-top:20px; color:var(--text-muted); font-size:12px; text-align:center;"></div>
+        </div>
+        <div class="viewport">
+            <div class="settings-icon" id="toggle-settings">⚙️</div>
+            <div class="section-title" style="text-align:center; margin-top:0;">Feed de Criações</div>
+            <div class="feed-grid" id="feed-grid"></div>
+        </div>
+    </div>
+
+    <!-- ABA HERO (PROMPT BUILDER) -->
+    <div id="hero-tab" class="tab-page">
+        <div class="sidebar">
+            <div class="section-title">1. Referências Persona</div>
+            <div class="ref-actions">
+                <button class="btn-ref" id="hero-upload-btn">📤 UPLOAD</button>
+                <button class="btn-ref" id="hero-paste-btn">📋 COLAR</button>
+                <button class="btn-ref" id="hero-clear-btn">🗑️ LIMPAR</button>
+                <input type="file" id="hero-file-input" style="display:none;" accept="image/*" multiple>
+            </div>
+            <div class="ref-carousel-container"><div class="ref-carousel" id="hero-ref-carousel"></div></div>
+
+            <div class="section-title">2. Identidade e Profissão</div>
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Profissão</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-profissao-toggle" checked onchange="toggleProfissaoField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-profissao" class="input-group" style="margin-top: 10px;">
+                    <input type="text" id="hero-profissao" placeholder="Ex: Desenvolvedor de Software">
+                </div>
+            </div>
+            <div class="input-group" style="margin-top: 16px;">
+                <label>Ambiente</label>
+                <input type="text" id="hero-ambiente" placeholder="Ex: Escritório minimalista high-tech">
+            </div>
+            <div class="input-group">
+                <label>Roupa</label>
+                <input type="text" id="hero-roupa" placeholder="Ex: Terno slim azul marinho">
+            </div>
+
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Descrição Extra (Reforço)</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-detalhes-toggle" onchange="toggleDetailsField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-detalhes" style="display:none; margin-top: 10px;">
+                    <textarea id="hero-detalhes-desc" rows="3" placeholder="Ex: Fisiculturista com seios fartos e ombros largos, pele bronzeada..."></textarea>
+                </div>
+            </div>
+
+            <div class="hero-controls" style="margin-top: 16px;">
+                <div class="input-group">
+                    <label>Modelo AI</label>
+                    <select id="hero-model-select">
+                        <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
+                        <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hero-controls" style="margin-top: 16px;">
+                <div class="input-group">
+                    <label>Gênero</label>
+                    <select id="hero-genero">
+                        <option value="homem">Masculino</option>
+                        <option value="mulher">Feminino</option>
+                        <option value="andrógeno">Andrógeno</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-title">3. Estilo e Composição</div>
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Estilo Visual</label>
+                    <select id="hero-estilo">
+                        <option value="executivo moderno">Executivo Moderno</option>
+                        <option value="criativo e vibrante">Criativo</option>
+                        <option value="técnico e industrial">Técnico</option>
+                        <option value="minimalista luxuoso">Minimalista</option>
+                        <option value="foto editorial moda praia feminina">Moda Praia</option>
+                        <option value="épico heroico com iluminação dramática">Heroico / Épico</option>
+                        <option value="capa de revista de alta moda (Vogue style)">Capa de Revista</option>
+                        <option value="estilo vida fitness e atlético">Vida Fitness</option>
+                        <option value="cinematográfico noir em preto e branco">Film Noir</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Preset / Filtro</label>
+                    <select id="hero-preset">
+                        <option value="cores naturais e realistas" selected>Nenhum (Natural)</option>
+                        <option value="ultra-vibrant Huji Cam style, vintage 35mm film, heavy light leaks, chromatic aberration, dated timestamp look, 90s aesthetic">Huji Cam (Vintage)</option>
+                        <option value="Kodak Portra 400 aesthetic, warm skin tones, fine film grain, soft highlights">Kodak Portra 400</option>
+                        <option value="cinematográfico Teal and Orange, high contrast, blue shadows and orange highlights">Teal & Orange</option>
+                        <option value="Polaroid instant film style, faded colors, soft edges, vintage matte finish">Polaroid Retrô</option>
+                        <option value="moody dark aesthetic, deep shadows, desaturated tones, dramatic low-key lighting">Moody & Dark</option>
+                        <option value="Technicolor movie style, hyper-saturated primary colors, retro cinema look">Technicolor Classic</option>
+                    </select>
+                </div>
+            </div>
+            <!-- SEÇÃO DEDICADA: POSICIONAMENTO -->
+            <div class="section-title">4. Pose e Posicionamento</div>
+            <div class="pose-box-container" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <!-- Toggle Mode -->
+                <div style="display:flex; justify-content:center; align-items:center; margin-bottom: 15px;">
+                    <label class="toggle-wrapper" style="margin-bottom: 0;">
+                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted);">POSES SALVAS</span>
+                        <div class="toggle" style="margin: 0 12px;">
+                            <input class="toggle-state" type="checkbox" id="hero-pose-custom-toggle" onchange="togglePoseMode()">
+                            <div class="indicator"></div>
+                        </div>
+                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted);">DIGITE POSE</span>
+                    </label>
+                </div>
+
+                <!-- Botão de Ação -->
+                <div id="pose-action-btn-container" style="display:flex; gap:10px; margin-bottom: 20px;">
+                    <button id="manage-poses-btn" title="Gerenciar Poses" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:white; border-radius:6px; height: 38px; cursor:pointer; font-size:11px; font-weight:bold; transition: all 0.2s;">⚙️ EDITAR LISTA / NOVA POSE</button>
+                </div>
+
+                <!-- Seletor Visual de Pose (Carrossel) -->
+                <div id="hero-pose-carousel-wrapper" class="pose-carousel-wrapper">
+                    <button class="carousel-nav prev" id="pose-prev-btn">‹</button>
+                    <div class="pose-carousel-viewport">
+                        <div class="pose-carousel-track" id="pose-carousel-track">
+                            <!-- Items inseridos via JS -->
+                        </div>
+                    </div>
+                    <button class="carousel-nav next" id="pose-next-btn">›</button>
+                </div>
+
+                <div id="hero-pose-custom-container" style="display:none; margin-top: 15px;">
+                    <label style="font-size: 10px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; display: block;">DESCRIÇÃO DA POSE ATUAL</label>
+                    <textarea id="hero-pose-custom" rows="3" placeholder="Descreva a pose personalizada em detalhes..."></textarea>
+                </div>
+
+                <div class="hero-controls" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <div class="input-group">
+                        <label>Lado Personagem</label>
+                        <select id="hero-lado">
+                            <option value="direita">Direita</option><option value="esquerda">Esquerda</option><option value="centro">Centro</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Plano</label>
+                        <select id="hero-plano">
+                            <option value="meio corpo">Meio Corpo</option><option value="rosto">Close-up Rosto</option><option value="corpo inteiro">Corpo Inteiro</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">5. Expressão e Ângulo</div>
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Expressão</label>
+                    <select id="hero-expressao">
+                        <option value="neutro" selected>Neutro (Padrão)</option>
+                        <optgroup label="Positivas">
+                            <option value="sorriso aberto e radiante">Sorriso Aberto</option>
+                            <option value="sorriso sutil e confiante">Sorriso Sutil</option>
+                            <option value="euforia insana e vibrante">Euforia Insana</option>
+                            <option value="olhar apaixonado e doce">Apaixonado</option>
+                        </optgroup>
+                        <optgroup label="Sérias & Focadas">
+                            <option value="olhar sério e autoritário">Sério / Autoritário</option>
+                            <option value="olhar focado e determinado">Focado / Determinado</option>
+                            <option value="expressão de profundo pensamento">Pensativo</option>
+                            <option value="olhar de desprezo e superioridade">Desprezo / Superioridade</option>
+                        </optgroup>
+                        <optgroup label="Dramáticas">
+                            <option value="expressão de surpresa e choque">Surpreso</option>
+                            <option value="rosto tenso e mandíbula cerrada">Tenso</option>
+                            <option value="olhar preocupado e melancólico">Preocupado</option>
+                            <option value="rosto bravo e intimidador">Bravo / Agressivo</option>
+                        </optgroup>
+                        <optgroup label="Editorial">
+                            <option value="olhar magnético para a lente">Olhar Magnético</option>
+                            <option value="rosto relaxado com boca levemente entreaberta">Editorial (Vogue Style)</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Ângulo de Câmera</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-angulo-toggle" onchange="toggleAnguloField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-angulo" style="display:none; margin-top: 10px;">
+                    <select id="hero-angulo">
+                        <option value="ao nível dos olhos">Nível dos Olhos (Eye-level)</option>
+                        <option value="de baixo para cima (low angle)">Contra-Plongée (Low Angle)</option>
+                        <option value="de cima para baixo (high angle)">Plongée (High Angle)</option>
+                        <option value="extremo low angle (worm's eye view)">Worm's Eye (Vista de Verme)</option>
+                        <option value="visto de cima (bird's eye view)">Bird's Eye (Vista de Pássaro)</option>
+                        <option value="ângulo holandês (dutch angle) inclinado">Holandês (Inclinado)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-title">4. Objetos e Acessórios</div>
+            <div class="effect-group">
+                <label class="toggle-wrapper">
+                    <span>Incluir Objeto na Cena</span>
+                    <div class="toggle">
+                        <input class="toggle-state" type="checkbox" id="hero-objeto-toggle" onchange="toggleObjetoField()">
+                        <div class="indicator"></div>
+                    </div>
+                </label>
+                <div id="controls-objeto" style="display:none; margin-top: 15px;">
+                    <div class="input-group">
+                        <label>Descrição do Objeto / Ação</label>
+                        <input type="text" id="hero-objeto-desc" placeholder="Ex: Segurando uma capa de disco de vinil">
+                    </div>
+                    <div class="ref-actions">
+                        <button class="btn-ref" id="obj-upload-btn">📤 UPLOAD OBJETO</button>
+                        <button class="btn-ref" id="obj-clear-btn">🗑️ LIMPAR</button>
+                        <input type="file" id="obj-file-input" style="display:none;" accept="image/*" multiple>
+                    </div>
+                    <div class="ref-carousel-container" style="margin-top:10px;">
+                        <div class="ref-carousel" id="obj-ref-carousel"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">5. Atmosfera e Efeitos</div>
+            <div class="hero-effects-list">
+                <!-- Backlight -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Backlight</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-backlight" onchange="toggleEffectControls('backlight')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-backlight" class="effect-extra-controls" style="display:none;">
+                        <input type="color" id="hero-backlight-cor" value="#ffffff" title="Cor do Backlight">
+                        <select id="hero-backlight-intensidade">
+                            <option value="suave">Suave</option>
+                            <option value="média" selected>Média</option>
+                            <option value="forte">Forte</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lens Flare -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Lens Flare</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-flare" onchange="toggleEffectControls('flare')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-flare" class="effect-extra-controls" style="display:none;">
+                        <input type="color" id="hero-flare-cor" value="#ffffff" title="Cor do Flare">
+                        <select id="hero-flare-estilo">
+                            <option value="anamórfico">Anamórfico</option>
+                            <option value="circular">Circular</option>
+                            <option value="suave">Glow</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Luz Volumétrica -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Luz Volumétrica</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-luzv" onchange="toggleEffectControls('luzv')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-luzv" class="effect-extra-controls" style="display:none;">
+                        <input type="color" id="hero-luzv-cor" value="#ffffff" title="Cor da Luz">
+                        <select id="hero-luzv-intensidade">
+                            <option value="sutil">Sutil</option>
+                            <option value="visível" selected>Visível</option>
+                            <option value="dramática">Dramática</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Partículas -->
+                <div class="effect-group">
+                    <label class="toggle-wrapper">
+                        <span>Partículas</span>
+                        <div class="toggle">
+                            <input class="toggle-state" type="checkbox" id="hero-part" onchange="toggleEffectControls('part')">
+                            <div class="indicator"></div>
+                        </div>
+                    </label>
+                    <div id="controls-part" class="effect-extra-controls" style="display:none;">
+                        <select id="hero-part-tipo">
+                            <option value="poeira suspensa">Poeira</option>
+                            <option value="partículas de luz">Fótons</option>
+                            <option value="nevoa leve">Névoa</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-controls">
+                <div class="input-group">
+                    <label>Formato</label>
+                    <select id="hero-aspect-select">
+                        <option value="1:1">⬜ 1:1</option>
+                        <option value="16:9" selected>▭ 16:9</option>
+                        <option value="9:16">▯ 9:16</option>
+                        <option value="4:3">📺 4:3</option>
+                        <option value="3:4">📸 3:4</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Qualidade</label>
+                    <select id="hero-quality-select">
+                        <option value="1K">⚡ 1K</option>
+                        <option value="4K" selected>🌟 4K</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-generate" id="hero-gen-btn">🚀 GERAR HERO PRO</button>
+        </div>
+        <div class="viewport">
+            <div class="section-title" style="text-align:center; margin-top:0;">Preview Hero Build</div>
+            <div class="feed-grid" id="hero-feed-grid"></div>
+            <div id="hero-status-msg" style="margin-top:20px; color:var(--text-muted); font-size:14px; text-align:center;">Configure os parâmetros e clique em Gerar.</div>
+        </div>
+    </div>
+
+    <!-- ABA GERAÇÃO EM LOTE -->
+    <div id="batch-tab" class="tab-page">
+        <div class="sidebar">
+            <div class="section-title">Gerenciador de Lote</div>
+            <div class="input-group">
+                <label>Colar JSON de Prompts</label>
+                <textarea id="batch-json-input" rows="15" placeholder='[ { "slide": 1, "prompt": "Descrição..." }, ... ]'></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label>Modelo AI</label>
+                <select id="batch-model-select">
+                    <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
+                    <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Formato</label>
+                <select id="batch-aspect-select">
+                    <option value="1:1">⬜ 1:1</option>
+                    <option value="16:9" selected>▭ 16:9</option>
+                    <option value="9:16">▯ 9:16</option>
+                    <option value="4:3">📺 4:3</option>
+                    <option value="3:4">📸 3:4</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Qualidade</label>
+                <select id="batch-quality-select">
+                    <option value="1K">⚡ 1K</option>
+                    <option value="4K" selected>🌟 4K</option>
+                </select>
+            </div>
+
+            <button class="btn-generate" id="batch-process-btn">🚀 INICIAR GERAÇÃO EM LOTE</button>
+            
+            <div id="batch-status-msg" style="margin-top:20px; color:var(--text-muted); font-size:12px; text-align:center;">
+                Aguardando lista de prompts...
+            </div>
+        </div>
+        <div class="viewport">
+            <div class="section-title" style="text-align:center; margin-top:0;">Fila de Processamento</div>
+            <div id="batch-groups-container" style="display:flex; flex-direction:column; gap:30px; padding:20px;">
+                <!-- Grupos de geração aparecerão aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA PIPELINE DE DEMANDAS (NOVA) -->
+    <div id="pipeline-tab" class="tab-page">
+        <div class="pipeline-tab-content">
+            <!-- HEADER DA ABA COM FILTROS E MENU -->
+            <div class="pipeline-header">
+                <h2 style="margin:0; font-size:18px;">Pipeline de Demandas</h2>
+                
+                <div class="pipeline-actions">
+                    <select id="filter-client" class="filter-select">
+                        <option value="">👤 Todos Clientes</option>
+                    </select>
+                    <select id="filter-job" class="filter-select">
+                        <option value="">📋 Todos Jobs</option>
+                    </select>
+                    <button class="btn-ref" id="clear-filters" style="font-size:11px; padding:8px 12px; background:rgba(255,255,255,0.05);">LIMPAR FILTROS</button>
+                    <div class="config-btn-trigger" id="pipeline-menu-btn" title="Configurações">⚙️</div>
+                </div>
+            </div>
+
+            <div class="pipeline-container">
+                <!-- COLUNA: FUTURAS -->
+                <div class="pipeline-column" data-status="backlog">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-gray"></span> Futuras</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('backlog')">+ Adicionar projeto</button>
+                </div>
+
+                <!-- COLUNA: NÃO INICIADO -->
+                <div class="pipeline-column" data-status="todo">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-yellow"></span> Não iniciado</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('todo')">+ Adicionar projeto</button>
+                </div>
+
+                <!-- COLUNA: EM ANDAMENTO -->
+                <div class="pipeline-column" data-status="in-progress">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-blue"></span> Em andamento</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('in-progress')">+ Adicionar projeto</button>
+                </div>
+
+                <!-- COLUNA: CONCLUÍDO -->
+                <div class="pipeline-column" data-status="done">
+                    <div class="column-header">
+                        <div class="column-title"><span class="dot dot-green"></span> Concluído</div>
+                        <span class="column-count">0</span>
+                    </div>
+                    <div class="column-cards"></div>
+                    <button class="add-card-btn" onclick="addNewPipelineCard('done')">+ Adicionar projeto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="settings-panel" class="settings-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2>Ajustes de API</h2><div class="close-btn" id="close-settings">✕</div>
+        </div>
+        <div class="section-title">Provedor Ativo</div>
+        <div class="input-group">
+            <select id="provider-select">
+                <option value="primary">💎 Primário (Google AI Direct)</option>
+                <option value="openrouter">🔋 Econômico (OpenRouter)</option>
+            </select>
+        </div>
+        <div class="section-title" style="margin-top: 25px;">Primary API Key (Google AI)</div>
+        <div class="input-group"><input type="password" id="api-key-input"></div>
+        <div class="section-title" style="margin-top: 25px;">OpenRouter API Key</div>
+        <div class="input-group"><input type="password" id="openrouter-key-input"></div>
+        <button class="btn-save" id="save-keys-btn" style="width:100%; margin-top: 20px;">SALVAR CONFIGURAÇÕES</button>
+        <button class="btn-shutdown" id="shutdown-btn" style="margin-top: 40px;">🛑 ENCERRAR ESTÚDIO</button>
+    </div>
+
+    <!-- PAINEL LATERAL DE CONFIGURAÇÕES DO PIPELINE -->
+    <div id="pipeline-config-panel" class="pipeline-settings-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 style="margin:0;">Ajustes Pipeline</h2>
+            <div class="close-btn" id="close-pipeline-config" style="cursor:pointer; font-size:20px;">✕</div>
+        </div>
+        <button class="manage-btn-large" id="open-clients-modal">
+            <span>👤 Gerenciar Clientes</span>
+            <span style="font-size:18px;">›</span>
+        </button>
+        <button class="manage-btn-large" id="open-jobs-modal">
+            <span>📋 Tipos de Job</span>
+            <span style="font-size:18px;">›</span>
+        </button>
+    </div>
+
+    <!-- MODAL GERENCIAR CLIENTES -->
+    <div id="clients-config-modal" class="modal" style="z-index: 10011;">
+        <div class="modal-content" style="max-width: 500px; max-height: 80vh;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Lista de Clientes</h3>
+                <div class="close-btn" id="close-clients-modal" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            <button id="add-client-btn-main" style="width:100%; padding:15px; background:var(--accent-blue); color:white; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:20px;">+ CADASTRAR NOVO CLIENTE</button>
+            <div id="clients-list-full" style="overflow-y:auto; max-height:50vh; display:flex; flex-direction:column; gap:10px;"></div>
+            <div style="margin-top:25px; display:flex; justify-content:flex-end;">
+                <button id="close-clients-bottom" class="btn-ref" style="padding:10px 25px; background:var(--bg-card); border:1px solid var(--border-color); color:white;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GERENCIAR JOBS -->
+    <div id="jobs-config-modal" class="modal" style="z-index: 10011;">
+        <div class="modal-content" style="max-width: 500px; max-height: 80vh;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Tipos de Job</h3>
+                <div class="close-btn" id="close-jobs-modal" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            <button id="add-job-btn-main" style="width:100%; padding:15px; background:var(--accent-blue); color:white; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:20px;">+ CADASTRAR NOVO TIPO DE JOB</button>
+            <div id="jobs-list-full" style="overflow-y:auto; max-height:50vh; display:flex; flex-direction:column; gap:10px;"></div>
+            <div style="margin-top:25px; display:flex; justify-content:flex-end;">
+                <button id="close-jobs-bottom" class="btn-ref" style="padding:10px 25px; background:var(--bg-card); border:1px solid var(--border-color); color:white;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALHES DA DEMANDA -->
+    <div id="demand-modal" class="modal" style="z-index: 10005;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Detalhes da Demanda</h3>
+                <div class="close-btn" id="close-demand-modal" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            <div class="input-group">
+                <label>Cliente</label>
+                <select id="demand-client-select" class="filter-select" style="width:100%;"></select>
+            </div>
+            <div class="input-group">
+                <label>Tipo de Job</label>
+                <select id="demand-job-select" class="filter-select" style="width:100%;"></select>
+            </div>
+            <div class="input-group">
+                <label>Título</label>
+                <input type="text" id="demand-title-input">
+            </div>
+            <div class="input-group">
+                <label>Descrição</label>
+                <textarea id="demand-desc-input" rows="6"></textarea>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button id="cancel-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border-color); background:transparent; color:white;">Fechar</button>
+                <button id="save-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:none; background:var(--accent-blue); color:white; font-weight:bold;">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALHES DA DEMANDA -->
+    <div id="demand-modal" class="modal" style="z-index: 10005;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Detalhes da Demanda</h3>
+                <div class="close-btn" id="close-demand-modal" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Nome do Cliente</label>
+                <input type="text" id="demand-client-input" placeholder="Ex: DCREX, Becker Smart...">
+            </div>
+
+            <div class="input-group">
+                <label>Título</label>
+                <input type="text" id="demand-title-input" placeholder="O que precisa ser feito?">
+            </div>
+
+            <div class="input-group">
+                <label>Descrição</label>
+                <textarea id="demand-desc-input" rows="6" placeholder="Detalhes da tarefa, referências, links..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button id="cancel-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border-color); background:transparent; color:white; cursor:pointer;">Fechar</button>
+                <button id="save-demand-btn" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent-blue); color:white; font-weight:bold;">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+            const selectedPage = document.getElementById(`${tab}-tab`);
+            const selectedBtn = document.getElementById(`tab-${tab}-btn`);
+            if(selectedPage) selectedPage.classList.add('active');
+            if(selectedBtn) selectedBtn.classList.add('active');
+        }
+    </script>
+</body>
+</html>

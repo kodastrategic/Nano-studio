@@ -1,0 +1,71 @@
+{
+
+  "enhance_vector": {
+
+    "description": "Aprimorar o vetor anexado mantendo exatamente a mesma forma, proporções e estilo, porém com qualidade máxima de vetor limpo. Remover todo ruído, serrilhado e imperfeições. Converter para aparência de vetor puro, sólido, nítido e profissional.",
+
+    "lines_and_edges": {
+
+      "edges": "arestas perfeitamente lisas e contínuas, sem serrilhados",
+
+      "thickness": "preservar a espessura exata das linhas do vetor original",
+
+      "uniformity": "linhas, curvas e ângulos completamente limpos e matematicamente suaves",
+
+      "cleanup": "remover artefatos, falhas e pixels residuais"
+
+    },
+
+    "colors": {
+
+      "mode": "preto e branco absoluto",
+
+      "black": "#000000 sólido",
+
+      "white": "#FFFFFF sólido",
+
+      "no_gray": true,
+
+      "contrast": "alto contraste para leitura perfeita"
+
+    },
+
+    "surfaces": {
+
+      "fill": "preenchimentos 100% sólidos sem textura ou gradação",
+
+      "stroke_precision": "bordas vetoriais limpas com contorno perfeito"
+
+    },
+
+    "fidelity": {
+
+      "preserve_design": true,
+
+      "preserve_layout": true,
+
+      "description": "não alterar o design, apenas melhorar a precisão das linhas e da forma"
+
+    },
+
+    "background": {
+
+      "color": "branco puro (#FFFFFF)",
+
+      "type": "limpo, sem textura"
+
+    },
+
+    "render": {
+
+      "quality": "ultra-high vector-like clarity",
+
+      "noise": "zero",
+
+      "finish": "resultado final com aparência de vetor profissional"
+
+    }
+
+  }
+
+}

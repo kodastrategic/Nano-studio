@@ -1,0 +1,87 @@
+{
+  "generation_mode": [
+    "full photographic re-synthesis",
+    "high-definition scene recreation"
+  ],
+
+  "core_instruction": [
+    "do not enhance, restore, deblur or upscale the reference image",
+    "do not attempt to recover lost visual information",
+    "the reference image must be treated only as a structural and identity guide",
+    "generate a completely new high-quality photograph based on the reference",
+    "all visible elements must be newly generated at full professional quality"
+  ],
+
+  "reference_usage_rules": [
+    "use the reference only to identify people, positions, pose and composition",
+    "do not copy low-quality details from the reference",
+    "ignore blur, noise, compression artifacts and motion defects in the reference",
+    "replace any unclear or damaged area with a newly generated realistic equivalent",
+    "never sharpen or hallucinate missing pixels from the original image"
+  ],
+
+  "scene_recreation": [
+    "recreate the same scene and number of subjects shown in the reference",
+    "if there are three people, recreate exactly three people",
+    "maintain relative positions and spatial relationships",
+    "preserve body orientation and general pose",
+    "do not alter the scene layout"
+  ],
+
+  "identity_preservation": [
+    "preserve facial identity of each person",
+    "faces must be newly rendered, sharp and anatomically correct",
+    "no blurred eyes, no distorted teeth, no soft facial features",
+    "hands must be newly generated with correct anatomy and high definition",
+    "no warped fingers, no melted shapes"
+  ],
+
+  "anatomy_and_detail_generation": [
+    "generate all anatomy at full professional quality",
+    "perfectly defined eyes, eyelashes and irises",
+    "clean and realistic teeth if visible",
+    "natural hand proportions with clearly separated fingers",
+    "correct skin folds and joints"
+  ],
+
+  "skin_and_surface_quality": [
+    "high-resolution realistic skin texture",
+    "natural pores and micro-variation",
+    "no plastic skin",
+    "no over-smoothing",
+    "no beauty filters"
+  ],
+
+  "lighting": [
+    "natural professional lighting",
+    "balanced and realistic light distribution",
+    "no dramatic or cinematic lighting",
+    "light must behave consistently across all subjects"
+  ],
+
+  "camera_simulation": [
+    "professional camera capture simulation",
+    "high-end lens clarity",
+    "natural depth of field",
+    "sharp focus on all subjects",
+    "no artificial sharpening artifacts"
+  ],
+
+  "quality_target": [
+    "native ultra-high resolution generation",
+    "8K-level detail perception",
+    "clean, noise-free image",
+    "no upscale artifacts",
+    "no AI hallucination patterns"
+  ],
+
+  "strict_prohibitions": [
+    "do not upscale the original image",
+    "do not restore or sharpen blurry areas",
+    "do not reuse low-quality textures from the reference",
+    "no stylization",
+    "no cinematic grading",
+    "no cartoon or illustration look",
+    "no text or watermarks"
+  ]
+}

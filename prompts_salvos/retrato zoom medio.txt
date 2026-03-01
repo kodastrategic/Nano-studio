@@ -1,0 +1,94 @@
+{
+  "editable_fields": {
+    "enquadramento_desejado": "medium shot from waist up",
+    "nivel_de_abertura": "reveal arms, shoulders and lateral space naturally"
+  },
+
+  "image_type": [
+    "photorealistic portrait outpainting",
+    "realistic frame expansion",
+    "professional portrait recomposition"
+  ],
+
+  "reference_handling": [
+    "use the uploaded image as the single and absolute reference",
+    "preserve facial features, identity and expression exactly",
+    "preserve skin tone, hair, glasses and all personal traits",
+    "do not beautify, stylize or alter the subject"
+  ],
+
+  "core_objective": [
+    "recreate the same image as if it were captured with a wider framing",
+    "expand the scene naturally beyond the original crop",
+    "maintain perfect continuity between original and generated areas"
+  ],
+
+  "subject_preservation_rules": [
+    "maintain exact face structure and proportions",
+    "preserve posture and pose",
+    "preserve clothing style, color and fabric",
+    "do not change body type or proportions"
+  ],
+
+  "body_and_framing": [
+    "extend the image to include torso and waist",
+    "reconstruct arms naturally without distortion",
+    "ensure shoulders, elbows and hands feel anatomically correct",
+    "avoid cropped limbs"
+  ],
+
+  "environment_reconstruction": [
+    "extend the original background seamlessly",
+    "match background color, texture and depth",
+    "no new objects added",
+    "no environment change"
+  ],
+
+  "lighting_and_color_matching": [
+    "match original lighting direction and softness",
+    "preserve color temperature",
+    "maintain shadow behavior",
+    "no new light sources introduced"
+  ],
+
+  "camera_consistency": [
+    "simulate the same camera and lens characteristics",
+    "maintain perspective and focal length realism",
+    "no wide-angle distortion",
+    "no artificial depth-of-field"
+  ],
+
+  "realism_constraints": [
+    "generated areas must blend perfectly with the original photo",
+    "no visible seams or artifacts",
+    "no AI-style textures",
+    "photo must look naturally captured"
+  ],
+
+  "quality_settings": [
+    "high resolution output",
+    "natural skin texture",
+    "professional portrait photography quality"
+  ],
+
+  "strict_restrictions": [
+    "no change of clothing",
+    "no change of environment",
+    "no change of facial expression",
+    "no stylization",
+    "no dramatic lighting",
+    "no artistic interpretation"
+  ],
+
+  "negative_prompts": [
+    "face alteration",
+    "beauty filter",
+    "AI smoothing",
+    "incorrect anatomy",
+    "extra limbs",
+    "blurred hands",
+    "distorted arms",
+    "fake background",
+    "cartoon style"
+  ]
+}

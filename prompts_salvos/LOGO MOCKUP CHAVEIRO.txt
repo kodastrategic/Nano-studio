@@ -1,0 +1,75 @@
+{
+  "EDITAVEIS": {
+    "ESTILO_VISUAL": "chaveiro premium metal + resina",
+    "METAL_BORDAS": "metal polido cromado",
+    "ALTURA_ALTO_RELEVO": "médio",
+    "MATERIAL_CENTRO": "resina plástica translúcida",
+    "COR_RESINA": "preto profundo / cor original do logo",
+    "NIVEL_BRILHO_METAL": "alto",
+    "NIVEL_BRILHO_RESINA": "semi-glossy",
+    "QUALIDADE_RENDER": "ultra alta",
+    "FUNDO": "neutro escuro ou gradiente suave"
+  },
+
+  "OBJETIVO_GERAL": [
+    "Recriar o logotipo fornecido com fidelidade absoluta",
+    "Aplicar acabamento inspirado em chaveiros premium de metal com resina",
+    "Criar contraste claro entre bordas metálicas em alto relevo e centro em material plástico"
+  ],
+
+  "REGRAS_DE_FIDELIDADE": [
+    "não redesenhar o logotipo",
+    "não alterar tipografia",
+    "não modificar proporções",
+    "não reinterpretar o design",
+    "preservar identidade visual original"
+  ],
+
+  "ESTRUTURA_3D": [
+    "bordas externas em alto relevo metálico bem definido",
+    "extrusão metálica contínua e precisa",
+    "centro do logotipo levemente rebaixado em relação às bordas",
+    "separação clara entre metal e resina"
+  ],
+
+  "MATERIAIS_METALICOS": [
+    "metal com aparência realista (PBR)",
+    "acabamento polido com reflexos especulares nítidos",
+    "bordas suavemente beveladas",
+    "aparência sólida e premium"
+  ],
+
+  "MATERIAIS_RESINA_PLASTICO": [
+    "material plástico/resina com leve profundidade óptica",
+    "superfície lisa e uniforme",
+    "leve translucidez ou profundidade interna",
+    "sem textura granulada ou aparência fosca"
+  ],
+
+  "ILUMINACAO": [
+    "iluminação de estúdio profissional",
+    "key light suave para leitura do centro em resina",
+    "rim light forte para destacar o alto relevo metálico",
+    "reflexos controlados para evidenciar diferença de materiais"
+  ],
+
+  "SOMBRAS_E_PROFUNDIDADE": [
+    "sombras suaves entre bordas e centro",
+    "oclusão ambiente sutil nas áreas rebaixadas",
+    "sensação tátil de objeto físico real"
+  ],
+
+  "RENDER_E_REALISMO": [
+    "render ultra nítido",
+    "alta resolução",
+    "realismo físico de materiais",
+    "aparência de produto fotografado em estúdio"
+  ],
+
+  "ESTILO_FINAL_DESEJADO": [
+    "visual de chaveiro premium",
+    "acabamento metal + resina de alta qualidade",
+    "branding sofisticado e físico",
+    "evitar estética genérica ou exagerada de IA"
+  ]
+}
