@@ -56,27 +56,17 @@ function setupMainEvents() {
     const menuBtn = document.getElementById('pipeline-menu-btn');
     const closeMenuBtn = document.getElementById('close-pipeline-config');
 
-    if (menuBtn) {
-        menuBtn.onclick = () => configPanel.classList.add('active');
-    }
-
-    if (closeMenuBtn) {
-        closeMenuBtn.onclick = () => configPanel.classList.remove('active');
-    }
+    if (menuBtn) menuBtn.addEventListener('click', () => configPanel.classList.add('active'));
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => configPanel.classList.remove('active'));
 
     // Sub-modais de Config (Clientes e Jobs)
     const openClients = document.getElementById('open-clients-modal');
     const openJobs = document.getElementById('open-jobs-modal');
 
-    if (openClients) {
-        openClients.onclick = () => document.getElementById('clients-config-modal').style.display = 'flex';
-    }
+    if (openClients) openClients.addEventListener('click', () => document.getElementById('clients-config-modal').style.display = 'flex');
+    if (openJobs) openJobs.addEventListener('click', () => document.getElementById('jobs-config-modal').style.display = 'flex');
 
-    if (openJobs) {
-        openJobs.onclick = () => document.getElementById('jobs-config-modal').style.display = 'flex';
-    }
-
-    // Fechar Sub-modais
+    // Fechar Sub-modais genérico
     const closeIds = [
         'close-clients-modal', 'close-clients-bottom',
         'close-jobs-modal', 'close-jobs-bottom',
@@ -85,56 +75,49 @@ function setupMainEvents() {
     closeIds.forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
-            btn.onclick = () => {
+            btn.addEventListener('click', (e) => {
                 const modal = btn.closest('.modal');
                 if (modal) modal.style.display = 'none';
-            };
+            });
         }
     });
+
+    // Cadastro de Itens
+    const addClientBtn = document.getElementById('add-client-btn-main');
+    if (addClientBtn) {
+        addClientBtn.addEventListener('click', async () => {
+            const name = prompt('Nome do novo cliente:');
+            if (name) { await dbPut(STORE_CLIENTS, { id: Date.now().toString(), name }); await refreshConfigLists(); }
+        });
+    }
+
+    const addJobBtn = document.getElementById('add-job-btn-main');
+    if (addJobBtn) {
+        addJobBtn.addEventListener('click', async () => {
+            const name = prompt('Nome do novo tipo de job:');
+            if (name) { await dbPut(STORE_JOBS, { id: Date.now().toString(), name }); await refreshConfigLists(); }
+        });
+    }
 
     // Filtros
     const fClient = document.getElementById('filter-client');
     const fJob = document.getElementById('filter-job');
     const clearBtn = document.getElementById('clear-filters');
 
-    if (fClient) fClient.onchange = applyFilters;
-    if (fJob) fJob.onchange = applyFilters;
+    if (fClient) fClient.addEventListener('change', applyFilters);
+    if (fJob) fJob.addEventListener('change', applyFilters);
     if (clearBtn) {
-        clearBtn.onclick = () => {
+        clearBtn.addEventListener('click', () => {
             fClient.value = '';
             fJob.value = '';
             applyFilters();
-        };
-    }
-
-    // Cadastro de Itens (Clientes e Jobs)
-    const addClientBtn = document.getElementById('add-client-btn-main');
-    const addJobBtn = document.getElementById('add-job-btn-main');
-
-    if (addClientBtn) {
-        addClientBtn.onclick = async () => {
-            const name = prompt('Nome do novo cliente:');
-            if (name) {
-                await dbPut(STORE_CLIENTS, { id: Date.now().toString(), name });
-                await refreshConfigLists();
-            }
-        };
-    }
-
-    if (addJobBtn) {
-        addJobBtn.onclick = async () => {
-            const name = prompt('Nome do novo tipo de job:');
-            if (name) {
-                await dbPut(STORE_JOBS, { id: Date.now().toString(), name });
-                await refreshConfigLists();
-            }
-        };
+        });
     }
 
     // Botão Salvar Demanda (Modal de Detalhes)
     const saveDemandBtn = document.getElementById('save-demand-btn');
     if (saveDemandBtn) {
-        saveDemandBtn.onclick = async () => {
+        saveDemandBtn.addEventListener('click', async () => {
             if (!currentEditingDemand) return;
             
             currentEditingDemand.client = document.getElementById('demand-client-select').value;
@@ -145,7 +128,7 @@ function setupMainEvents() {
             await dbPut(STORE_DEMANDS, currentEditingDemand);
             document.getElementById('demand-modal').style.display = 'none';
             await refreshDemands();
-        };
+        });
     }
 }
 
@@ -157,9 +140,7 @@ async function refreshDemands() {
 function applyFilters() {
     const cf = document.getElementById('filter-client').value;
     const jf = document.getElementById('filter-job').value;
-    
     const filtered = allDemandsCache.filter(d => (!cf || d.client === cf) && (!jf || d.jobType === jf));
-    
     const data = {
         'backlog': filtered.filter(d => d.status === 'backlog'),
         'todo': filtered.filter(d => d.status === 'todo'),
@@ -191,12 +172,10 @@ function createCard(card) {
             <span class="card-tag" style="background:rgba(52,152,219,0.2); color:#3498db;">${card.client || 'Sem Cliente'}</span>
             <span class="card-tag" style="background:rgba(155,89,182,0.2); color:#9b59b6;">${card.jobType || 'Geral'}</span>
         </div>
-        <div class="card-actions">
-            <button class="card-btn del-btn" style="background:transparent; border:none; cursor:pointer;">🗑️</button>
-        </div>
+        <div class="card-actions"><button class="del-btn" style="background:transparent; border:none; cursor:pointer;">🗑️</button></div>
     `;
 
-    div.onclick = (e) => {
+    div.addEventListener('click', (e) => {
         if (e.target.closest('.del-btn')) return;
         currentEditingDemand = card;
         document.getElementById('demand-client-select').value = card.client || '';
@@ -204,16 +183,13 @@ function createCard(card) {
         document.getElementById('demand-title-input').value = card.title || '';
         document.getElementById('demand-desc-input').value = card.desc || '';
         document.getElementById('demand-modal').style.display = 'flex';
-    };
+    });
 
     const delBtn = div.querySelector('.del-btn');
-    delBtn.onclick = async (e) => {
+    delBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (confirm('Excluir demanda?')) {
-            await dbDelete(STORE_DEMANDS, card.id);
-            await refreshDemands();
-        }
-    };
+        if (confirm('Excluir demanda?')) { await dbDelete(STORE_DEMANDS, card.id); await refreshDemands(); }
+    });
 
     return div;
 }
@@ -276,7 +252,6 @@ function updateCount(s) {
 function setupDragAndDrop() {
     const cards = document.querySelectorAll('.pipeline-card');
     const conts = document.querySelectorAll('.column-cards');
-    
     cards.forEach(card => {
         card.ondragstart = () => card.classList.add('dragging');
         card.ondragend = async () => {
@@ -289,7 +264,6 @@ function setupDragAndDrop() {
             }
         };
     });
-
     conts.forEach(container => {
         container.ondragover = (e) => {
             e.preventDefault();
