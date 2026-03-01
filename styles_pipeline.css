@@ -1,13 +1,53 @@
 /* styles_pipeline.css */
+.pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pipeline-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    transition: background 0.2s;
+}
+
+.hamburger-menu:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.filter-select {
+    background: var(--bg-input);
+    color: white;
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+}
+
 .pipeline-container {
     display: flex;
     gap: 20px;
     padding: 20px;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 145px); /* Ajustado para o novo header */
     overflow-x: auto;
     background: var(--bg-main);
     color: var(--text-main);
 }
+
+/* Restante do arquivo mantido... */
 
 .pipeline-column {
     background: rgba(255, 255, 255, 0.03);

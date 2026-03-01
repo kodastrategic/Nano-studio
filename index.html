@@ -459,6 +459,24 @@
 
     <!-- ABA PIPELINE DE DEMANDAS (NOVA) -->
     <div id="pipeline-tab" class="tab-page">
+        <!-- HEADER DA ABA COM FILTROS E MENU -->
+        <div class="pipeline-header">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div class="hamburger-menu" id="pipeline-menu-btn">☰</div>
+                <h2 style="margin:0; font-size:18px;">Pipeline de Demandas</h2>
+            </div>
+            
+            <div class="pipeline-actions">
+                <select id="filter-client" class="filter-select">
+                    <option value="">👤 Todos Clientes</option>
+                </select>
+                <select id="filter-job" class="filter-select">
+                    <option value="">📋 Todos Jobs</option>
+                </select>
+                <button class="btn-ref" id="clear-filters" style="font-size:11px; padding:8px 12px; background:rgba(255,255,255,0.05);">LIMPAR FILTROS</button>
+            </div>
+        </div>
+
         <div class="pipeline-container">
             <!-- COLUNA: FUTURAS -->
             <div class="pipeline-column" data-status="backlog">
@@ -666,6 +684,34 @@
         </div>
     </div>
 
+    <!-- MODAL MENU PIPELINE -->
+    <div id="pipeline-config-modal" class="modal" style="z-index: 10010;">
+        <div class="modal-content" style="max-width: 450px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0;">Configurações do Pipeline</h3>
+                <div class="close-btn" id="close-pipeline-config" style="cursor:pointer; font-size:20px;">✕</div>
+            </div>
+            
+            <div class="section-title" style="margin-top:0;">Gerenciar Clientes</div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="text" id="new-client-name" placeholder="Novo cliente..." style="flex:1; background:var(--bg-input); color:white; border:1px solid var(--border-color); border-radius:8px; padding:8px;">
+                <button id="add-client-btn" style="background:var(--accent-blue); color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">+</button>
+            </div>
+            <div id="clients-list" style="max-height:120px; overflow-y:auto; background:rgba(255,255,255,0.03); border-radius:8px; padding:10px; margin-bottom:20px; display:flex; flex-wrap:wrap; gap:8px;">
+                <!-- Clientes via JS -->
+            </div>
+
+            <div class="section-title">Tipos de Job</div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="text" id="new-job-name" placeholder="Ex: Carrossel, Vídeo..." style="flex:1; background:var(--bg-input); color:white; border:1px solid var(--border-color); border-radius:8px; padding:8px;">
+                <button id="add-job-btn" style="background:var(--accent-blue); color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">+</button>
+            </div>
+            <div id="jobs-list" style="max-height:120px; overflow-y:auto; background:rgba(255,255,255,0.03); border-radius:8px; padding:10px; margin-bottom:10px; display:flex; flex-wrap:wrap; gap:8px;">
+                <!-- Tipos de job via JS -->
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DETALHES DA DEMANDA -->
     <div id="demand-modal" class="modal" style="z-index: 10005;">
         <div class="modal-content" style="max-width: 600px;">
@@ -675,8 +721,17 @@
             </div>
             
             <div class="input-group">
-                <label>Nome do Cliente</label>
-                <input type="text" id="demand-client-input" placeholder="Ex: DCREX, Becker Smart...">
+                <label>Cliente</label>
+                <select id="demand-client-select" class="filter-select" style="width:100%;">
+                    <option value="">Selecione um cliente...</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Tipo de Job</label>
+                <select id="demand-job-select" class="filter-select" style="width:100%;">
+                    <option value="">Selecione o tipo de tarefa...</option>
+                </select>
             </div>
 
             <div class="input-group">
