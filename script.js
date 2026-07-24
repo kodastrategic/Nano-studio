@@ -257,12 +257,17 @@ const ASPECT_MAP = {
     "4:3":  { w: 1216, h: 832  },
     "3:4":  { w: 832,  h: 1216 },
 };
-const QUALITY_STEPS = { "1K": 2, "4K": 4 };
+const QUALITY_STEPS = {
+    "flux.2-klein-4b": { "1K": 2, "4K": 4 },
+    "flux.1-schnell":  { "1K": 2, "4K": 4 },
+    "flux.1-dev":      { "1K": 12, "4K": 50 },
+};
 
 // --- API CORE (NVIDIA FLUX via Vercel proxy) ---
 async function callNvidiaAPI(key, prompt, refs, aspect, quality, modelId = "flux.1-schnell") {
     const dims = ASPECT_MAP[aspect] || { w: 1024, h: 1024 };
-    const steps = QUALITY_STEPS[quality] || 4;
+    const stepsMap = QUALITY_STEPS[modelId] || QUALITY_STEPS["flux.1-schnell"];
+    const steps = stepsMap[quality] || 4;
 
     const response = await fetch("/api/generate", {
         method: "POST",
