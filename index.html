@@ -41,9 +41,8 @@
             <div class="ref-carousel-container"><div class="ref-carousel" id="ref-carousel"></div></div>
             <div class="input-group">
                 <label>Modelo AI</label>
-                <select id="model-select">
-                    <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
-                    <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                <select id="model-select" style="opacity:0.7; pointer-events:none;">
+                    <option value="flux.1-schnell" selected>⚡ FLUX.1-schnell (NVIDIA)</option>
                 </select>
             </div>
             <div class="input-group">
@@ -123,9 +122,8 @@
             <div class="hero-controls" style="margin-top: 16px;">
                 <div class="input-group">
                     <label>Modelo AI</label>
-                    <select id="hero-model-select">
-                        <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
-                        <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                    <select id="hero-model-select" style="opacity:0.7; pointer-events:none;">
+                        <option value="flux.1-schnell" selected>⚡ FLUX.1-schnell (NVIDIA)</option>
                     </select>
                 </div>
             </div>
@@ -416,9 +414,8 @@
             
             <div class="input-group">
                 <label>Modelo AI</label>
-                <select id="batch-model-select">
-                    <option value="gemini-3.1-flash-image-preview" selected>⚡ Gemini 3.1 Flash</option>
-                    <option value="gemini-3-pro-image-preview">📸 Gemini 3 Pro (Image)</option>
+                <select id="batch-model-select" style="opacity:0.7; pointer-events:none;">
+                    <option value="flux.1-schnell" selected>⚡ FLUX.1-schnell (NVIDIA)</option>
                 </select>
             </div>
 
@@ -461,7 +458,7 @@
             <h2>Ajustes</h2><div class="close-btn" id="close-settings">✕</div>
         </div>
         <div class="input-group">
-            <label>Chave API (Gemini)</label>
+            <label>Chave API (NVIDIA)</label>
             <input type="password" id="api-key-input" placeholder="Sua chave...">
             <button class="btn-save" id="save-key-btn" style="width:100%;">ATUALIZAR CHAVE</button>
         </div>

@@ -41,7 +41,7 @@ document.getElementById('close-ref-modal').onclick = () => refModal.style.displa
 
 // --- WEB READY: Carregamento Automático da Chave ---
 function loadApiKey() {
-    const savedKey = localStorage.getItem('banana_api_key');
+    const savedKey = localStorage.getItem('nova_api_key');
     if (savedKey) {
         apiKeyInput.value = savedKey;
         console.log("🔑 Chave API carregada do navegador.");
@@ -51,7 +51,7 @@ loadApiKey();
 
 document.getElementById('save-key-btn').onclick = () => {
     const key = apiKeyInput.value.trim();
-    localStorage.setItem('banana_api_key', key);
+    localStorage.setItem('nova_api_key', key);
     alert("✅ Chave salva no navegador!");
 };
 
@@ -242,39 +242,61 @@ document.getElementById('ref-delete-btn').onclick = () => {
     refModal.style.display = 'none';
 };
 
-// --- API CORE ---
-async function callGeminiAPI(key, prompt, refs, aspect, quality, modelId = "gemini-3.1-flash-image-preview") {
-    let parts = [{ text: prompt }];
-    refs.forEach((ref) => {
-        try {
-            const base64Data = ref.split(',')[1];
-            const mimeType = ref.split(';')[0].split(':')[1] || "image/png";
-            parts.push({ inlineData: { data: base64Data, mimeType: mimeType } });
-        } catch (e) { console.error("Erro ref:", e); }
-    });
+// --- ASPECT RATIO MAP (FLUX.1 supported sizes) ---
+const ASPECT_MAP = {
+    "1:1":  { w: 1024, h: 1024 },
+    "16:9": { w: 1344, h: 768  },
+    "9:16": { w: 768,  h: 1344 },
+    "4:3":  { w: 1216, h: 832  },
+    "3:4":  { w: 832,  h: 1216 },
+};
+const QUALITY_STEPS = { "1K": 2, "4K": 4 };
 
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${key}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: parts }],
-                generationConfig: { 
-                    response_modalities: ["IMAGE"], 
-                    imageConfig: { aspect_ratio: aspect, image_size: quality } 
-                }
-            })
-        });
+// --- API CORE (NVIDIA FLUX.1) ---
+async function callNvidiaAPI(key, prompt, refs, aspect, quality) {
+    const dims = ASPECT_MAP[aspect] || { w: 1024, h: 1024 };
+    const steps = QUALITY_STEPS[quality] || 4;
 
-        const data = await response.json();
-        if (data.error) throw new Error(`${data.error.code}: ${data.error.message}`);
-        if (!data.candidates || !data.candidates[0].content) {
-            if (data.candidates && data.candidates[0].finishReason === "SAFETY") throw new Error("BLOQUEIO DE SEGURANÇA: API recusou o conteúdo.");
-            throw new Error("A API não retornou imagem.");
+    const payload = {
+        prompt: prompt,
+        width: dims.w,
+        height: dims.h,
+        seed: Math.floor(Math.random() * 2147483647),
+        steps: steps,
+    };
+
+    const response = await fetch(
+        "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-schnell",
+        {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${key}`,
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(payload),
         }
-        const imagePart = data.candidates[0].content.parts.find(p => p.inlineData || p.data);
-        return imagePart.inlineData ? imagePart.inlineData.data : imagePart.data;
-    } catch (err) { throw err; }
+    );
+
+    if (!response.ok) {
+        let detail = "";
+        try { const e = await response.json(); detail = e.detail || JSON.stringify(e); }
+        catch { detail = response.statusText; }
+        throw new Error(`HTTP ${response.status}: ${detail}`);
+    }
+
+    const data = await response.json();
+    if (!data.artifacts || data.artifacts.length === 0) {
+        throw new Error("A API não retornou imagem.");
+    }
+    const art = data.artifacts[0];
+    if (art.finishReason === "CONTENT_FILTERED") {
+        throw new Error("BLOQUEIO DE SEGURANÇA: conteúdo recusado pelo filtro.");
+    }
+    if (art.finishReason === "ERROR") {
+        throw new Error("Erro interno da API ao gerar imagem.");
+    }
+    return art.base64;
 }
 
 function createFeedItem(grid) {
@@ -301,14 +323,13 @@ document.getElementById('gen-btn').onclick = async () => {
     const key = apiKeyInput.value.trim();
     const aspect = document.getElementById('aspect-select').value;
     const quality = document.getElementById('quality-select').value;
-    const model = document.getElementById('model-select').value;
     
     if (!prompt || !key) { alert("Configure a chave API."); return; }
     const item = createFeedItem(feedGrid);
     statusMsg.innerText = "⏳ Gerando...";
     try {
-        const response = await callGeminiAPI(key, prompt, attachedRefs, aspect, quality, model);
-        finishFeedItem(item, `data:image/png;base64,${response}`);
+        const response = await callNvidiaAPI(key, prompt, attachedRefs, aspect, quality);
+        finishFeedItem(item, `data:image/jpeg;base64,${response}`);
         statusMsg.innerText = "✨ Pronto!";
     } catch (e) { 
         statusMsg.innerText = "❌ ERRO: " + e.message; 
@@ -387,9 +408,8 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
 
         const aspect = getVal('hero-aspect-select') || "16:9";
         const quality = getVal('hero-quality-select') || "4K";
-        const model = getVal('hero-model-select') || "gemini-3.1-flash-image-preview";
-        const response = await callGeminiAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality, model);
-        finishFeedItem(item, `data:image/png;base64,${response}`);
+        const response = await callNvidiaAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality);
+        finishFeedItem(item, `data:image/jpeg;base64,${response}`);
         heroStatusMsg.innerText = "✨ Hero Pro Gerado!";
     } catch (e) { 
         heroStatusMsg.innerText = "❌ Erro: " + e.message; 
@@ -449,8 +469,6 @@ if (batchProcessBtn) {
         const key = apiKeyInput.value.trim();
         const aspect = document.getElementById('batch-aspect-select').value;
         const quality = document.getElementById('batch-quality-select').value;
-        const model = document.getElementById('batch-model-select').value;
-
         if (!key) { alert("Chave API não configurada."); return; }
         if (!rawJson) { alert("Cole o JSON de prompts primeiro."); return; }
 
@@ -473,7 +491,7 @@ if (batchProcessBtn) {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:15px;">
                 <div>
                     <h3 style="margin:0; font-size:14px; color:var(--accent-blue);">Pacote de Geração #${timestamp}</h3>
-                    <span style="font-size:10px; opacity:0.5;">${promptList.length} Slides • Modelo: ${model}</span>
+                    <span style="font-size:10px; opacity:0.5;">${promptList.length} Slides • FLUX.1-schnell</span>
                 </div>
                 <button class="btn-save download-all-btn" style="margin:0; padding:8px 15px; font-size:10px; display:none;">📥 BAIXAR EM LOTE (.ZIP)</button>
             </div>
@@ -506,13 +524,13 @@ if (batchProcessBtn) {
             currentGrid.appendChild(itemEl);
 
             try {
-                const response = await callGeminiAPI(key, item.prompt, [], aspect, quality, model);
-                const imgSrc = `data:image/png;base64,${response}`;
+                const response = await callNvidiaAPI(key, item.prompt, [], aspect, quality);
+                const imgSrc = `data:image/jpeg;base64,${response}`;
                 
                 itemEl.innerHTML = `<img src="${imgSrc}"><div style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; font-size:8px; font-weight:bold;">SLIDE ${slideNum}</div>`;
                 itemEl.onclick = () => { expandedImg.src = imgSrc; previewModal.style.display = 'flex'; };
                 
-                generatedImages.push({ name: `slide_${slideNum}.png`, data: response });
+                generatedImages.push({ name: `slide_${slideNum}.jpg`, data: response });
 
             } catch (err) {
                 itemEl.innerHTML = "<div style='padding:20px; text-align:center; color:var(--danger-red); font-size:10px;'>⚠️ ERRO</div>";
@@ -539,7 +557,7 @@ async function downloadBatchAsZip(images, folderName) {
         setTimeout(() => {
             const link = document.createElement('a');
             link.download = img.name;
-            link.href = `data:image/png;base64,${img.data}`;
+            link.href = `data:image/jpeg;base64,${img.data}`;
             link.click();
         }, index * 200);
     });
