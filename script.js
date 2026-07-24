@@ -242,7 +242,14 @@ document.getElementById('ref-delete-btn').onclick = () => {
     refModal.style.display = 'none';
 };
 
-// --- ASPECT RATIO MAP (FLUX.1 supported sizes) ---
+// --- MODEL ENDPOINTS ---
+const MODEL_ENDPOINTS = {
+    "flux.1-schnell":   "black-forest-labs/flux.1-schnell",
+    "flux.1-dev":       "black-forest-labs/flux.1-dev",
+    "flux.2-klein-4b":  "black-forest-labs/flux.2-klein-4b",
+};
+
+// --- ASPECT RATIO MAP (FLUX supported sizes) ---
 const ASPECT_MAP = {
     "1:1":  { w: 1024, h: 1024 },
     "16:9": { w: 1344, h: 768  },
@@ -252,8 +259,9 @@ const ASPECT_MAP = {
 };
 const QUALITY_STEPS = { "1K": 2, "4K": 4 };
 
-// --- API CORE (NVIDIA FLUX.1) ---
-async function callNvidiaAPI(key, prompt, refs, aspect, quality) {
+// --- API CORE (NVIDIA FLUX) ---
+async function callNvidiaAPI(key, prompt, refs, aspect, quality, modelId = "flux.1-schnell") {
+    const endpoint = MODEL_ENDPOINTS[modelId] || MODEL_ENDPOINTS["flux.1-schnell"];
     const dims = ASPECT_MAP[aspect] || { w: 1024, h: 1024 };
     const steps = QUALITY_STEPS[quality] || 4;
 
@@ -266,7 +274,7 @@ async function callNvidiaAPI(key, prompt, refs, aspect, quality) {
     };
 
     const response = await fetch(
-        "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-schnell",
+        `https://ai.api.nvidia.com/v1/genai/${endpoint}`,
         {
             method: "POST",
             headers: {
@@ -323,12 +331,13 @@ document.getElementById('gen-btn').onclick = async () => {
     const key = apiKeyInput.value.trim();
     const aspect = document.getElementById('aspect-select').value;
     const quality = document.getElementById('quality-select').value;
+    const model = document.getElementById('model-select').value;
     
     if (!prompt || !key) { alert("Configure a chave API."); return; }
     const item = createFeedItem(feedGrid);
     statusMsg.innerText = "⏳ Gerando...";
     try {
-        const response = await callNvidiaAPI(key, prompt, attachedRefs, aspect, quality);
+        const response = await callNvidiaAPI(key, prompt, attachedRefs, aspect, quality, model);
         finishFeedItem(item, `data:image/jpeg;base64,${response}`);
         statusMsg.innerText = "✨ Pronto!";
     } catch (e) { 
@@ -408,7 +417,8 @@ if(heroGenBtn) heroGenBtn.onclick = async () => {
 
         const aspect = getVal('hero-aspect-select') || "16:9";
         const quality = getVal('hero-quality-select') || "4K";
-        const response = await callNvidiaAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality);
+        const model = getVal('hero-model-select') || "flux.1-schnell";
+        const response = await callNvidiaAPI(key, finalPromptText, [...heroRefs, ...objRefs], aspect, quality, model);
         finishFeedItem(item, `data:image/jpeg;base64,${response}`);
         heroStatusMsg.innerText = "✨ Hero Pro Gerado!";
     } catch (e) { 
@@ -469,6 +479,7 @@ if (batchProcessBtn) {
         const key = apiKeyInput.value.trim();
         const aspect = document.getElementById('batch-aspect-select').value;
         const quality = document.getElementById('batch-quality-select').value;
+        const model = document.getElementById('batch-model-select').value;
         if (!key) { alert("Chave API não configurada."); return; }
         if (!rawJson) { alert("Cole o JSON de prompts primeiro."); return; }
 
@@ -491,7 +502,7 @@ if (batchProcessBtn) {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:15px;">
                 <div>
                     <h3 style="margin:0; font-size:14px; color:var(--accent-blue);">Pacote de Geração #${timestamp}</h3>
-                    <span style="font-size:10px; opacity:0.5;">${promptList.length} Slides • FLUX.1-schnell</span>
+                    <span style="font-size:10px; opacity:0.5;">${promptList.length} Slides • ${model}</span>
                 </div>
                 <button class="btn-save download-all-btn" style="margin:0; padding:8px 15px; font-size:10px; display:none;">📥 BAIXAR EM LOTE (.ZIP)</button>
             </div>
@@ -524,7 +535,7 @@ if (batchProcessBtn) {
             currentGrid.appendChild(itemEl);
 
             try {
-                const response = await callNvidiaAPI(key, item.prompt, [], aspect, quality);
+                const response = await callNvidiaAPI(key, item.prompt, [], aspect, quality, model);
                 const imgSrc = `data:image/jpeg;base64,${response}`;
                 
                 itemEl.innerHTML = `<img src="${imgSrc}"><div style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; font-size:8px; font-weight:bold;">SLIDE ${slideNum}</div>`;
