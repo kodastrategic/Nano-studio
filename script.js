@@ -260,7 +260,7 @@ const ASPECT_MAP = {
 const QUALITY_STEPS = {
     "flux.2-klein-4b": { "1K": 2, "4K": 4 },
     "flux.1-schnell":  { "1K": 2, "4K": 4 },
-    "flux.1-dev":      { "1K": 12, "4K": 50 },
+    "flux.1-dev":      { "1K": 20, "4K": 28 },
 };
 
 // --- API CORE (NVIDIA FLUX via Vercel proxy) ---

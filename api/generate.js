@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         steps: steps || 4,
     };
     if (info.cfg) {
-        payload.cfg_scale = 5;
+        payload.cfg_scale = 1;
     }
 
     try {
