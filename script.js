@@ -259,41 +259,29 @@ const ASPECT_MAP = {
 };
 const QUALITY_STEPS = { "1K": 2, "4K": 4 };
 
-// --- API CORE (NVIDIA FLUX) ---
+// --- API CORE (NVIDIA FLUX via Vercel proxy) ---
 async function callNvidiaAPI(key, prompt, refs, aspect, quality, modelId = "flux.1-schnell") {
-    const endpoint = MODEL_ENDPOINTS[modelId] || MODEL_ENDPOINTS["flux.1-schnell"];
     const dims = ASPECT_MAP[aspect] || { w: 1024, h: 1024 };
     const steps = QUALITY_STEPS[quality] || 4;
 
-    const payload = {
-        prompt: prompt,
-        width: dims.w,
-        height: dims.h,
-        seed: Math.floor(Math.random() * 2147483647),
-        steps: steps,
-    };
-
-    const response = await fetch(
-        `https://ai.api.nvidia.com/v1/genai/${endpoint}`,
-        {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${key}`,
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify(payload),
-        }
-    );
-
-    if (!response.ok) {
-        let detail = "";
-        try { const e = await response.json(); detail = e.detail || JSON.stringify(e); }
-        catch { detail = response.statusText; }
-        throw new Error(`HTTP ${response.status}: ${detail}`);
-    }
+    const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            prompt: prompt,
+            key: key,
+            model: modelId,
+            width: dims.w,
+            height: dims.h,
+            steps: steps,
+        }),
+    });
 
     const data = await response.json();
+    if (!response.ok) {
+        const msg = data.error || data.detail || response.statusText;
+        throw new Error(`HTTP ${response.status}: ${msg}`);
+    }
     if (!data.artifacts || data.artifacts.length === 0) {
         throw new Error("A API não retornou imagem.");
     }
